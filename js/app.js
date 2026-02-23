@@ -282,17 +282,25 @@ async function renderPost() {
   const body = document.getElementById('post-body');
   body.innerHTML = post.writeup || '<p>No writeup available.</p>';
 
-  // Tracklist
+  // Tracklist — Spotify embeds for additional tracks
   const tracklist = document.getElementById('post-tracklist');
   if (post.tracks && post.tracks.length > 0) {
-    tracklist.innerHTML = `<h3>Tracklist</h3>` +
-      post.tracks.map(t => `
-        <div class="track-row" onclick="Player.play({id:'${t.id}',title:'${t.title}',artist:'${t.artist}',artUrl:'${post.artUrl}',previewUrl:'${t.previewUrl}'})">
-          <div class="track-play">&#9654;</div>
-          <div class="track-name">${t.title}</div>
-          <div class="track-artist-name">${t.artist}</div>
-        </div>
-      `).join('');
+    const trackItems = post.tracks.map(t => {
+      if (t.spotifyId) {
+        return `<div class="track-embed">
+          <iframe src="https://open.spotify.com/embed/track/${t.spotifyId}?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"></iframe>
+        </div>`;
+      }
+      // Fallback: plain row if no Spotify ID
+      return `<div class="track-row">
+        <div class="track-name">${t.title}</div>
+        <div class="track-artist-name">${t.artist}</div>
+      </div>`;
+    }).join('');
+    tracklist.innerHTML = `<h3>Tracklist</h3>${trackItems}`;
   }
 
   // Sidebar
