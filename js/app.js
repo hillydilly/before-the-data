@@ -42,14 +42,19 @@ function createMusicCard(post) {
     <div class="card-title">${post.title}</div>
     <div class="card-artist">${post.artist}</div>
   `;
-  // Click card → go to post page
-  card.addEventListener('click', () => {
-    window.location.href = `post.html?id=${post.id}`;
-  });
-  // Click play overlay → play preview (don't navigate)
-  card.querySelector('.play-overlay').addEventListener('click', (e) => {
+  // Click art area (including play overlay) → play preview
+  card.querySelector('.card-art').addEventListener('click', (e) => {
     e.stopPropagation();
     Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+  });
+  // Click title or artist → navigate to post
+  card.querySelector('.card-title').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.location.href = `post.html?id=${post.id}`;
+  });
+  card.querySelector('.card-artist').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.location.href = `post.html?id=${post.id}`;
   });
   return card;
 }
