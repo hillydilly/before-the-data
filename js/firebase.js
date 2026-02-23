@@ -28,7 +28,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", instagram: "https://instagram.com", twitter: "https://twitter.com" },
     tracks: [],
     relatedIds: ["demo-2", "demo-3", "demo-4"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 1240
   },
   {
@@ -46,7 +46,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", tiktok: "https://tiktok.com", instagram: "https://instagram.com" },
     tracks: [],
     relatedIds: ["demo-1", "demo-5", "demo-6"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 2100
   },
   {
@@ -68,7 +68,7 @@ const DEMO_POSTS = [
       { id: "t3", title: "Television", artist: "99 Neighbors", previewUrl: "" }
     ],
     relatedIds: ["demo-4", "demo-7", "demo-8"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 3400
   },
   {
@@ -86,7 +86,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", instagram: "https://instagram.com" },
     tracks: [],
     relatedIds: ["demo-1", "demo-2", "demo-6"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 1870
   },
   {
@@ -104,7 +104,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", instagram: "https://instagram.com", twitter: "https://twitter.com" },
     tracks: [],
     relatedIds: ["demo-1", "demo-7", "demo-3"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 980
   },
   {
@@ -122,7 +122,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", tiktok: "https://tiktok.com", web: "https://jfrombk.com" },
     tracks: [],
     relatedIds: ["demo-2", "demo-4", "demo-8"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 5200
   },
   {
@@ -140,7 +140,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", instagram: "https://instagram.com" },
     tracks: [],
     relatedIds: ["demo-5", "demo-1", "demo-3"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 4100
   },
   {
@@ -158,7 +158,7 @@ const DEMO_POSTS = [
     socialLinks: { spotify: "https://open.spotify.com", tiktok: "https://tiktok.com", instagram: "https://instagram.com", twitter: "https://twitter.com" },
     tracks: [],
     relatedIds: ["demo-7", "demo-6", "demo-4"],
-    writtenBy: { name: "Chad Hillard", location: "Austin" },
+    writtenBy: { name: "Chad Hillard", location: "Nashville, TN" },
     views: 6800
   }
 ];
