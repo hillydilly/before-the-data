@@ -592,3 +592,37 @@ ul { list-style: none; }
   padding: 1px 4px; border-radius: 3px;
   vertical-align: middle; margin-left: 4px;
 }
+
+/* ============================================
+   POST PAGE — STREAM LINKS + SOCIAL PILLS
+   ============================================ */
+.post-stream-links {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap; margin: 14px 0 10px;
+}
+.post-play-btn {
+  background: rgba(255,255,255,0.95); color: #111;
+  border: none; border-radius: 20px;
+  padding: 8px 18px; font-size: 13px; font-weight: 700;
+  cursor: pointer; letter-spacing: .03em;
+  transition: all .15s; white-space: nowrap;
+}
+.post-play-btn:hover { background: #fff; transform: scale(1.03); }
+.stream-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 16px; border-radius: 20px; font-size: 12px;
+  font-weight: 700; letter-spacing: .04em; text-decoration: none;
+  transition: opacity .15s; white-space: nowrap;
+}
+.stream-pill:hover { opacity: .85; }
+.spotify-pill { background: #1DB954; color: #fff; }
+.apple-pill { background: #fff; color: #000; }
+.post-socials { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 12px; }
+.social-pill {
+  display: inline-block; padding: 5px 14px; border-radius: 16px;
+  font-size: 11px; font-weight: 600; letter-spacing: .04em;
+  text-decoration: none; background: rgba(255,255,255,.15);
+  color: rgba(255,255,255,.9); border: 1px solid rgba(255,255,255,.25);
+  transition: background .15s;
+}
+.social-pill:hover { background: rgba(255,255,255,.28); }

@@ -233,12 +233,16 @@ async function renderPost() {
       <div class="post-title">${post.title}</div>
       <div class="post-date">Published ${timeAgo(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
+      <div class="post-stream-links">
+        ${post.previewUrl ? `<button class="post-play-btn" id="hero-play-btn">▶ Play Preview</button>` : ''}
+        ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
+        ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
+      </div>
       <div class="post-socials">
-        ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank">🎵 Spotify</a>` : ''}
-        ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank">📷 Instagram</a>` : ''}
-        ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank">🎵 TikTok</a>` : ''}
-        ${post.socialLinks?.twitter ? `<a href="${post.socialLinks.twitter}" target="_blank">🐦 Twitter</a>` : ''}
-        ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank">🌐 Web</a>` : ''}
+        ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank" class="social-pill">Instagram</a>` : ''}
+        ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank" class="social-pill">TikTok</a>` : ''}
+        ${post.socialLinks?.twitter ? `<a href="${post.socialLinks.twitter}" target="_blank" class="social-pill">Twitter</a>` : ''}
+        ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
         ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
@@ -246,11 +250,15 @@ async function renderPost() {
     </div>
   `;
 
-  // Play button — play this track
-  hero.style.cursor = 'pointer';
-  hero.addEventListener('click', () => {
-    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-  });
+  // Play button — play Apple Music preview
+  const playBtn = document.getElementById('hero-play-btn');
+  if (playBtn && post.previewUrl) {
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+      playBtn.textContent = '▶ Playing in player bar ↑';
+    });
+  }
 
   // Body
   const body = document.getElementById('post-body');
