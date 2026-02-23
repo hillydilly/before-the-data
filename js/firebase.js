@@ -271,5 +271,35 @@ async function incrementViews(postId) {
   }
 }
 
+/* --- Fetch Charts (from config/btd_charts) --- */
+async function fetchCharts() {
+  // Try Firebase REST (no auth needed for config collection)
+  try {
+    const res = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_charts?key=${FIREBASE_CONFIG.apiKey}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const tracks = data.fields?.tracks?.arrayValue?.values || [];
+      return tracks.map(v => {
+        const f = v.mapValue.fields;
+        return {
+          rank:      parseInt(f.rank?.integerValue || 0),
+          title:     f.title?.stringValue || '',
+          artist:    f.artist?.stringValue || '',
+          spotifyId: f.spotifyId?.stringValue || '',
+          ytId:      f.ytId?.stringValue || '',
+          thumb:     f.thumb?.stringValue || '',
+          explicit:  f.explicit?.booleanValue || false,
+          addedAt:   f.addedAt?.stringValue || ''
+        };
+      }).sort((a, b) => a.rank - b.rank);
+    }
+  } catch (e) {
+    console.warn('[BTD] Charts fetch failed:', e.message);
+  }
+  return [];
+}
+
 // Init on load
 document.addEventListener('DOMContentLoaded', initFirebase);

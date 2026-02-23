@@ -540,3 +540,55 @@ ul { list-style: none; }
    ============================================ */
 .mt-40 { margin-top: 40px; }
 .hidden { display: none !important; }
+
+/* ============================================
+   YOUTUBE PLAYER MODAL
+   ============================================ */
+#yt-modal {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .25s ease;
+  pointer-events: none;
+}
+#yt-modal.open { opacity: 1; pointer-events: all; }
+.yt-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.75);
+  backdrop-filter: blur(4px);
+}
+.yt-panel {
+  position: relative; z-index: 1;
+  background: var(--tx-1);
+  border-radius: 12px;
+  overflow: hidden;
+  width: min(600px, 95vw);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  transform: translateY(20px);
+  transition: transform .25s ease;
+}
+#yt-modal.open .yt-panel { transform: translateY(0); }
+.yt-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+}
+.yt-title { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: #fff; letter-spacing: .03em; }
+.yt-artist { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; }
+.yt-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,.15); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; flex-shrink: 0;
+  transition: background .15s;
+}
+.yt-close:hover { background: rgba(255,255,255,.3); }
+.yt-embed { position: relative; padding-bottom: 56.25%; height: 0; }
+.yt-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+/* Explicit badge */
+.explicit {
+  display: inline-block;
+  font-size: 9px; font-weight: 700;
+  background: var(--tx-3); color: #fff;
+  padding: 1px 4px; border-radius: 3px;
+  vertical-align: middle; margin-left: 4px;
+}

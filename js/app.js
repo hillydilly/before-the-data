@@ -78,17 +78,91 @@ function createChartRow(post, rank) {
   return row;
 }
 
+/* --- YouTube Player Modal --- */
+let ytModal = null;
+
+function openYouTubeModal(track) {
+  if (ytModal) ytModal.remove();
+
+  ytModal = document.createElement('div');
+  ytModal.id = 'yt-modal';
+  ytModal.innerHTML = `
+    <div class="yt-backdrop"></div>
+    <div class="yt-panel">
+      <div class="yt-header">
+        <div class="yt-track-info">
+          <div class="yt-title">${track.title}</div>
+          <div class="yt-artist">${track.artist}</div>
+        </div>
+        <button class="yt-close" title="Close">✕</button>
+      </div>
+      <div class="yt-embed">
+        <iframe
+          src="https://www.youtube.com/embed/${track.ytId}?autoplay=1&rel=0"
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+          frameborder="0">
+        </iframe>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(ytModal);
+  requestAnimationFrame(() => ytModal.classList.add('open'));
+
+  const close = () => {
+    ytModal.classList.remove('open');
+    setTimeout(() => ytModal?.remove(), 300);
+    ytModal = null;
+  };
+  ytModal.querySelector('.yt-close').addEventListener('click', close);
+  ytModal.querySelector('.yt-backdrop').addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); }, { once: true });
+}
+
+function createChartRowFromTrack(track) {
+  const row = document.createElement('div');
+  row.className = 'chart-row';
+  const thumb = track.thumb || `https://img.youtube.com/vi/${track.ytId}/hqdefault.jpg`;
+  row.innerHTML = `
+    <div class="chart-rank">#${track.rank}</div>
+    <button class="chart-play" title="Play">&#9654;</button>
+    <img class="chart-art" src="${thumb}" alt="${track.title}" loading="lazy">
+    <div class="chart-info">
+      <div class="chart-artist">${track.artist}${track.explicit ? ' <span class="explicit">E</span>' : ''}</div>
+      <div class="chart-title">${track.title}</div>
+    </div>
+    <div class="chart-actions">
+      <button title="Like">&#9825;</button>
+    </div>
+  `;
+  const playFn = () => {
+    if (track.ytId) openYouTubeModal(track);
+  };
+  row.querySelector('.chart-play').addEventListener('click', e => { e.stopPropagation(); playFn(); });
+  row.addEventListener('click', playFn);
+  return row;
+}
+
 /* --- Discover Page --- */
 async function renderDiscover() {
   const scrollContainer = document.getElementById('new-music-scroll');
   const chartList = document.getElementById('chart-list');
   if (!scrollContainer || !chartList) return;
 
+  // New Music: demo/Firebase posts
   const latest = await fetchPosts('publishedAt', 'desc', 10);
   latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
 
-  const popular = await fetchPosts('views', 'desc', 25);
-  popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
+  // Charts: real data from Firebase btd_charts
+  const charts = await fetchCharts();
+  if (charts.length > 0) {
+    charts.forEach(t => chartList.appendChild(createChartRowFromTrack(t)));
+  } else {
+    // Fallback to demo posts
+    const popular = await fetchPosts('views', 'desc', 25);
+    popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
+  }
 }
 
 /* --- New Music Page --- */
