@@ -75,6 +75,43 @@ async function getExistingPostIds() {
   return ids;
 }
 
+// --- Spotify token + artwork ---
+const SPOTIFY_CLIENT_ID = 'f7dac43e65584124ac11bc702431d26d';
+const SPOTIFY_CLIENT_SECRET = '0a4ec9c84f114f81a80b0508e006299e';
+let _spotifyToken = null;
+
+async function getSpotifyToken() {
+  if (_spotifyToken) return _spotifyToken;
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64')
+    },
+    body: 'grant_type=client_credentials'
+  });
+  const data = await res.json();
+  _spotifyToken = data.access_token;
+  return _spotifyToken;
+}
+
+async function getSpotifyArtwork(trackId) {
+  try {
+    const token = await getSpotifyToken();
+    const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) return { artUrl: '', artUrlSm: '' };
+    const t = await res.json();
+    return {
+      artUrl: t.album?.images?.[0]?.url || '',
+      artUrlSm: t.album?.images?.[2]?.url || '',
+    };
+  } catch {
+    return { artUrl: '', artUrlSm: '' };
+  }
+}
+
 // --- Fetch iTunes preview URL ---
 async function getItunesPreview(artist, title) {
   const q = `${artist} ${title}`.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '+');
@@ -142,12 +179,18 @@ async function main() {
     return;
   }
 
-  // Fetch iTunes previews
-  process.stderr.write('Fetching iTunes previews...\n');
+  // Fetch Spotify artwork + iTunes previews
+  process.stderr.write('Fetching artwork + previews...\n');
   for (const t of batch) {
-    t.previewUrl = await getItunesPreview(t.primaryArtist, t.trackName);
+    const [artwork, preview] = await Promise.all([
+      getSpotifyArtwork(t.trackId),
+      getItunesPreview(t.primaryArtist, t.trackName),
+    ]);
+    t.artUrl = artwork.artUrl;
+    t.artUrlSm = artwork.artUrlSm;
+    t.previewUrl = preview;
     await new Promise(r => setTimeout(r, 300));
-    process.stderr.write(`  ${t.previewUrl ? '✅' : '❌'} ${t.primaryArtist} — ${t.trackName}\n`);
+    process.stderr.write(`  ${t.artUrl ? '🖼' : '📭'} ${t.previewUrl ? '🎵' : '🔇'} ${t.primaryArtist} — ${t.trackName}\n`);
   }
 
   // Output batch as JSON
