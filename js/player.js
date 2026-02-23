@@ -56,7 +56,7 @@ const Player = (() => {
       artEl.alt = track.title || '';
     }
     if (titleEl) titleEl.textContent = `${track.artist} — ${track.title}`;
-    if (sourceEl) sourceEl.textContent = 'SPOTIFY';
+    if (sourceEl) sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '—');
   }
 
   function updatePlayButton() {

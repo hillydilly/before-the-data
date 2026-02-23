@@ -284,14 +284,17 @@ async function fetchCharts() {
       return tracks.map(v => {
         const f = v.mapValue.fields;
         return {
-          rank:      parseInt(f.rank?.integerValue || 0),
-          title:     f.title?.stringValue || '',
-          artist:    f.artist?.stringValue || '',
-          spotifyId: f.spotifyId?.stringValue || '',
-          ytId:      f.ytId?.stringValue || '',
-          thumb:     f.thumb?.stringValue || '',
-          explicit:  f.explicit?.booleanValue || false,
-          addedAt:   f.addedAt?.stringValue || ''
+          rank:       parseInt(f.rank?.integerValue || 0),
+          title:      f.title?.stringValue || '',
+          artist:     f.artist?.stringValue || '',
+          spotifyId:  f.spotifyId?.stringValue || '',
+          previewUrl: f.previewUrl?.stringValue || '',
+          artUrl:     f.artUrl?.stringValue || '',
+          artUrlSm:   f.artUrlSm?.stringValue || '',
+          albumName:  f.albumName?.stringValue || '',
+          ytId:       f.ytId?.stringValue || '',
+          explicit:   f.explicit?.booleanValue || false,
+          addedAt:    f.addedAt?.stringValue || ''
         };
       }).sort((a, b) => a.rank - b.rank);
     }

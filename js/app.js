@@ -123,10 +123,10 @@ function openYouTubeModal(track) {
 function createChartRowFromTrack(track) {
   const row = document.createElement('div');
   row.className = 'chart-row';
-  const thumb = track.thumb || `https://img.youtube.com/vi/${track.ytId}/hqdefault.jpg`;
+  const thumb = track.artUrlSm || track.artUrl || (track.ytId ? `https://img.youtube.com/vi/${track.ytId}/hqdefault.jpg` : '');
   row.innerHTML = `
     <div class="chart-rank">#${track.rank}</div>
-    <button class="chart-play" title="Play">&#9654;</button>
+    <button class="chart-play" title="Play" data-playing-id="${track.spotifyId}">&#9654;</button>
     <img class="chart-art" src="${thumb}" alt="${track.title}" loading="lazy">
     <div class="chart-info">
       <div class="chart-artist">${track.artist}${track.explicit ? ' <span class="explicit">E</span>' : ''}</div>
@@ -136,10 +136,24 @@ function createChartRowFromTrack(track) {
       <button title="Like">&#9825;</button>
     </div>
   `;
-  const playFn = () => {
-    if (track.ytId) openYouTubeModal(track);
+  const playFn = (e) => {
+    if (e) e.stopPropagation();
+    if (track.previewUrl) {
+      // Apple Music preview — play in top player bar
+      Player.play({
+        id: track.spotifyId,
+        title: track.title,
+        artist: track.artist,
+        artUrl: track.artUrl || thumb,
+        previewUrl: track.previewUrl,
+        ytId: track.ytId
+      });
+    } else if (track.ytId) {
+      // No preview — fall back to YouTube modal
+      openYouTubeModal(track);
+    }
   };
-  row.querySelector('.chart-play').addEventListener('click', e => { e.stopPropagation(); playFn(); });
+  row.querySelector('.chart-play').addEventListener('click', playFn);
   row.addEventListener('click', playFn);
   return row;
 }
