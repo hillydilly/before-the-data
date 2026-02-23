@@ -461,6 +461,30 @@ ul { list-style: none; }
 }
 .post-body p { margin-bottom: 16px; }
 
+/* Spotify embed blocks inside post write-ups */
+.btd-tracks {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.btd-track-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.btd-track-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tx-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.btd-track-embed iframe {
+  display: block;
+  border-radius: 8px;
+}
+
 .post-tracklist { margin-top: 32px; }
 .post-tracklist h3 {
   font-family: var(--font-heading);
