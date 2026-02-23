@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before The Data</title>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body data-page="">
+
+  <div id="player">
+    <div class="player-controls">
+      <button id="btn-prev">⏮</button>
+      <button id="btn-play">▶</button>
+      <button id="btn-next">⏭</button>
+    </div>
+    <div class="player-track">
+      <img id="player-art" src="" alt="">
+      <div class="player-info">
+        <span id="player-title">—</span>
+        <span id="player-artist">Select a track</span>
+      </div>
+    </div>
+    <div class="player-progress">
+      <input type="range" id="player-seek" min="0" max="100" value="0">
+    </div>
+    <div class="player-right">
+      <input type="range" id="player-vol" min="0" max="1" step="0.01" value="0.8">
+    </div>
+  </div>
+
+  <nav id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/brand/logo-black.jpg" alt="BTD" class="brand-mark">
+      <span class="brand-name">BEFORE<br>THE DATA</span>
+    </div>
+    <div class="sidebar-user">Chad Hillard</div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html" data-page="discover">🔍 Discover</a></li>
+      <li><a href="new-music.html" data-page="new-music">🎵 New Music</a></li>
+      <li><a href="popular.html" data-page="popular">📈 Popular</a></li>
+      <li><a href="search.html" data-page="search">🔎 Search</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Submit Music</a>
+    </div>
+  </nav>
+
+  <div id="mobile-nav">
+    <ul>
+      <li><a href="index.html" data-page="discover"><span class="nav-icon">🔍</span>Discover</a></li>
+      <li><a href="new-music.html" data-page="new-music"><span class="nav-icon">🎵</span>New Music</a></li>
+      <li><a href="popular.html" data-page="popular"><span class="nav-icon">📈</span>Popular</a></li>
+      <li><a href="search.html" data-page="search"><span class="nav-icon">🔎</span>Search</a></li>
+    </ul>
+  </div>
+
+  <div id="main">
+    <div id="post-container"></div>
+  </div>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) { document.getElementById('post-container').innerHTML = '<div class="empty-msg">Post not found</div>'; return; }
+
+      const post = await getPostById(id);
+      if (!post) { document.getElementById('post-container').innerHTML = '<div class="empty-msg">Post not found</div>'; return; }
+
+      document.title = `${post.title} by ${post.artist} — Before The Data`;
+
+      // Find next post
+      const allPosts = await getAllPosts();
+      const idx = allPosts.findIndex(p => p.id === post.id);
+      const nextPost = allPosts[idx + 1] || allPosts[0];
+
+      // Related: 3 posts excluding current
+      const related = allPosts.filter(p => p.id !== post.id).slice(0, 3);
+
+      const container = document.getElementById('post-container');
+      container.innerHTML = `
+        <!-- Hero -->
+        <div class="post-hero">
+          <div class="post-hero-bg" style="background-image: url('${post.artUrl}')"></div>
+          <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
+          <div class="post-hero-title">${post.title}</div>
+          <div class="post-hero-artist">${post.artist}</div>
+          <div class="post-hero-meta">${countryFlag(post.country)} Published ${timeAgo(post.publishedAt)} · ${(post.views || 0).toLocaleString()} views</div>
+          <div class="post-pills">
+            <span class="pill">Spotify</span>
+            <span class="pill">TikTok</span>
+            <span class="pill">Instagram</span>
+            <span class="pill">Twitter</span>
+            <span class="pill">Web</span>
+          </div>
+          <div class="post-share">
+            <button onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title + ' by ' + post.artist + ' — Before The Data')}&url=' + encodeURIComponent(window.location.href))">Share on X</button>
+            <button onclick="navigator.clipboard.writeText(window.location.href).then(() => this.textContent = 'Copied!')">Copy Link</button>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="post-body">
+          <div class="post-content">
+            <div class="post-writeup">${post.writeup}</div>
+            ${(post.tracks || []).length ? `
+              <div class="section-label mb-32">TRACKLIST</div>
+              <ol>${post.tracks.map(t => `<li>${t}</li>`).join('')}</ol>
+            ` : ''}
+            <div style="margin-top: 24px;" class="post-tags">
+              ${(post.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="post-sidebar">
+            <div class="sidebar-card">
+              <div class="sidebar-card-label">Written By</div>
+              <div class="written-by-name">${post.writtenBy?.name || 'BTD Staff'}</div>
+              <div class="written-by-loc">${post.writtenBy?.location || ''}</div>
+            </div>
+            ${nextPost ? `
+            <div class="sidebar-card">
+              <div class="sidebar-card-label">Next Post</div>
+              <a href="post.html?id=${nextPost.id}" class="next-post-link">
+                <img src="${nextPost.artUrl}" alt="${nextPost.title}">
+                <div>
+                  <div class="next-post-title">${nextPost.title}</div>
+                  <div class="next-post-artist">${nextPost.artist}</div>
+                </div>
+              </a>
+            </div>` : ''}
+            <div class="sidebar-card">
+              <div class="sidebar-card-label">Related Tracks</div>
+              ${related.map(r => `
+                <a href="post.html?id=${r.id}" class="related-item">
+                  <img src="${r.artUrl}" alt="${r.title}">
+                  <div>
+                    <div class="related-item-title">${r.title}</div>
+                    <div class="related-item-artist">${r.artist}</div>
+                  </div>
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Play button in hero — clicking art plays the track
+      container.querySelector('.post-hero-art')?.addEventListener('click', () => {
+        Player.playTrack(post);
+      });
+      container.querySelector('.post-hero-art').style.cursor = 'pointer';
+    });
+  </script>
+</body>
+</html>

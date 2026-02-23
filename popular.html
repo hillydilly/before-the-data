@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before The Data — Popular</title>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body data-page="popular">
+
+  <div id="player">
+    <div class="player-controls">
+      <button id="btn-prev">⏮</button>
+      <button id="btn-play">▶</button>
+      <button id="btn-next">⏭</button>
+    </div>
+    <div class="player-track">
+      <img id="player-art" src="" alt="">
+      <div class="player-info">
+        <span id="player-title">—</span>
+        <span id="player-artist">Select a track</span>
+      </div>
+    </div>
+    <div class="player-progress">
+      <input type="range" id="player-seek" min="0" max="100" value="0">
+    </div>
+    <div class="player-right">
+      <input type="range" id="player-vol" min="0" max="1" step="0.01" value="0.8">
+    </div>
+  </div>
+
+  <nav id="sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/brand/logo-black.jpg" alt="BTD" class="brand-mark">
+      <span class="brand-name">BEFORE<br>THE DATA</span>
+    </div>
+    <div class="sidebar-user">Chad Hillard</div>
+    <ul class="sidebar-nav">
+      <li><a href="index.html" data-page="discover">🔍 Discover</a></li>
+      <li><a href="new-music.html" data-page="new-music">🎵 New Music</a></li>
+      <li><a href="popular.html" data-page="popular">📈 Popular</a></li>
+      <li><a href="search.html" data-page="search">🔎 Search</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Submit Music</a>
+    </div>
+  </nav>
+
+  <div id="mobile-nav">
+    <ul>
+      <li><a href="index.html" data-page="discover"><span class="nav-icon">🔍</span>Discover</a></li>
+      <li><a href="new-music.html" data-page="new-music"><span class="nav-icon">🎵</span>New Music</a></li>
+      <li><a href="popular.html" data-page="popular"><span class="nav-icon">📈</span>Popular</a></li>
+      <li><a href="search.html" data-page="search"><span class="nav-icon">🔎</span>Search</a></li>
+    </ul>
+  </div>
+
+  <div id="main">
+    <div class="section-header">
+      <span class="section-label">POPULAR</span>
+      <span class="section-updated" id="pop-updated"></span>
+    </div>
+    <div class="chart-list" id="pop-list"></div>
+  </div>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const byViews = await getPostsByViews(25);
+      const list = document.getElementById('pop-list');
+      if (byViews.length) {
+        document.getElementById('pop-updated').textContent = 'Last updated ' + timeAgo(byViews[0].publishedAt);
+      }
+      byViews.forEach((p, i) => {
+        const row = document.createElement('div');
+        row.className = 'chart-row';
+        row.innerHTML = `
+          <span class="chart-rank">${i + 1}</span>
+          <div class="chart-play" onclick="event.stopPropagation(); Player.playTrack(${JSON.stringify(p).replace(/"/g, '&quot;')})">▶</div>
+          <img class="chart-art" src="${p.artUrl}" alt="${p.title}" loading="lazy">
+          <div class="chart-info">
+            <div class="chart-info-artist">${p.artist}</div>
+            <div class="chart-info-title">${p.title}</div>
+          </div>
+          <div class="chart-actions">
+            <button title="Like">♡</button>
+            <button title="More">•••</button>
+          </div>
+        `;
+        row.addEventListener('click', () => { window.location.href = 'post.html?id=' + p.id; });
+        list.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>
