@@ -156,6 +156,13 @@ const Player = (() => {
     _playCurrentTrack();
   }
 
+  // Pre-load a section as the queue without starting playback
+  function setQueue(tracks) {
+    if (!tracks || tracks.length === 0) return;
+    queue = tracks.map(t => ({ id: t.id, title: t.title, artist: t.artist, artUrl: t.artUrl, previewUrl: t.previewUrl }));
+    saveState();
+  }
+
   // Event listeners
   if (playBtn) playBtn.addEventListener('click', togglePlay);
   if (prevBtn) prevBtn.addEventListener('click', prev);
@@ -170,5 +177,5 @@ const Player = (() => {
   // Init
   document.addEventListener('DOMContentLoaded', restoreState);
 
-  return { play, togglePlay, next, prev, getQueue: () => queue, getCurrent: () => queue[currentIndex] };
+  return { play, togglePlay, next, prev, setQueue, getQueue: () => queue, getCurrent: () => queue[currentIndex] };
 })();

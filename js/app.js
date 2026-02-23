@@ -35,17 +35,22 @@ function createMusicCard(post) {
   const card = document.createElement('div');
   card.className = 'music-card';
   card.innerHTML = `
-    <div class="card-art">
+    <div class="card-art" data-playing-id="${post.id}">
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
     <div class="card-title">${post.title}</div>
     <div class="card-artist">${post.artist}</div>
   `;
-  // Click art area (including play overlay) → play preview
+  // Click art area → play or pause if already playing this track
   card.querySelector('.card-art').addEventListener('click', (e) => {
     e.stopPropagation();
-    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    const current = Player.getCurrent();
+    if (current && current.id === post.id) {
+      Player.togglePlay(); // pause/resume if this card is active
+    } else {
+      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    }
   });
   // Click title or artist → navigate to post
   card.querySelector('.card-title').addEventListener('click', (e) => {
@@ -132,6 +137,7 @@ async function renderDiscover() {
 
   // New Music: demo/Firebase posts
   const latest = await fetchPosts('publishedAt', 'desc', 10);
+  Player.setQueue(latest); // pre-load so next/prev works across all cards
   latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
 
   // Charts: real data from Firebase btd_charts
@@ -151,6 +157,7 @@ async function renderNewMusic() {
   if (!grid) return;
 
   const posts = await fetchPosts('publishedAt', 'desc', 50);
+  Player.setQueue(posts); // pre-load full page as queue
   posts.forEach(p => {
     const card = createMusicCard(p);
     const dateEl = document.createElement('div');
