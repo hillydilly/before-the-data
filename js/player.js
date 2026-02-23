@@ -1,112 +1,174 @@
-/* === Before The Data — Audio Player === */
+/* ============================================
+   Before The Data — Audio Player
+   ============================================ */
 
 const Player = (() => {
   let audio = new Audio();
   let queue = [];
-  let currentIdx = -1;
+  let currentIndex = -1;
   let isPlaying = false;
 
-  const $ = id => document.getElementById(id);
+  // DOM refs
+  const bar = document.getElementById('player-bar');
+  const artEl = bar?.querySelector('.player-art');
+  const titleEl = bar?.querySelector('.player-title');
+  const sourceEl = bar?.querySelector('.player-source');
+  const playBtn = bar?.querySelector('.play-btn');
+  const prevBtn = bar?.querySelector('.prev-btn');
+  const nextBtn = bar?.querySelector('.next-btn');
+  const heartBtn = bar?.querySelector('.heart-btn');
+  const progressFill = bar?.querySelector('.player-progress-fill');
+  const volumeSlider = bar?.querySelector('.volume-slider');
 
-  function init() {
-    audio.volume = 0.8;
-
-    // Restore state from sessionStorage
-    const saved = sessionStorage.getItem('btd_player');
-    if (saved) {
-      try {
+  // Restore state from sessionStorage
+  function restoreState() {
+    try {
+      const saved = sessionStorage.getItem('btd_player');
+      if (saved) {
         const s = JSON.parse(saved);
-        queue = s.queue || [];
-        currentIdx = s.currentIdx ?? -1;
-        if (queue[currentIdx]) updateUI(queue[currentIdx]);
-      } catch (e) {}
-    }
-
-    // Controls
-    $('btn-play')?.addEventListener('click', toggle);
-    $('btn-prev')?.addEventListener('click', prev);
-    $('btn-next')?.addEventListener('click', next);
-    $('player-vol')?.addEventListener('input', e => { audio.volume = e.target.value; });
-
-    // Audio events
-    audio.addEventListener('ended', next);
-    audio.addEventListener('play', () => { isPlaying = true; updatePlayBtn(); });
-    audio.addEventListener('pause', () => { isPlaying = false; updatePlayBtn(); });
+        if (s.queue) queue = s.queue;
+        if (typeof s.currentIndex === 'number') currentIndex = s.currentIndex;
+        if (s.volume !== undefined && volumeSlider) {
+          audio.volume = s.volume;
+          volumeSlider.value = s.volume;
+        }
+        if (currentIndex >= 0 && queue[currentIndex]) {
+          updateUI(queue[currentIndex]);
+        }
+      }
+    } catch (e) {}
   }
 
   function saveState() {
-    sessionStorage.setItem('btd_player', JSON.stringify({ queue, currentIdx }));
+    try {
+      sessionStorage.setItem('btd_player', JSON.stringify({
+        queue: queue.slice(0, 50),
+        currentIndex,
+        volume: audio.volume
+      }));
+    } catch (e) {}
   }
 
   function updateUI(track) {
-    if (!track) return;
-    const art = $('player-art');
-    const title = $('player-title');
-    const artist = $('player-artist');
-    if (art) { art.src = track.artUrl || ''; art.alt = track.title; }
-    if (title) title.textContent = track.title || '—';
-    if (artist) artist.textContent = track.artist || 'Select a track';
-  }
-
-  function updatePlayBtn() {
-    const btn = $('btn-play');
-    if (btn) btn.textContent = isPlaying ? '⏸' : '▶';
-  }
-
-  function playTrack(track) {
-    // Add to queue if not already current
-    const idx = queue.findIndex(t => t.id === track.id);
-    if (idx >= 0) {
-      currentIdx = idx;
-    } else {
-      queue.push(track);
-      currentIdx = queue.length - 1;
+    if (!bar) return;
+    if (artEl) {
+      artEl.src = track.artUrl || '';
+      artEl.alt = track.title || '';
     }
+    if (titleEl) titleEl.textContent = `${track.artist} — ${track.title}`;
+    if (sourceEl) sourceEl.textContent = 'SPOTIFY';
+  }
+
+  function updatePlayButton() {
+    if (playBtn) {
+      playBtn.innerHTML = isPlaying ? '&#9646;&#9646;' : '&#9654;';
+    }
+    // Update all page play buttons
+    document.querySelectorAll('[data-playing-id]').forEach(el => {
+      el.classList.remove('is-playing');
+    });
+    if (isPlaying && queue[currentIndex]) {
+      document.querySelectorAll(`[data-playing-id="${queue[currentIndex].id}"]`).forEach(el => {
+        el.classList.add('is-playing');
+      });
+    }
+  }
+
+  // Audio events
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration && progressFill) {
+      progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    }
+  });
+
+  audio.addEventListener('ended', () => {
+    next();
+  });
+
+  audio.addEventListener('error', () => {
+    console.warn('[BTD Player] Audio error, skipping');
+    next();
+  });
+
+  // Controls
+  function play(track, newQueue) {
+    if (newQueue) {
+      queue = newQueue;
+      currentIndex = queue.findIndex(t => t.id === track.id);
+      if (currentIndex === -1) { queue.unshift(track); currentIndex = 0; }
+    } else {
+      const idx = queue.findIndex(t => t.id === track.id);
+      if (idx >= 0) {
+        currentIndex = idx;
+      } else {
+        queue.push(track);
+        currentIndex = queue.length - 1;
+      }
+    }
+    _playCurrentTrack();
+  }
+
+  function _playCurrentTrack() {
+    const track = queue[currentIndex];
+    if (!track || !track.previewUrl) {
+      updateUI(track || { artist: '', title: 'No preview available', artUrl: '' });
+      isPlaying = false;
+      updatePlayButton();
+      saveState();
+      return;
+    }
+    audio.src = track.previewUrl;
+    audio.play().then(() => {
+      isPlaying = true;
+      updatePlayButton();
+    }).catch(() => {
+      isPlaying = false;
+      updatePlayButton();
+    });
     updateUI(track);
     saveState();
+  }
 
-    if (track.previewUrl) {
-      audio.src = track.previewUrl;
-      audio.play().catch(() => {});
-    } else {
-      // No preview available — just update UI
+  function togglePlay() {
+    if (!audio.src && queue[currentIndex]) {
+      _playCurrentTrack();
+      return;
+    }
+    if (isPlaying) {
       audio.pause();
       isPlaying = false;
-      updatePlayBtn();
+    } else {
+      audio.play().catch(() => {});
+      isPlaying = true;
     }
-  }
-
-  function setQueue(tracks, startIdx = 0) {
-    queue = tracks;
-    if (queue[startIdx]) {
-      currentIdx = startIdx;
-      playTrack(queue[startIdx]);
-    }
-    saveState();
-  }
-
-  function toggle() {
-    if (!audio.src && queue[currentIdx]?.previewUrl) {
-      audio.src = queue[currentIdx].previewUrl;
-    }
-    if (isPlaying) { audio.pause(); } else { audio.play().catch(() => {}); }
+    updatePlayButton();
   }
 
   function next() {
-    if (currentIdx < queue.length - 1) {
-      currentIdx++;
-      playTrack(queue[currentIdx]);
-    }
+    if (queue.length === 0) return;
+    currentIndex = (currentIndex + 1) % queue.length;
+    _playCurrentTrack();
   }
 
   function prev() {
-    if (currentIdx > 0) {
-      currentIdx--;
-      playTrack(queue[currentIdx]);
-    }
+    if (queue.length === 0) return;
+    currentIndex = (currentIndex - 1 + queue.length) % queue.length;
+    _playCurrentTrack();
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+  // Event listeners
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
+  if (prevBtn) prevBtn.addEventListener('click', prev);
+  if (nextBtn) nextBtn.addEventListener('click', next);
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+      audio.volume = parseFloat(e.target.value);
+      saveState();
+    });
+  }
 
-  return { playTrack, setQueue, toggle, next, prev };
+  // Init
+  document.addEventListener('DOMContentLoaded', restoreState);
+
+  return { play, togglePlay, next, prev, getQueue: () => queue, getCurrent: () => queue[currentIndex] };
 })();
