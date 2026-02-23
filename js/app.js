@@ -5,11 +5,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // Determine current page
   const path = window.location.pathname;
-  const page = path.includes('new-music') ? 'new-music'
+  // data-page on <body> is the authoritative signal (handles clean URLs like /sloe-jack-pour-me-a-drink)
+  const bodyPage = document.body.dataset.page;
+  const page = bodyPage || (
+    path.includes('new-music') ? 'new-music'
     : path.includes('popular') ? 'popular'
     : path.includes('search') ? 'search'
     : path.includes('post') ? 'post'
-    : 'discover';
+    : 'discover'
+  );
 
   // Highlight active nav
   document.querySelectorAll('#sidebar nav a').forEach(a => {
@@ -55,11 +59,11 @@ function createMusicCard(post) {
   // Click title or artist → navigate to post
   card.querySelector('.card-title').addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = `post.html?id=${post.id}`;
+    window.location.href = `/${post.id}`;
   });
   card.querySelector('.card-artist').addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = `post.html?id=${post.id}`;
+    window.location.href = `/${post.id}`;
   });
   return card;
 }
@@ -85,7 +89,7 @@ function createChartRow(post, rank) {
     Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
   });
   row.addEventListener('click', () => {
-    window.location.href = `post.html?id=${post.id}`;
+    window.location.href = `/${post.id}`;
   });
   return row;
 }
@@ -207,7 +211,7 @@ function initSearch() {
           </div>
         `;
         el.addEventListener('click', () => {
-          window.location.href = `post.html?id=${p.id}`;
+          window.location.href = `/${p.id}`;
         });
         results.appendChild(el);
       });
@@ -223,10 +227,13 @@ async function renderPost() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
   const slug = params.get('slug');
+  // Clean URL: /sloe-jack-pour-me-a-drink — slug lives in pathname
+  const pathSlug = window.location.pathname.replace(/^\//, '').replace(/\.html$/, '') || null;
 
   let post = null;
   if (id) post = await fetchPostById(id);
   else if (slug) post = await fetchPostBySlug(slug);
+  else if (pathSlug && pathSlug !== 'post') post = await fetchPostBySlug(pathSlug);
 
   if (!post) {
     document.getElementById('post-content').innerHTML =
@@ -337,7 +344,7 @@ async function renderPost() {
       const rel = await fetchPostById(rid);
       if (rel) {
         sidebarHTML += `
-          <a class="related-item" href="post.html?id=${rel.id}">
+          <a class="related-item" href="/${rel.id}">
             <img src="${rel.artUrl}" alt="${rel.title}" loading="lazy">
             <div>
               <div class="rel-title">${rel.title}</div>

@@ -1,0 +1,3 @@
+# Static pages served directly (no redirect needed for .html files)
+# Catch-all: clean post URLs → post.html (Netlify rewrite, URL stays clean)
+/:slug  /post.html  200
