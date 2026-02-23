@@ -78,48 +78,6 @@ function createChartRow(post, rank) {
   return row;
 }
 
-/* --- YouTube Player Modal --- */
-let ytModal = null;
-
-function openYouTubeModal(track) {
-  if (ytModal) ytModal.remove();
-
-  ytModal = document.createElement('div');
-  ytModal.id = 'yt-modal';
-  ytModal.innerHTML = `
-    <div class="yt-backdrop"></div>
-    <div class="yt-panel">
-      <div class="yt-header">
-        <div class="yt-track-info">
-          <div class="yt-title">${track.title}</div>
-          <div class="yt-artist">${track.artist}</div>
-        </div>
-        <button class="yt-close" title="Close">✕</button>
-      </div>
-      <div class="yt-embed">
-        <iframe
-          src="https://www.youtube.com/embed/${track.ytId}?autoplay=1&rel=0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen
-          frameborder="0">
-        </iframe>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(ytModal);
-  requestAnimationFrame(() => ytModal.classList.add('open'));
-
-  const close = () => {
-    ytModal.classList.remove('open');
-    setTimeout(() => ytModal?.remove(), 300);
-    ytModal = null;
-  };
-  ytModal.querySelector('.yt-close').addEventListener('click', close);
-  ytModal.querySelector('.yt-backdrop').addEventListener('click', close);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); }, { once: true });
-}
-
 function createChartRowFromTrack(track) {
   const row = document.createElement('div');
   row.className = 'chart-row';
@@ -136,22 +94,23 @@ function createChartRowFromTrack(track) {
       <button title="Like">&#9825;</button>
     </div>
   `;
+  // Disable play button if no preview available
+  if (!track.previewUrl) {
+    row.querySelector('.chart-play').disabled = true;
+    row.querySelector('.chart-play').title = 'No preview available';
+    row.querySelector('.chart-play').style.opacity = '0.3';
+  }
+
   const playFn = (e) => {
     if (e) e.stopPropagation();
-    if (track.previewUrl) {
-      // Apple Music preview — play in top player bar
-      Player.play({
-        id: track.spotifyId,
-        title: track.title,
-        artist: track.artist,
-        artUrl: track.artUrl || thumb,
-        previewUrl: track.previewUrl,
-        ytId: track.ytId
-      });
-    } else if (track.ytId) {
-      // No preview — fall back to YouTube modal
-      openYouTubeModal(track);
-    }
+    if (!track.previewUrl) return; // no preview — do nothing
+    Player.play({
+      id: track.spotifyId,
+      title: track.title,
+      artist: track.artist,
+      artUrl: track.artUrl || thumb,
+      previewUrl: track.previewUrl
+    });
   };
   row.querySelector('.chart-play').addEventListener('click', playFn);
   row.addEventListener('click', playFn);
