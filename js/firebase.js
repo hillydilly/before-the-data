@@ -198,56 +198,88 @@ function initFirebase() {
   }
 }
 
+/* Parse a Firestore REST document into a plain post object */
+function parsePostDoc(doc) {
+  const f = doc.fields || {};
+  const id = doc.name?.split('/').pop() || '';
+
+  function strVal(field) { return field?.stringValue || ''; }
+  function intVal(field) { return parseInt(field?.integerValue || 0); }
+  function boolVal(field) { return field?.booleanValue || false; }
+  function arrVal(field) { return (field?.arrayValue?.values || []).map(v => v.stringValue || ''); }
+  function mapVal(field) {
+    const fields = field?.mapValue?.fields || {};
+    return Object.fromEntries(Object.entries(fields).map(([k,v]) => [k, strVal(v)]));
+  }
+
+  const slug = strVal(f.slug) || id.replace('btd_post_','');
+  return {
+    id: strVal(f.id) || slug,
+    slug,
+    title: strVal(f.title),
+    artist: strVal(f.artist),
+    artUrl: strVal(f.artUrl),
+    artUrlSm: strVal(f.artUrlSm),
+    previewUrl: strVal(f.previewUrl),
+    spotifyId: strVal(f.spotifyId),
+    country: strVal(f.country),
+    publishedAt: { seconds: Math.floor(new Date(strVal(f.publishedAt) || Date.now()).getTime() / 1000) },
+    tags: arrVal(f.tags),
+    socialLinks: mapVal(f.socialLinks),
+    writeup: strVal(f.writeup),
+    tracks: [],
+    writtenBy: mapVal(f.writtenBy),
+    views: intVal(f.views)
+  };
+}
+
+/* Fetch all posts from config collection (btd_post_* docs) via REST */
+async function fetchPostsFromFirebase() {
+  try {
+    const res = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=100`
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
+    if (docs.length === 0) return null;
+    return docs.map(parsePostDoc);
+  } catch (e) {
+    console.warn('[BTD] Posts fetch failed:', e.message);
+    return null;
+  }
+}
+
 async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limitCount = 25) {
-  if (firebaseReady && db) {
-    try {
-      const snap = await db.collection('btd_posts')
-        .orderBy(orderByField, direction)
-        .limit(limitCount)
-        .get();
-      if (!snap.empty) {
-        const posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        if (posts.length > 0) return posts;
-      }
-    } catch (e) {
-      console.warn('[BTD] Firestore fetch failed, using demo:', e.message);
-    }
-  }
-  // Fallback to demo data
-  let sorted = [...DEMO_POSTS];
+  const livePosts = await fetchPostsFromFirebase();
+  const posts = livePosts || [...DEMO_POSTS];
+
   if (orderByField === 'views') {
-    sorted.sort((a, b) => direction === 'desc' ? b.views - a.views : a.views - b.views);
+    posts.sort((a, b) => direction === 'desc' ? b.views - a.views : a.views - b.views);
   } else {
-    sorted.sort((a, b) => direction === 'desc'
-      ? (b.publishedAt.seconds - a.publishedAt.seconds)
-      : (a.publishedAt.seconds - b.publishedAt.seconds));
+    posts.sort((a, b) => {
+      const aS = typeof a.publishedAt === 'object' ? a.publishedAt.seconds : Math.floor(new Date(a.publishedAt).getTime()/1000);
+      const bS = typeof b.publishedAt === 'object' ? b.publishedAt.seconds : Math.floor(new Date(b.publishedAt).getTime()/1000);
+      return direction === 'desc' ? bS - aS : aS - bS;
+    });
   }
-  return sorted.slice(0, limitCount);
+  return posts.slice(0, limitCount);
 }
 
 async function fetchPostById(id) {
-  if (firebaseReady && db) {
-    try {
-      const doc = await db.collection('btd_posts').doc(id).get();
-      if (doc.exists) return { id: doc.id, ...doc.data() };
-    } catch (e) {
-      console.warn('[BTD] Firestore fetch by ID failed:', e.message);
-    }
-  }
-  return DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
+  try {
+    const res = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${id}?key=${FIREBASE_CONFIG.apiKey}`
+    );
+    if (res.ok) return parsePostDoc(await res.json());
+  } catch(e) {}
+  // Try slug lookup
+  const all = await fetchPosts('publishedAt', 'desc', 100);
+  return all.find(p => p.id === id || p.slug === id) || DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
 }
 
 async function fetchPostBySlug(slug) {
-  if (firebaseReady && db) {
-    try {
-      const snap = await db.collection('btd_posts')
-        .where('slug', '==', slug).limit(1).get();
-      if (!snap.empty) return { id: snap.docs[0].id, ...snap.docs[0].data() };
-    } catch (e) {
-      console.warn('[BTD] Firestore fetch by slug failed:', e.message);
-    }
-  }
-  return DEMO_POSTS.find(p => p.slug === slug) || null;
+  return fetchPostById(slug);
 }
 
 async function searchPosts(query) {
