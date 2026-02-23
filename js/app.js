@@ -227,7 +227,10 @@ async function renderPost() {
   const hero = document.getElementById('post-hero');
   hero.innerHTML = `
     <div class="post-hero-bg" style="background-image:url('${post.artUrl}')"></div>
-    <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
+    <div class="post-art-wrap" id="art-play-wrap">
+      <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
+      ${post.previewUrl ? `<div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>` : ''}
+    </div>
     <div class="post-hero-meta">
       <div class="post-artist">${post.artist}</div>
       <div class="post-title">${post.title}</div>
@@ -250,14 +253,22 @@ async function renderPost() {
     </div>
   `;
 
-  // Play button — play Apple Music preview
+  // Play button — play preview
+  const playPost = () => {
+    if (!post.previewUrl) return;
+    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    const playBtn = document.getElementById('hero-play-btn');
+    if (playBtn) playBtn.textContent = '▶ Playing in player bar ↑';
+  };
+
+  const artWrap = document.getElementById('art-play-wrap');
+  if (artWrap && post.previewUrl) {
+    artWrap.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
+  }
+
   const playBtn = document.getElementById('hero-play-btn');
   if (playBtn && post.previewUrl) {
-    playBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-      playBtn.textContent = '▶ Playing in player bar ↑';
-    });
+    playBtn.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
   }
 
   // Body
