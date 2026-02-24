@@ -237,7 +237,7 @@ function parsePostDoc(doc) {
 async function fetchPostsFromFirebase() {
   try {
     const res = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=100`
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500`
     );
     if (!res.ok) return null;
     const data = await res.json();
