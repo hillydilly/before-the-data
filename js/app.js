@@ -357,4 +357,71 @@ async function renderPost() {
     sidebarHTML += '</section>';
   }
   sidebar.innerHTML = sidebarHTML;
+
+  updatePostMeta(post);
+  updateJsonLd(post);
+}
+
+// ─── SEO: Dynamic meta tags for post pages ───────────────────────────────────
+function setMeta(property, content) {
+  let el = document.querySelector(`meta[property="${property}"]`) ||
+           document.querySelector(`meta[name="${property}"]`);
+  if (el) el.content = content;
+}
+
+function updatePostMeta(post) {
+  const title = `${post.artist} - "${post.title}" | Before The Data`;
+  const rawDesc = post.writeup ? post.writeup.replace(/<[^>]+>/g, '') : '';
+  const description = rawDesc.length > 155
+    ? rawDesc.substring(0, 152) + '...'
+    : (rawDesc || `Free music discovery — ${post.artist} - ${post.title} on Before The Data`);
+  const image = post.artUrl || 'https://beforethedata.com/assets/og-image.jpg';
+  const url = `https://beforethedata.com/${post.slug || post.id}`;
+
+  document.title = title;
+
+  // Standard
+  setMeta('description', description);
+
+  // OG
+  setMeta('og:title', title);
+  setMeta('og:description', description);
+  setMeta('og:image', image);
+  setMeta('og:url', url);
+  setMeta('og:type', 'article');
+
+  // Twitter
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', description);
+  setMeta('twitter:image', image);
+
+  // Canonical
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.href = url;
+}
+
+function updateJsonLd(post) {
+  const existing = document.getElementById('post-jsonld');
+  if (existing) existing.remove();
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'post-jsonld';
+  script.textContent = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "name": `${post.artist} - "${post.title}"`,
+    "author": { "@type": "Person", "name": "Chad Hillard" },
+    "itemReviewed": {
+      "@type": "MusicRecording",
+      "name": post.title,
+      "byArtist": { "@type": "MusicGroup", "name": post.artist }
+    },
+    "reviewBody": post.writeup ? post.writeup.replace(/<[^>]+>/g, '') : '',
+    "publisher": {
+      "@type": "Organization",
+      "name": "Before The Data",
+      "url": "https://beforethedata.com"
+    }
+  });
+  document.head.appendChild(script);
 }
