@@ -825,3 +825,13 @@ ul { list-style: none; }
   color: var(--tx-3);
   margin-top: 6px;
 }
+
+/* ============================================
+   NEW MUSIC — MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .music-list-item .list-art {
+    width: 100px;
+    height: 100px;
+  }
+}
