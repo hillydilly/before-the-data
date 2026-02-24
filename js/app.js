@@ -156,20 +156,82 @@ async function renderDiscover() {
 }
 
 /* --- New Music Page --- */
+function createListItem(post) {
+  const item = document.createElement('div');
+  item.className = 'music-list-item';
+  item.dataset.id = post.id;
+
+  // Strip HTML from writeup
+  const rawWriteup = post.writeup || '';
+  const writeupText = rawWriteup.replace(/<[^>]*>/g, '').trim();
+
+  item.innerHTML = `
+    <div class="list-art">
+      <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
+      <div class="list-play-overlay">
+        <button class="list-play-btn">&#9654;</button>
+      </div>
+    </div>
+    <div class="list-info">
+      <div class="list-artist">${post.artist}</div>
+      <div class="list-title">${post.title}</div>
+      ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
+      <div class="list-date">${timeAgo(post.publishedAt)}</div>
+    </div>
+  `;
+
+  item.querySelector('.list-play-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const current = Player.getCurrent();
+    if (current && current.id === post.id) {
+      Player.togglePlay();
+    } else {
+      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    }
+  });
+
+  item.querySelector('.list-info').addEventListener('click', () => {
+    window.location.href = `/${post.id}`;
+  });
+
+  return item;
+}
+
 async function renderNewMusic() {
   const grid = document.getElementById('music-grid');
   if (!grid) return;
 
   const posts = await fetchPosts('publishedAt', 'desc', 500);
-  Player.setQueue(posts); // pre-load full page as queue
-  posts.forEach(p => {
-    const card = createMusicCard(p);
-    const dateEl = document.createElement('div');
-    dateEl.className = 'card-date';
-    dateEl.textContent = timeAgo(p.publishedAt);
-    card.appendChild(dateEl);
-    grid.appendChild(card);
-  });
+  Player.setQueue(posts);
+
+  // Default: list view
+  let currentView = localStorage.getItem('btd-view') || 'list';
+
+  function renderView(view) {
+    grid.innerHTML = '';
+    if (view === 'list') {
+      grid.className = 'music-grid list-view';
+      posts.forEach(p => grid.appendChild(createListItem(p)));
+    } else {
+      grid.className = 'music-grid';
+      posts.forEach(p => {
+        const card = createMusicCard(p);
+        const dateEl = document.createElement('div');
+        dateEl.className = 'card-date';
+        dateEl.textContent = timeAgo(p.publishedAt);
+        card.appendChild(dateEl);
+        grid.appendChild(card);
+      });
+    }
+    document.getElementById('view-list')?.classList.toggle('active', view === 'list');
+    document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
+    localStorage.setItem('btd-view', view);
+  }
+
+  renderView(currentView);
+
+  document.getElementById('view-list')?.addEventListener('click', () => renderView('list'));
+  document.getElementById('view-grid')?.addEventListener('click', () => renderView('grid'));
 }
 
 /* --- Popular Page --- */
