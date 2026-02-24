@@ -160,7 +160,7 @@ async function renderNewMusic() {
   const grid = document.getElementById('music-grid');
   if (!grid) return;
 
-  const posts = await fetchPosts('publishedAt', 'desc', 50);
+  const posts = await fetchPosts('publishedAt', 'desc', 500);
   Player.setQueue(posts); // pre-load full page as queue
   posts.forEach(p => {
     const card = createMusicCard(p);
