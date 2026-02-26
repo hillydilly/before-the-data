@@ -1,13 +1,13 @@
+functionsDirectory = "/Users/clawdbot/before-the-data/netlify/functions"
+functionsDirectoryOrigin = "default"
 plugins = []
 headers = []
 
-[functions]
-
-[functions."*"]
-
 [build]
+edge_functions = "/Users/clawdbot/before-the-data/netlify/edge-functions"
 publish = "/Users/clawdbot/before-the-data"
-publishOrigin = "default"
+publishOrigin = "ui"
+functions = "/Users/clawdbot/before-the-data/netlify/functions"
 
 [build.environment]
 
@@ -22,6 +22,14 @@ publishOrigin = "default"
 [build.processing.js]
 
 [build.services]
+
+[[edge_functions]]
+path = "/*"
+function = "og"
+
+[functions]
+
+[functions."*"]
 
 [[redirects]]
 from = "/:slug"
