@@ -1,2 +1,6 @@
 # Local Netlify folder
 .netlify
+remotion/output/
+remotion/node_modules/
+*.mp4
+*.mov
