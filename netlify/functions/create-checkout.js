@@ -28,7 +28,6 @@ export default async (req) => {
         'line_items[0][quantity]': '1',
         'success_url': `${origin}/heard-first.html?success=1&session_id={CHECKOUT_SESSION_ID}`,
         'cancel_url': `${origin}/heard-first.html`,
-        'customer_creation': 'always',
         'billing_address_collection': 'auto',
       }).toString()
     });
