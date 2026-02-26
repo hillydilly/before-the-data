@@ -5,231 +5,122 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit Music — Before The Data</title>
   <meta name="description" content="Submit your music to Before The Data. Chad listens to everything personally.">
-  <meta name="author" content="Chad Hillard">
   <link rel="canonical" href="https://beforethedata.com/submit.html">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://beforethedata.com/submit.html">
   <meta property="og:title" content="Submit Music — Before The Data">
   <meta property="og:description" content="Chad listens to everything personally.">
   <meta property="og:image" content="https://beforethedata.com/assets/og-image.jpg">
-  <meta property="og:site_name" content="Before The Data">
   <link rel="stylesheet" href="css/main.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
-    /* ── Submit Page Styles ── */
-    .submit-wrap {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-    .submit-header {
-      margin-bottom: 40px;
-    }
+    .submit-wrap { max-width: 560px; margin: 0 auto; padding: 40px 24px 80px; }
+    .submit-header { margin-bottom: 40px; }
     .submit-header h1 {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 52px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      line-height: 1;
-      margin: 0 0 12px;
+      font-size: 52px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; line-height: 1; margin: 0 0 12px;
     }
-    .submit-header p {
-      font-size: 15px;
-      color: #555;
-      line-height: 1.6;
-      margin: 0;
-    }
-    /* Steps */
-    .step-block {
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
-    .step-block.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .submit-header p { font-size: 15px; color: #555; line-height: 1.6; margin: 0; }
 
-    /* Cards */
+    .step-block { display: none; animation: fadeIn 0.25s ease; }
+    .step-block.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
     .submit-card {
-      border: 1px solid #e0e0e0;
-      padding: 32px;
-      margin-bottom: 24px;
+      border: 1px solid #e8e8e8; padding: 32px; margin-bottom: 24px;
     }
     .submit-card h2 {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 0 0 8px;
+      font-size: 28px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; margin: 0 0 8px; color: #000;
     }
-    .submit-card p {
-      font-size: 14px;
-      color: #555;
-      line-height: 1.6;
-      margin: 0 0 20px;
-    }
+    .submit-card p { font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 24px; }
 
-    /* Form fields */
-    .field-group { margin-bottom: 16px; }
-    .field-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #000;
-      margin-bottom: 6px;
+    /* Tier toggle */
+    .tier-toggle {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
     }
-    .field-group .req { color: #999; font-weight: 400; }
-    .field-input, .field-textarea, .field-select {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid #e0e0e0;
-      font-family: inherit;
-      font-size: 14px;
-      background: #fafafa;
-      color: #000;
-      outline: none;
-      transition: border-color 0.15s;
-      box-sizing: border-box;
+    .tier-option {
+      border: 2px solid #e8e8e8; padding: 20px 16px; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s; position: relative;
+      text-align: center;
     }
-    .field-input:focus, .field-textarea:focus, .field-select:focus {
-      border-color: #000;
+    .tier-option:hover { border-color: #ccc; }
+    .tier-option.selected { border-color: #000; background: #000; color: #fff; }
+    .tier-option.selected .tier-label { color: #fff; }
+    .tier-option.selected .tier-price { color: #fff; }
+    .tier-option.selected .tier-desc { color: #aaa; }
+    .tier-badge {
+      position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+      background: #000; color: #fff; font-size: 9px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px;
+      white-space: nowrap;
+    }
+    .tier-option.selected .tier-badge { background: #fff; color: #000; }
+    .tier-label { font-size: 13px; font-weight: 700; color: #000; display: block; margin-bottom: 4px; }
+    .tier-price { font-size: 22px; font-weight: 700; color: #000; display: block; margin-bottom: 6px; }
+    .tier-desc { font-size: 11px; color: #888; line-height: 1.4; display: block; }
+
+    .field-group { margin-bottom: 20px; }
+    .field-group label { display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #333; margin-bottom: 8px; }
+    .req { font-weight: 400; color: #999; }
+    .field-input {
+      width: 100%; padding: 12px 14px; border: 1px solid #ddd;
+      font-size: 14px; font-family: inherit; color: #000;
+      box-sizing: border-box; outline: none; transition: border-color 0.15s;
       background: #fff;
     }
-    .field-textarea { resize: vertical; min-height: 100px; }
-    .char-count { font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+    .field-input:focus { border-color: #000; }
+    .field-textarea {
+      width: 100%; padding: 12px 14px; border: 1px solid #ddd;
+      font-size: 14px; font-family: inherit; color: #000;
+      box-sizing: border-box; outline: none; resize: vertical; min-height: 100px;
+      transition: border-color 0.15s; background: #fff;
+    }
+    .field-textarea:focus { border-color: #000; }
+    .char-count { font-size: 11px; color: #bbb; text-align: right; margin-top: 4px; }
     .char-count.over { color: #c00; }
 
-    /* Buttons */
+    .divider { border: none; border-top: 1px solid #eee; margin: 24px 0; }
+
     .btn-primary {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background: #000;
-      color: #fff;
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      border: none;
-      cursor: pointer;
-      transition: background 0.15s;
-      text-align: center;
+      display: block; width: 100%; background: #000; color: #fff;
+      font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 16px; border: none; cursor: pointer; font-family: inherit;
+      transition: opacity 0.15s; margin-top: 8px;
     }
-    .btn-primary:hover { background: #222; }
+    .btn-primary:hover { opacity: 0.85; }
     .btn-primary:disabled { opacity: 0.5; cursor: default; }
 
-    /* Heard First pitch (after email gate) */
-    .heard-first-pitch {
-      background: #000;
-      color: #fff;
-      padding: 24px 32px;
-      margin-bottom: 24px;
+    .btn-secondary {
+      display: block; width: 100%; background: #fff; color: #000;
+      font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      padding: 16px; border: 2px solid #000; cursor: pointer; font-family: inherit;
+      transition: all 0.15s; margin-top: 12px;
     }
-    .heard-first-pitch h3 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 0 0 8px;
-    }
-    .heard-first-pitch p {
-      font-size: 13px;
-      color: #ccc;
-      line-height: 1.5;
-      margin: 0 0 16px;
-    }
-    .heard-first-pitch a {
-      display: inline-block;
-      padding: 9px 20px;
-      background: #fff;
-      color: #000;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-decoration: none;
-    }
-    .heard-first-pitch a:hover { background: #f0f0f0; }
+    .btn-secondary:hover { background: #f5f5f5; }
 
-    /* Price badge */
-    .price-badge {
-      display: inline-block;
-      background: #000;
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      margin-bottom: 16px;
-    }
-
-    /* Divider */
-    .divider { border: none; border-top: 1px solid #e0e0e0; margin: 24px 0; }
-
-    /* Success state */
-    .success-card {
-      border: 2px solid #000;
-      padding: 48px 40px;
-      text-align: center;
-    }
-    .success-card .success-icon { font-size: 48px; margin-bottom: 20px; }
-    .success-card h2 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin: 0 0 12px;
-    }
-    .success-card p { font-size: 15px; color: #555; line-height: 1.6; margin: 0; }
-
-    /* Error */
-    .form-error {
-      background: #fff0f0;
-      border: 1px solid #fcc;
-      color: #c00;
-      padding: 12px 16px;
-      font-size: 13px;
-      margin-bottom: 16px;
-      display: none;
-    }
+    .form-error { display: none; color: #c00; font-size: 13px; margin-bottom: 16px; padding: 10px 14px; background: #fff5f5; border-left: 3px solid #c00; }
     .form-error.visible { display: block; }
 
-    /* Fine print */
-    .fine-print {
-      font-size: 12px;
-      color: #999;
-      line-height: 1.5;
-      margin-top: 12px;
-    }
+    .fine-print { font-size: 11px; color: #999; line-height: 1.5; margin-top: 12px; }
     .fine-print a { color: #000; text-decoration: underline; }
 
-    /* Step indicator */
-    .step-indicator {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 32px;
-      align-items: center;
+    /* Heard First pitch */
+    .hf-pitch {
+      background: #f9f9f9; border: 1px solid #eee; padding: 20px 24px;
+      margin-bottom: 24px;
     }
-    .step-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #e0e0e0;
-      transition: background 0.2s;
-    }
-    .step-dot.done { background: #000; }
-    .step-label {
-      font-size: 11px;
-      color: #999;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-    .step-label.current { color: #000; }
+    .hf-pitch h3 { font-size: 14px; font-weight: 700; margin: 0 0 6px; color: #000; }
+    .hf-pitch p { font-size: 13px; color: #555; line-height: 1.5; margin: 0 0 12px; }
+    .hf-pitch a { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #000; text-decoration: none; border-bottom: 1px solid #000; }
+
+    /* Success */
+    .success-card { text-align: center; padding: 60px 40px; border: 1px solid #eee; }
+    .success-icon { font-size: 48px; margin-bottom: 16px; }
+    .success-card h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 40px; font-weight: 700; text-transform: uppercase; margin: 0 0 12px; }
+    .success-card p { font-size: 15px; color: #555; line-height: 1.7; margin: 0; }
   </style>
 </head>
 <body data-page="submit">
@@ -293,31 +184,21 @@
         </div>
       </div>
 
-      <!-- STEP 2: Payment -->
-      <div id="step-payment" class="step-block">
-        <!-- Heard First pitch -->
-        <div class="heard-first-pitch">
-          <h3>★ Heard First — A&R Intel, 48 Hours Early</h3>
-          <p>Get the artists Chad finds before we publish. Playlist additions, stream milestones, breakout signals — delivered to your inbox before the blogs catch on.</p>
-          <a href="heard-first.html">Get Heard First →</a>
-        </div>
-
-        <div class="submit-card">
-          <h2>Submit Your Track</h2>
-          <span class="price-badge">$5 one-time</span>
-          <p>One submission. Chad personally listens. If it fits what we're looking for, you'll hear back.</p>
-          <div id="payment-error" class="form-error"></div>
-          <button class="btn-primary" id="checkout-btn">Pay $5 &amp; Submit →</button>
-          <p class="fine-print">Secure payment via Stripe. One-time charge, not a subscription.</p>
-        </div>
-      </div>
-
-      <!-- STEP 3: Submission Form (after paid=1 in URL) -->
+      <!-- STEP 2: Submission Form + Tier Choice -->
       <div id="step-form" class="step-block">
+
+        <div class="hf-pitch">
+          <h3>★ Heard First — A&R Intel, 48 Hours Early</h3>
+          <p>Get every artist Chad finds before we publish — plus the full data behind it.</p>
+          <a href="heard-first.html">Learn more →</a>
+        </div>
+
         <div class="submit-card">
           <h2>Your Track Info</h2>
-          <p>Fill this out. The more detail the better. Chad reads every word.</p>
+          <p>Fill this out. The more detail, the better.</p>
+
           <div id="submit-error" class="form-error"></div>
+
           <form id="submit-form">
             <div class="field-group">
               <label for="spotify-url">Spotify Track URL <span class="req">*</span></label>
@@ -345,8 +226,29 @@
               <textarea id="bio" class="field-textarea" placeholder="Who you are, where you're from, what this track is about..." maxlength="300"></textarea>
               <div class="char-count"><span id="bio-count">0</span>/300</div>
             </div>
-            <button type="submit" class="btn-primary" id="submit-btn">Send It In →</button>
-            <p class="fine-print">By submitting you confirm this is your original work.</p>
+
+            <hr class="divider">
+
+            <!-- Tier choice -->
+            <div class="field-group">
+              <label>Submission Type</label>
+              <div class="tier-toggle">
+                <div class="tier-option" id="tier-free" onclick="selectTier('free')">
+                  <span class="tier-label">Standard</span>
+                  <span class="tier-price">Free</span>
+                  <span class="tier-desc">Goes into the queue. No guarantee on timeline.</span>
+                </div>
+                <div class="tier-option selected" id="tier-paid" onclick="selectTier('paid')">
+                  <span class="tier-badge">Recommended</span>
+                  <span class="tier-label">Guaranteed Listen</span>
+                  <span class="tier-price">$5</span>
+                  <span class="tier-desc">Chad personally listens within 7 days. Jumps to the top.</span>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="submit-btn">Submit Track →</button>
+            <p class="fine-print">By submitting you confirm this is your original work. Paid submissions are processed via Stripe. No refunds on paid submissions.</p>
           </form>
         </div>
       </div>
@@ -356,9 +258,10 @@
         <div class="success-card">
           <div class="success-icon">📬</div>
           <h2>We Got It.</h2>
-          <p>Your track is in the queue. Chad listens to everything personally. You'll hear back.<br><br>Check your inbox for a confirmation.</p>
+          <p id="success-msg">Your track is in the queue. Chad listens to everything personally. You'll hear back.<br><br>Check your inbox for a confirmation.</p>
         </div>
       </div>
+
     </div>
   </main>
 
@@ -367,45 +270,48 @@
   <script src="js/firebase.js"></script>
   <script src="js/player.js"></script>
   <script>
-    /* ── Submit Music Page Logic ── */
     const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
     const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
 
     const params = new URLSearchParams(window.location.search);
-    const paid = params.get('paid') === '1';
+    const paidReturn = params.get('paid') === '1';
     const sessionId = params.get('session_id') || '';
 
     let capturedEmail = '';
+    let selectedTier = 'paid'; // default to recommended
 
-    // Try to restore email from storage
     try { capturedEmail = localStorage.getItem('btd_submit_email') || ''; } catch(e) {}
 
     function showStep(id) {
       document.querySelectorAll('.step-block').forEach(el => el.classList.remove('active'));
-      const el = document.getElementById(id);
-      if (el) el.classList.add('active');
+      document.getElementById(id)?.classList.add('active');
     }
 
-    // If already paid, skip to form
-    if (paid) {
+    function selectTier(tier) {
+      selectedTier = tier;
+      document.getElementById('tier-free').classList.toggle('selected', tier === 'free');
+      document.getElementById('tier-paid').classList.toggle('selected', tier === 'paid');
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = tier === 'paid' ? 'Pay $5 & Submit →' : 'Submit Track (Free) →';
+    }
+
+    // On load
+    if (paidReturn) {
+      // Came back from Stripe — show form, prefill as paid, skip tier choice
       showStep('step-form');
+      document.querySelector('.tier-toggle').style.display = 'none';
+      selectedTier = 'paid';
     } else if (capturedEmail) {
-      showStep('step-payment');
+      showStep('step-form');
     }
 
-    // Email form
-    const emailForm = document.getElementById('email-form');
-    const emailError = document.getElementById('email-error');
-    const emailSubmitBtn = document.getElementById('email-submit-btn');
-
-    emailForm.addEventListener('submit', async (e) => {
+    // Email gate
+    document.getElementById('email-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('gate-email').value.trim();
       if (!email) return;
-
-      emailSubmitBtn.textContent = 'Saving...';
-      emailSubmitBtn.disabled = true;
-      emailError.classList.remove('visible');
+      const btn = document.getElementById('email-submit-btn');
+      btn.textContent = 'Saving...'; btn.disabled = true;
 
       try {
         const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -421,45 +327,16 @@
         });
         capturedEmail = email;
         try { localStorage.setItem('btd_submit_email', email); } catch(e) {}
-        showStep('step-payment');
+        showStep('step-form');
       } catch(err) {
-        emailError.textContent = 'Something went wrong. Please try again.';
-        emailError.classList.add('visible');
-        emailSubmitBtn.textContent = 'Continue →';
-        emailSubmitBtn.disabled = false;
+        const errEl = document.getElementById('email-error');
+        errEl.textContent = 'Something went wrong. Try again.';
+        errEl.classList.add('visible');
+        btn.textContent = 'Continue →'; btn.disabled = false;
       }
     });
 
-    // Checkout button
-    const checkoutBtn = document.getElementById('checkout-btn');
-    const paymentError = document.getElementById('payment-error');
-
-    checkoutBtn.addEventListener('click', async () => {
-      checkoutBtn.textContent = 'Loading checkout...';
-      checkoutBtn.disabled = true;
-      paymentError.classList.remove('visible');
-
-      try {
-        const res = await fetch('/api/create-submit-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: capturedEmail })
-        });
-        const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          throw new Error(data.error || 'No checkout URL returned');
-        }
-      } catch(err) {
-        paymentError.textContent = 'Payment failed to load. Please try again.';
-        paymentError.classList.add('visible');
-        checkoutBtn.textContent = 'Pay $5 & Submit →';
-        checkoutBtn.disabled = false;
-      }
-    });
-
-    // Bio char counter
+    // Bio counter
     const bioField = document.getElementById('bio');
     const bioCount = document.getElementById('bio-count');
     bioField.addEventListener('input', () => {
@@ -469,17 +346,13 @@
     });
 
     // Submission form
-    const submitForm = document.getElementById('submit-form');
-    const submitError = document.getElementById('submit-error');
-    const submitBtn = document.getElementById('submit-btn');
-
-    submitForm.addEventListener('submit', async (e) => {
+    document.getElementById('submit-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      submitBtn.textContent = 'Sending...';
-      submitBtn.disabled = true;
-      submitError.classList.remove('visible');
+      const btn = document.getElementById('submit-btn');
+      const errEl = document.getElementById('submit-error');
+      btn.textContent = 'Submitting...'; btn.disabled = true;
+      errEl.classList.remove('visible');
 
-      const email = capturedEmail || '';
       const spotifyUrl = document.getElementById('spotify-url').value.trim();
       const artistName = document.getElementById('artist-name').value.trim();
       const genre = document.getElementById('genre').value.trim();
@@ -487,13 +360,49 @@
       const tiktokUrl = document.getElementById('tiktok-url').value.trim();
       const bio = document.getElementById('bio').value.trim();
 
+      // If paid tier and NOT returning from Stripe — go to Stripe first
+      if (selectedTier === 'paid' && !paidReturn) {
+        // Store form data so we can restore after return
+        try {
+          localStorage.setItem('btd_pending_submission', JSON.stringify({ spotifyUrl, artistName, genre, instagramUrl, tiktokUrl, bio }));
+        } catch(e) {}
+        // Redirect to Stripe
+        btn.textContent = 'Redirecting to checkout...';
+        try {
+          const res = await fetch('/api/create-submit-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: capturedEmail })
+          });
+          const data = await res.json();
+          if (data.url) { window.location.href = data.url; return; }
+          throw new Error(data.error || 'No checkout URL');
+        } catch(err) {
+          errEl.textContent = 'Payment failed to load. Please try again.';
+          errEl.classList.add('visible');
+          btn.textContent = 'Pay $5 & Submit →'; btn.disabled = false;
+        }
+        return;
+      }
+
+      // Free submit OR returning from paid Stripe
+      // Try to restore pending submission data if returning from Stripe
+      let finalData = { spotifyUrl, artistName, genre, instagramUrl, tiktokUrl, bio };
+      if (paidReturn) {
+        try {
+          const pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}');
+          if (pending.spotifyUrl) finalData = { ...pending };
+        } catch(e) {}
+      }
+
       try {
         const res = await fetch('/api/submit-music', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email, spotifyUrl, artistName, genre,
-            instagramUrl, tiktokUrl, bio,
+            email: capturedEmail,
+            ...finalData,
+            tier: paidReturn ? 'paid' : 'free',
             stripeSessionId: sessionId
           })
         });
@@ -501,16 +410,40 @@
           const d = await res.json().catch(() => ({}));
           throw new Error(d.error || 'Submission failed');
         }
-        // Clear stored email
-        try { localStorage.removeItem('btd_submit_email'); } catch(e) {}
+        try { localStorage.removeItem('btd_submit_email'); localStorage.removeItem('btd_pending_submission'); } catch(e) {}
+        const successMsg = document.getElementById('success-msg');
+        if (paidReturn) {
+          successMsg.innerHTML = "Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You'll hear back either way.<br><br>Check your inbox for a confirmation.";
+        }
         showStep('step-success');
       } catch(err) {
-        submitError.textContent = 'Something went wrong. Please try again or email hello@beforethedata.com';
-        submitError.classList.add('visible');
-        submitBtn.textContent = 'Send It In →';
-        submitBtn.disabled = false;
+        errEl.textContent = 'Something went wrong. Try again or email hello@beforethedata.com';
+        errEl.classList.add('visible');
+        btn.textContent = selectedTier === 'paid' ? 'Pay $5 & Submit →' : 'Submit Track (Free) →';
+        btn.disabled = false;
       }
     });
+
+    // Restore form after Stripe redirect
+    if (paidReturn) {
+      try {
+        const pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}');
+        if (pending.spotifyUrl) {
+          document.getElementById('spotify-url').value = pending.spotifyUrl || '';
+          document.getElementById('artist-name').value = pending.artistName || '';
+          document.getElementById('genre').value = pending.genre || '';
+          document.getElementById('instagram-url').value = pending.instagramUrl || '';
+          document.getElementById('tiktok-url').value = pending.tiktokUrl || '';
+          document.getElementById('bio').value = pending.bio || '';
+          bioCount.textContent = (pending.bio || '').length;
+        }
+      } catch(e) {}
+      // Update submit button for paid flow
+      document.getElementById('submit-btn').textContent = 'Submit Track →';
+    } else {
+      // Default: recommended = paid tier
+      selectTier('paid');
+    }
   </script>
 </body>
 </html>
