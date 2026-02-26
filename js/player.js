@@ -117,6 +117,10 @@ const Player = (() => {
       saveState();
       return;
     }
+    // Gate check — show email modal on 2nd play if not subscribed
+    if (typeof BTDGate !== 'undefined' && !BTDGate.checkGate()) {
+      return; // blocked — modal shown
+    }
     audio.src = track.previewUrl;
     audio.play().then(() => {
       isPlaying = true;
