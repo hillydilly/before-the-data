@@ -83,7 +83,9 @@ export default async (req) => {
     <div style="padding:40px 32px;">
       <h2 style="font-size:28px;font-weight:700;color:#000;margin:0 0 20px;letter-spacing:-0.5px;">We got it.</h2>
       <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">
-        Your track is in the queue. Chad listens to everything personally. You'll hear back.
+        ${tier === 'paid'
+          ? "Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You'll hear back either way."
+          : "Your track is in the queue. No guarantee on timeline — but it's in there. If it's right for us, you'll hear back."}
       </p>
       <p style="font-size:14px;color:#666;line-height:1.6;margin:0;">
         — Before The Data
