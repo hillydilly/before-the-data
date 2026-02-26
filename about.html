@@ -114,7 +114,9 @@
       filter: grayscale(100%);
       transition: filter 0.2s;
     }
-    .testimonial-item:hover .testimonial-avatar { filter: grayscale(0%); }
+    .testimonial-item { cursor: pointer; }
+    .testimonial-item:hover .testimonial-avatar { filter: grayscale(0%); transform: scale(1.05); }
+    .testimonial-avatar { transition: filter 0.2s, transform 0.2s; }
     .testimonial-name {
       font-size: 10px;
       font-weight: 600;
@@ -317,59 +319,189 @@
     <!-- ARTIST TESTIMONIALS -->
     <div class="about-testimonials">
       <h2 class="about-press-label">Artist Testimonials</h2>
+      <p style="font-size:12px;color:var(--tx-3);margin:-16px 0 28px;text-align:center;">Click any artist to see their testimonial</p>
       <div class="testimonial-grid">
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818558/Screenshot_2026-02-11_at_8.02.21_AM_t6cs5p.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('billie')" title="Billie Eilish">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770752060/Billie_Eilish_cfx2gh.png')"></div>
           <span class="testimonial-name">Billie Eilish</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('finneas')" title="FINNEAS">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818558/Screenshot_2026-02-11_at_8.02.02_AM_yyx4rq.png')"></div>
           <span class="testimonial-name">FINNEAS</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('troye')" title="Troye Sivan">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818558/Screenshot_2026-02-11_at_8.01.39_AM_rg1u1v.png')"></div>
           <span class="testimonial-name">Troye Sivan</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('charlie')" title="Charlie Puth">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818562/Screenshot_2026-02-11_at_8.00.27_AM_y5y7zy.png')"></div>
           <span class="testimonial-name">Charlie Puth</span>
         </div>
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818561/Screenshot_2026-02-11_at_8.00.57_AM_ag8npl.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('odesza')" title="ODESZA">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/odesza_b80l2d.png')"></div>
           <span class="testimonial-name">ODESZA</span>
         </div>
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818563/Screenshot_2026-02-11_at_8.00.06_AM_d5nfa9.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('lauv')" title="Lauv">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/lauv_bul9fv.png')"></div>
           <span class="testimonial-name">Lauv</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('alayna')" title="alayna">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818565/Screenshot_2026-02-11_at_7.59.32_AM_aapbaq.png')"></div>
           <span class="testimonial-name">alayna</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('tayo')" title="Tayo Sound">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770818568/Screenshot_2026-02-11_at_7.59.10_AM_tsvjxp.png')"></div>
           <span class="testimonial-name">Tayo Sound</span>
         </div>
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819780/Screenshot_2026-02-11_at_8.22.42_AM_gwkbee.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('healy')" title="Healy">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/healy_ggro1y.png')"></div>
           <span class="testimonial-name">Healy</span>
         </div>
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819781/Screenshot_2026-02-11_at_8.22.13_AM_tllb2g.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('nombe')" title="NoMBe">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/nombe_mynkgv.png')"></div>
           <span class="testimonial-name">NoMBe</span>
         </div>
-        <div class="testimonial-item">
+        <div class="testimonial-item" onclick="openTestimonial('verite')" title="Verité">
           <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819782/Screenshot_2026-02-11_at_8.21.29_AM_gjwaib.png')"></div>
           <span class="testimonial-name">Verité</span>
         </div>
-        <div class="testimonial-item">
-          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819783/Screenshot_2026-02-11_at_8.20.46_AM_fwzq6v.png')"></div>
+        <div class="testimonial-item" onclick="openTestimonial('laica')" title="Laica">
+          <div class="testimonial-avatar" style="background-image:url('https://res.cloudinary.com/dd9nbystx/image/upload/v1770819784/Screenshot_2026-02-11_at_8.19.56_AM_awxbqy.png')"></div>
           <span class="testimonial-name">Laica</span>
         </div>
       </div>
     </div>
 
+    <!-- TESTIMONIAL MODAL -->
+    <div id="testimonial-modal" onclick="closeTestimonial(event)" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:24px;">
+      <div id="testimonial-card" style="background:#fff;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto;" onclick="event.stopPropagation()">
+        <button onclick="closeTestimonial()" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#000;z-index:1;line-height:1;padding:4px 8px;">✕</button>
+        <div id="testimonial-media"></div>
+        <div style="padding:24px 28px 28px;">
+          <p id="testimonial-name-display" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999;margin:0 0 10px;"></p>
+          <blockquote id="testimonial-quote" style="font-size:15px;line-height:1.75;color:#222;margin:0;font-style:italic;border-left:3px solid #000;padding-left:16px;"></blockquote>
+        </div>
+      </div>
+    </div>
+
   </main>
+
+  <script>
+    const TESTIMONIALS = {
+      billie: {
+        name: 'Billie Eilish',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752060/Billie_Eilish_cfx2gh.png',
+        quote: '"Hillydilly.com started it all. Thank you for everything Michael Enwright, Chad Hillard, I love you" — Billie Eilish, Facebook 2016'
+      },
+      finneas: {
+        name: 'FINNEAS',
+        type: 'video',
+        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844990/Finnes_r83tyd.mp4',
+        quote: null
+      },
+      troye: {
+        name: 'Troye Sivan',
+        type: 'video',
+        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844435/troyesivan_shoutout_lpzdea.mp4',
+        quote: null
+      },
+      charlie: {
+        name: 'Charlie Puth',
+        type: 'video',
+        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844436/Charlieputh_djnkgo.mp4',
+        quote: null
+      },
+      odesza: {
+        name: 'ODESZA',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/odesza_b80l2d.png',
+        quote: '"@hillydilly Just wanted to say your blog is our favorite. Thank you for caring about what you do." — @odesza'
+      },
+      lauv: {
+        name: 'Lauv',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/lauv_bul9fv.png',
+        quote: '"ay @hillydilly you guys are what Andre3000 is talking about when he asked \'what\'s cooler than being cool?\'" — @lauvsongs'
+      },
+      alayna: {
+        name: 'alayna',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770818565/Screenshot_2026-02-11_at_7.59.32_AM_aapbaq.png',
+        quote: null
+      },
+      tayo: {
+        name: 'Tayo Sound',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770818568/Screenshot_2026-02-11_at_7.59.10_AM_tsvjxp.png',
+        quote: null
+      },
+      healy: {
+        name: 'Healy',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/healy_ggro1y.png',
+        quote: '"Shoutout to the beautiful people at @hillydilly man. Wouldn\'t be anywhere near where I am today without them." — @healy'
+      },
+      nombe: {
+        name: 'NoMBe',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/nombe_mynkgv.png',
+        quote: '"Can I say that @hillydilly were the first to feature me and the love has been real ever since. Still one of my favs to find new tunes." — @NoMBeMusic'
+      },
+      verite: {
+        name: 'Verité',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819782/Screenshot_2026-02-11_at_8.21.29_AM_gjwaib.png',
+        quote: null
+      },
+      laica: {
+        name: 'Laica',
+        type: 'image',
+        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819784/Screenshot_2026-02-11_at_8.19.56_AM_awxbqy.png',
+        quote: '"Chad actually found me through SoundCloud. I initially released it in 2019 and then obviously re-released it in 2020. I love Chad though. He\'s great. He\'s super chill and laid back. He responds so quickly and he\'s really always there for me which is a blessing." — Laica'
+      }
+    };
+
+    function openTestimonial(id) {
+      const t = TESTIMONIALS[id];
+      if (!t) return;
+      const modal = document.getElementById('testimonial-modal');
+      const media = document.getElementById('testimonial-media');
+      const quote = document.getElementById('testimonial-quote');
+      const nameEl = document.getElementById('testimonial-name-display');
+
+      nameEl.textContent = t.name;
+
+      if (t.type === 'video') {
+        media.innerHTML = `<video src="${t.src}" controls autoplay playsinline style="width:100%;display:block;max-height:400px;background:#000;"></video>`;
+      } else {
+        media.innerHTML = `<img src="${t.src}" style="width:100%;display:block;max-height:400px;object-fit:contain;background:#f5f5f5;" alt="${t.name}">`;
+      }
+
+      if (t.quote) {
+        quote.textContent = t.quote;
+        quote.style.display = 'block';
+      } else {
+        quote.style.display = 'none';
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTestimonial(e) {
+      if (e && e.target !== document.getElementById('testimonial-modal')) return;
+      const modal = document.getElementById('testimonial-modal');
+      const media = document.getElementById('testimonial-media');
+      media.innerHTML = ''; // stop video
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeTestimonial();
+    });
+  </script>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
