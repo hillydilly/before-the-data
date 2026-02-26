@@ -1,0 +1,21 @@
+{
+  "name": "btd-remotion",
+  "version": "1.0.0",
+  "description": "Before The Data — Instagram Reel generator",
+  "scripts": {
+    "start": "npx remotion studio",
+    "build": "npx remotion render BTDReel out/reel.mp4",
+    "render": "node scripts/render-reel.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.257",
+    "remotion": "4.0.257",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.3.3"
+  }
+}

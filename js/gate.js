@@ -100,6 +100,13 @@ const BTDGate = (() => {
         }})
       });
 
+      // Send welcome email via Netlify function (fire and forget)
+      fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      }).catch(() => {}); // silent fail — email is bonus, not blocking
+
       markSubscribed(email);
       el.querySelector('.gate-body').innerHTML = `
         <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>

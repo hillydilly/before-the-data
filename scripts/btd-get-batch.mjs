@@ -101,28 +101,51 @@ async function getSpotifyArtwork(trackId) {
     const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    if (!res.ok) return { artUrl: '', artUrlSm: '' };
+    if (!res.ok) return { artUrl: '', artUrlSm: '', artistImgUrl: '' };
     const t = await res.json();
+
+    // Also fetch artist photo for BTD reel (artist image, not album art)
+    let artistImgUrl = '';
+    const artistId = t.artists?.[0]?.id;
+    if (artistId) {
+      try {
+        const ar = await fetch(`https://api.spotify.com/v1/artists/${artistId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (ar.ok) {
+          const ad = await ar.json();
+          artistImgUrl = ad.images?.[0]?.url || '';
+        }
+      } catch { /* skip artist image on failure */ }
+    }
+
     return {
       artUrl: t.album?.images?.[0]?.url || '',
       artUrlSm: t.album?.images?.[2]?.url || '',
+      artistImgUrl,
     };
   } catch {
-    return { artUrl: '', artUrlSm: '' };
+    return { artUrl: '', artUrlSm: '', artistImgUrl: '' };
   }
 }
 
-// --- Fetch iTunes preview URL ---
-async function getItunesPreview(artist, title) {
+// --- Fetch iTunes preview URL + artwork ---
+async function getItunesFull(artist, title) {
   const q = `${artist} ${title}`.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '+');
   const url = `https://itunes.apple.com/search?term=${q}&entity=song&limit=5`;
+  const empty = { previewUrl: '', artUrl: '', artUrlSm: '' };
   try {
     const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
     const data = await res.json();
-    const best = (data.results || []).find(r => r.previewUrl);
-    return best?.previewUrl || '';
+    const best = (data.results || []).find(r => r.previewUrl) || data.results?.[0];
+    if (!best) return empty;
+    return {
+      previewUrl: best.previewUrl || '',
+      artUrl: (best.artworkUrl100 || '').replace('100x100', '640x640'),
+      artUrlSm: (best.artworkUrl100 || '').replace('100x100', '300x300'),
+    };
   } catch {
-    return '';
+    return empty;
   }
 }
 
@@ -179,18 +202,24 @@ async function main() {
     return;
   }
 
-  // Fetch Spotify artwork + iTunes previews
+  // Fetch Spotify artwork + iTunes previews (with iTunes fallback for artwork)
   process.stderr.write('Fetching artwork + previews...\n');
   for (const t of batch) {
-    const [artwork, preview] = await Promise.all([
+    const [artwork, itunesData] = await Promise.all([
       getSpotifyArtwork(t.trackId),
-      getItunesPreview(t.primaryArtist, t.trackName),
+      getItunesFull(t.primaryArtist, t.trackName),
     ]);
-    t.artUrl = artwork.artUrl;
-    t.artUrlSm = artwork.artUrlSm;
-    t.previewUrl = preview;
+
+    // Artwork: prefer Spotify, fall back to iTunes
+    t.artUrl = artwork.artUrl || itunesData.artUrl;
+    t.artUrlSm = artwork.artUrlSm || itunesData.artUrlSm;
+    t.artistImgUrl = artwork.artistImgUrl || ''; // artist photo for BTD reel
+    t.previewUrl = itunesData.previewUrl;
+
     await new Promise(r => setTimeout(r, 300));
-    process.stderr.write(`  ${t.artUrl ? '🖼' : '📭'} ${t.previewUrl ? '🎵' : '🔇'} ${t.primaryArtist} — ${t.trackName}\n`);
+    const artSource = artwork.artUrl ? '🖼 Sp' : (itunesData.artUrl ? '🖼 iT' : '📭');
+    const artistImg = artwork.artistImgUrl ? '👤' : '  ';
+    process.stderr.write(`  ${artSource} ${artistImg} ${t.previewUrl ? '🎵' : '🔇'} ${t.primaryArtist} — ${t.trackName}\n`);
   }
 
   // Output batch as JSON
