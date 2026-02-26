@@ -395,78 +395,18 @@
 
   <script>
     const TESTIMONIALS = {
-      billie: {
-        name: 'Billie Eilish',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752060/Billie_Eilish_cfx2gh.png',
-        quote: null
-      },
-      finneas: {
-        name: 'FINNEAS',
-        type: 'video',
-        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844990/Finnes_r83tyd.mp4',
-        quote: null
-      },
-      troye: {
-        name: 'Troye Sivan',
-        type: 'video',
-        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844435/troyesivan_shoutout_lpzdea.mp4',
-        quote: null
-      },
-      charlie: {
-        name: 'Charlie Puth',
-        type: 'video',
-        src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844436/Charlieputh_djnkgo.mp4',
-        quote: null
-      },
-      odesza: {
-        name: 'ODESZA',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/odesza_b80l2d.png',
-        quote: '"@hillydilly Just wanted to say your blog is our favorite. Thank you for caring about what you do." — @odesza'
-      },
-      lauv: {
-        name: 'Lauv',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/lauv_bul9fv.png',
-        quote: '"ay @hillydilly you guys are what Andre3000 is talking about when he asked \'what\'s cooler than being cool?\'" — @lauvsongs'
-      },
-      alayna: {
-        name: 'alayna',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770818565/Screenshot_2026-02-11_at_7.59.32_AM_aapbaq.png',
-        quote: null
-      },
-      tayo: {
-        name: 'Tayo Sound',
-        type: 'instagram',
-        src: 'https://www.instagram.com/p/CMSf4xJMzRy/',
-        quote: null
-      },
-      healy: {
-        name: 'Healy',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/healy_ggro1y.png',
-        quote: '"Shoutout to the beautiful people at @hillydilly man. Wouldn\'t be anywhere near where I am today without them." — @healy'
-      },
-      nombe: {
-        name: 'NoMBe',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/nombe_mynkgv.png',
-        quote: '"Can I say that @hillydilly were the first to feature me and the love has been real ever since. Still one of my favs to find new tunes." — @NoMBeMusic'
-      },
-      verite: {
-        name: 'Verité',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819207/verite_hnedrz.png',
-        quote: null
-      },
-      laica: {
-        name: 'Laica',
-        type: 'image',
-        src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819784/Screenshot_2026-02-11_at_8.19.56_AM_awxbqy.png',
-        quote: '"Chad actually found me through SoundCloud. I initially released it in 2019 and then obviously re-released it in 2020. I love Chad though. He\'s great. He\'s super chill and laid back. He responds so quickly and he\'s really always there for me which is a blessing." — Laica'
-      }
+      billie: { name: 'Billie Eilish', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752060/Billie_Eilish_cfx2gh.png', quote: null },
+      finneas: { name: 'FINNEAS', type: 'video', src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844990/Finnes_r83tyd.mp4', quote: null },
+      troye: { name: 'Troye Sivan', type: 'video', src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844435/troyesivan_shoutout_lpzdea.mp4', quote: null },
+      charlie: { name: 'Charlie Puth', type: 'video', src: 'https://res.cloudinary.com/dd9nbystx/video/upload/v1770844436/Charlieputh_djnkgo.mp4', quote: null },
+      odesza: { name: 'ODESZA', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/odesza_b80l2d.png', quote: null },
+      lauv: { name: 'Lauv', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770752057/lauv_bul9fv.png', quote: null },
+      alayna: { name: 'alayna', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770818565/Screenshot_2026-02-11_at_7.59.32_AM_aapbaq.png', quote: null },
+      tayo: { name: 'Tayo Sound', type: 'instagram', src: 'https://www.instagram.com/p/CMSf4xJMzRy/', quote: null },
+      healy: { name: 'Healy', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/healy_ggro1y.png', quote: null },
+      nombe: { name: 'NoMBe', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819204/nombe_mynkgv.png', quote: null },
+      verite: { name: 'Verité', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819207/verite_hnedrz.png', quote: null },
+      laica: { name: 'Laica', type: 'image', src: 'https://res.cloudinary.com/dd9nbystx/image/upload/v1770819784/Screenshot_2026-02-11_at_8.19.56_AM_awxbqy.png', quote: '"Chad actually found me through SoundCloud. I initially released it in 2019 and then re-released it in 2020. I love Chad though. He\'s great. Super chill and laid back. He responds so quickly and he\'s really always there for me which is a blessing." — Laica' }
     };
 
     function openTestimonial(id) {
