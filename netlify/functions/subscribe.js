@@ -18,7 +18,7 @@ export default async (req) => {
     }
 
     const RESEND_KEY = process.env.RESEND_API_KEY || 're_GEpDNamo_ES7dvBB6SzemdjpATYtErpGb';
-    const FROM = process.env.BTD_FROM_EMAIL || 'Before The Data <onboarding@resend.dev>';
+    const FROM = 'Before The Data <hello@beforethedata.com>';
 
     // Welcome email HTML (inline for Netlify function)
     const html = `<!DOCTYPE html>
