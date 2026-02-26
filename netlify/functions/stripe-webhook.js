@@ -66,8 +66,8 @@ export default async (req) => {
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;"><tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 <tr><td style="background:#000;padding:28px 32px;text-align:center;">
-  <img src="https://beforethedata.com/assets/brand/wordmark-full.png" alt="Before The Data" width="160" style="display:inline-block;">
-  <p style="margin:8px 0 0;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#666;">HEARD FIRST</p>
+  <img src="https://beforethedata.com/assets/brand/wordmark-full.png" alt="Before The Data" width="320" style="display:inline-block;max-width:100%;">
+  <p style="margin:8px 0 0;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#555;font-weight:600;">HEARD FIRST</p>
 </td></tr>
 <tr><td style="background:#fff;padding:40px 40px 32px;">
   <h1 style="margin:0 0 16px;font-size:36px;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:1px;line-height:1;">You're in.</h1>
