@@ -39,7 +39,7 @@ export default async (req) => {
   <tr>
     <td style="background:#ffffff;padding:40px 40px 32px;">
       <h1 style="margin:0 0 16px;font-size:32px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:1px;line-height:1;">Welcome.</h1>
-      <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;">Before The Data is a music discovery project built on one thing — finding artists before anyone else. Billie Eilish. Lorde. Halsey. LANY. Daniel Caesar. All found here first. Now you're part of that.</p>
+      <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;">Before The Data is a music discovery project built on one thing: finding artists before anyone else. Billie Eilish. Lorde. Halsey. LANY. Daniel Caesar. All found here first. Now you're part of that.</p>
     </td>
   </tr>
 
@@ -60,7 +60,7 @@ export default async (req) => {
         <tr>
           <td style="padding:10px 0;">
             <p style="margin:0;font-size:14px;color:#000;font-weight:600;">30-second previews + full write-ups</p>
-            <p style="margin:4px 0 0;font-size:13px;color:#666;line-height:1.5;">Context behind every pick — what it is, why it matters, where it's going.</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666;line-height:1.5;">Context behind every pick: what it is, why it matters, where it's going.</p>
           </td>
         </tr>
       </table>
@@ -73,13 +73,13 @@ export default async (req) => {
   <!-- Paid tier -->
   <tr>
     <td style="background:#ffffff;padding:32px 40px 40px;">
-      <p style="margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">HEARD FIRST — PAID TIER (COMING SOON)</p>
-      <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.7;">For the people who want the edge. Not just the pick — the intelligence behind it.</p>
+      <p style="margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">HEARD FIRST: PAID TIER (COMING SOON)</p>
+      <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.7;">For the people who want the edge. Not just the pick. The intelligence behind it.</p>
       <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eeeeee;">
         <tr>
           <td style="padding:16px 20px;border-bottom:1px solid #f5f5f5;">
             <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">48hr early access</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Every ARTIST DISCOVERY pick lands in your inbox the moment it's found — 48 hours before it goes public.</p>
+            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Every ARTIST DISCOVERY pick lands in your inbox the moment it's found. 48 hours before it goes public.</p>
           </td>
         </tr>
         <tr style="background:#fafafa;">
@@ -91,7 +91,7 @@ export default async (req) => {
         <tr>
           <td style="padding:16px 20px;border-bottom:1px solid #f5f5f5;">
             <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">Weekly artist tracker</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Auto-pulled from our A&amp;R dashboard every week. See how every scouted artist's numbers moved — streams, followers, UGC — since we called them.</p>
+            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Auto-pulled from our A&amp;R dashboard every week. See how every scouted artist's numbers moved since we called them: streams, followers, UGC..</p>
           </td>
         </tr>
         <tr style="background:#fafafa;">

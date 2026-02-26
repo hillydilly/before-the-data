@@ -75,12 +75,12 @@ export default async (req) => {
     const trackLabel = submission.artistName || 'your track';
 
     const subject = isApprove
-      ? 'We listened. — Before The Data'
-      : 'Thanks for submitting. — Before The Data';
+      ? 'We listened. (Before The Data)'
+      : 'Thanks for submitting. (Before The Data)';
 
     const bodyText = isApprove
       ? `We listened to ${trackLabel}. Keep going. We're watching.`
-      : `Not right for us right now — but keep creating. The right moment comes.`;
+      : `Not right for us right now. Keep creating. The right moment comes.`;
 
     const emailHtml = `<!DOCTYPE html>
 <html>
@@ -96,7 +96,7 @@ export default async (req) => {
         ${bodyText}
       </p>
       <p style="font-size:14px;color:#666;line-height:1.6;margin:0;">
-        — Before The Data
+        Before The Data
       </p>
     </div>
     <div style="padding:24px 32px;border-top:1px solid #eee;">

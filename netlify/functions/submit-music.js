@@ -85,10 +85,10 @@ export default async (req) => {
       <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">
         ${tier === 'paid'
           ? "Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You'll hear back either way."
-          : "Your track is in the queue. No guarantee on timeline — but it's in there. If it's right for us, you'll hear back."}
+          : "Your track is in the queue. No guarantee on timeline. But it's in there. If it's right for us, you'll hear back."}
       </p>
       <p style="font-size:14px;color:#666;line-height:1.6;margin:0;">
-        — Before The Data
+        Before The Data
       </p>
     </div>
     <div style="padding:24px 32px;border-top:1px solid #eee;">
@@ -109,7 +109,7 @@ export default async (req) => {
       body: JSON.stringify({
         from: 'Before The Data <hello@beforethedata.com>',
         to: [email],
-        subject: 'We got it. — Before The Data',
+        subject: "We got it. (Before The Data)",
         html: emailHtml
       })
     }).catch(err => console.warn('Confirmation email failed:', err));

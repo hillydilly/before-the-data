@@ -40,11 +40,11 @@ const BTDGate = (() => {
             <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32">
           </div>
           <h2 class="gate-headline">You just heard it early.</h2>
-          <p class="gate-sub">That's the whole idea. Before The Data has been finding artists before anyone else since 2007 — Billie Eilish, Lorde, Halsey, LANY, Daniel Caesar. All found here first.</p>
-          <p class="gate-sub2">Drop your email and get every pick like this — free.</p>
+          <p class="gate-sub">That's the whole idea. Before The Data has been finding artists before anyone else since 2007. Billie Eilish, Lorde, Halsey, LANY, Daniel Caesar. All found here first.</p>
+          <p class="gate-sub2">Drop your email and get every pick like this. Free.</p>
           <form class="gate-form" id="btd-gate-form">
             <input type="email" class="gate-input" id="gate-email" placeholder="your@email.com" required autocomplete="email">
-            <button type="submit" class="gate-submit">I'm In — Keep Me Posted</button>
+            <button type="submit" class="gate-submit">I'm In. Keep Me Posted</button>
           </form>
           <p class="gate-fine">No spam. Unsubscribe anytime. Already subscribed? <a href="#" id="gate-already">Continue listening.</a></p>
         </div>
@@ -112,7 +112,7 @@ const BTDGate = (() => {
       el.querySelector('.gate-body').innerHTML = `
         <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>
         <h2 class="gate-headline">You're in.</h2>
-        <p class="gate-sub">Check your inbox. Every pick comes to you first — before the blogs, before the playlists, before anyone else.</p>
+        <p class="gate-sub">Check your inbox. Every pick comes to you first. Before the blogs, before the playlists, before anyone else.</p>
         <button class="gate-submit" id="gate-close-btn">Keep Listening →</button>
       `;
       el.querySelector('#gate-close-btn').addEventListener('click', () => hideModal());

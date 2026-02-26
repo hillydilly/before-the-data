@@ -71,14 +71,14 @@ export default async (req) => {
 </td></tr>
 <tr><td style="background:#fff;padding:40px 40px 32px;">
   <h1 style="margin:0 0 16px;font-size:36px;font-weight:700;color:#000;text-transform:uppercase;letter-spacing:1px;line-height:1;">You're in.</h1>
-  <p style="margin:0 0 20px;font-size:15px;color:#444;line-height:1.7;">Welcome to <strong>Heard First</strong> — you now have early access to every Artist Discovery pick, 48 hours before the public. Plus the full A&R data behind it.</p>
+  <p style="margin:0 0 20px;font-size:15px;color:#444;line-height:1.7;">Welcome to <strong>Heard First</strong>. You now have early access to every Artist Discovery pick. 48 hours before the public. Plus the full A&R data behind it.</p>
   <p style="margin:0;font-size:14px;color:#666;line-height:1.7;">The next pick drops in your inbox before it goes anywhere else. Keep an ear out.</p>
 </td></tr>
 <tr><td style="background:#000;padding:28px 32px;text-align:center;">
   <a href="https://beforethedata.com" style="display:inline-block;background:#fff;color:#000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:12px 28px;text-decoration:none;">Start Listening →</a>
 </td></tr>
 <tr><td style="background:#f2f2f2;padding:20px 32px;text-align:center;">
-  <p style="margin:0;font-size:11px;color:#bbb;">Heard First — $9/mo. Manage your subscription at beforethedata.com.</p>
+  <p style="margin:0;font-size:11px;color:#bbb;">Heard First. $9/mo. Manage your subscription at beforethedata.com.</p>
 </td></tr>
 </table></td></tr></table></body></html>`
         })
