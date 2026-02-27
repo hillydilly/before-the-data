@@ -191,6 +191,10 @@
         <div class="submit-card">
           <h2>Your Track Info</h2>
           <p>Fill this out. The more detail, the better.</p>
+          <div id="signed-in-bar" style="display:none;margin-bottom:20px;padding:10px 14px;background:#f5f5f5;border-radius:6px;font-size:13px;color:#444;display:flex;align-items:center;gap:8px;">
+            <span>&#x2713; Signed in as <strong id="signed-in-email"></strong></span>
+            <a href="#" id="change-email-link" style="margin-left:auto;font-size:12px;color:#999;text-decoration:underline;">Change</a>
+          </div>
 
           <div id="submit-error" class="form-error"></div>
 
@@ -370,10 +374,30 @@
         showStep('step-form');
       }
     } else if (capturedEmail) {
-      // Pre-fill email field in case they end up on email step
+      // Already have email — skip email step, show signed-in bar
       try { document.getElementById('gate-email').value = capturedEmail; } catch(e) {}
+      showSignedIn(capturedEmail);
       showStep('step-form');
     }
+
+    function showSignedIn(email) {
+      const bar = document.getElementById('signed-in-bar');
+      const label = document.getElementById('signed-in-email');
+      if (bar && label) {
+        label.textContent = email;
+        bar.style.display = 'flex';
+      }
+    }
+
+    document.getElementById('change-email-link')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      capturedEmail = '';
+      try { localStorage.removeItem('btd_submit_email'); } catch(e) {}
+      const bar = document.getElementById('signed-in-bar');
+      if (bar) bar.style.display = 'none';
+      document.getElementById('gate-email').value = '';
+      showStep('step-email');
+    });
 
     // Email gate
     document.getElementById('email-form').addEventListener('submit', async (e) => {
