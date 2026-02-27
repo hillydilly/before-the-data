@@ -135,6 +135,8 @@ function createChartRowFromTrack(track) {
 
 /* --- Discover Page --- */
 async function renderDiscover() {
+  // Genre filter from URL
+  const genreFilter = new URLSearchParams(window.location.search).get('genre');
   const scrollContainer = document.getElementById('new-music-scroll');
   const chartList = document.getElementById('chart-list');
   if (!scrollContainer || !chartList) return;
@@ -160,6 +162,7 @@ function createListItem(post) {
   const item = document.createElement('div');
   item.className = 'music-list-item';
   item.dataset.id = post.id;
+  if (post.genre) item.dataset.genre = post.genre;
 
   // Strip HTML from writeup
   const rawWriteup = post.writeup || '';
@@ -201,13 +204,44 @@ async function renderNewMusic() {
   const grid = document.getElementById('music-grid');
   if (!grid) return;
 
-  const posts = await fetchPosts('publishedAt', 'desc', 500);
-  Player.setQueue(posts);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 500);
+
+  // Genre filter from URL param
+  const urlGenre = new URLSearchParams(window.location.search).get('genre');
+  let activeGenre = urlGenre || null;
+
+  // Inject genre filter bar
+  const pageHeader = document.querySelector('.page-header') || grid.parentElement;
+  const existingBar = document.getElementById('genre-filter-bar');
+  if (!existingBar && pageHeader) {
+    const genres = [...new Set(allPosts.map(p => p.genre).filter(Boolean))].sort();
+    const bar = document.createElement('div');
+    bar.id = 'genre-filter-bar';
+    bar.innerHTML = `
+      <button class="genre-btn ${!activeGenre ? 'active' : ''}" data-genre="">All</button>
+      ${genres.map(g => `<button class="genre-btn ${activeGenre === g ? 'active' : ''}" data-genre="${g}">${g}</button>`).join('')}
+    `;
+    pageHeader.insertBefore(bar, grid);
+    bar.addEventListener('click', e => {
+      if (!e.target.classList.contains('genre-btn')) return;
+      activeGenre = e.target.dataset.genre || null;
+      bar.querySelectorAll('.genre-btn').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
+      renderView(currentView);
+      // Update URL without reload
+      const url = new URL(window.location.href);
+      if (activeGenre) url.searchParams.set('genre', activeGenre);
+      else url.searchParams.delete('genre');
+      history.replaceState({}, '', url);
+    });
+  }
+
+  Player.setQueue(allPosts);
 
   // Default: list view
   let currentView = localStorage.getItem('btd-view') || 'list';
 
   function renderView(view) {
+    const posts = activeGenre ? allPosts.filter(p => p.genre === activeGenre) : allPosts;
     grid.innerHTML = '';
     if (view === 'list') {
       grid.className = 'music-grid list-view';
@@ -331,6 +365,7 @@ async function renderPost() {
         ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
+        ${post.genre ? `<a href="/?genre=${encodeURIComponent(post.genre)}" class="genre-pill">${post.genre}</a>` : ''}
         ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
       </div>
     </div>
