@@ -287,7 +287,14 @@
     let capturedEmail = '';
     let selectedTier = 'paid'; // default to recommended
 
-    try { capturedEmail = emailFromUrl || localStorage.getItem('btd_submit_email') || ''; } catch(e) {
+    try {
+      capturedEmail = emailFromUrl
+        || localStorage.getItem('btd_submit_email')
+        || localStorage.getItem('btd_subscriber')
+        || '';
+      // btd_subscriber stores 'returning' for gate-only users — ignore that
+      if (capturedEmail === 'returning') capturedEmail = '';
+    } catch(e) {
       capturedEmail = emailFromUrl || '';
     }
 
