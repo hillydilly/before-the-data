@@ -32,7 +32,7 @@ export default async (req) => {
   <tr>
     <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 16px;text-align:center;">
       <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
-        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772199219/btd/btd-logo.jpg"
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/e_background_removal,f_png/btd/btd-logo.jpg"
              alt="BEFORE THE DATA"
              width="320"
              style="display:block;width:320px;max-width:100%;border:0;margin:0 auto;"
