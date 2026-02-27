@@ -90,7 +90,7 @@ export default async (req) => {
   <tr>
     <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 20px;text-align:center;">
       <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
-        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772200667/btd/btd-email-header.png"
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201268/btd/btd-email-header-2x.png"
              alt="BEFORE THE DATA" width="280"
              style="display:block;width:280px;max-width:100%;border:0;margin:0 auto;" />
         <p style="margin:10px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
@@ -106,7 +106,7 @@ export default async (req) => {
       <p style="margin:0 0 24px;font-size:15px;color:#333333;line-height:1.75;">
         ${isPaid
           ? 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.'
-          : 'Your track is in the queue. No guarantee on timeline. But it is in there. If it is right for us, you will hear back.'}
+          : 'Your track is in the queue. No timeline guarantee. We go through everything. If it is right for us, we will be in touch.'}
       </p>
     </td>
   </tr>
@@ -126,7 +126,7 @@ export default async (req) => {
       </table>` : `
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">It goes into the queue</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">No timeline guarantee. We go through submissions when we go through them.</p></td></tr>
-        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">If it connects, you hear from us</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">We do not respond to every submission. But if it is right, we will reach out.</p></td></tr>
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">If it connects, you hear from us</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">We do not respond to every submission. If it is right for us, we will be in touch.</p></td></tr>
         <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">Want to jump the queue?</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;"><a href="https://beforethedata.com/submit.html" style="color:#000000;font-weight:600;text-decoration:underline;">Upgrade to Heard First ($5)</a> — guaranteed listen within 7 days, you hear back either way.</p></td></tr>
       </table>`}
     </td>
@@ -139,7 +139,7 @@ export default async (req) => {
       <p style="margin:0;font-size:14px;color:#333333;line-height:1.75;">
         ${isPaid
           ? 'Keep an ear out. You will hear back within 7 days.'
-          : 'Your first pick from us is coming. Keep an ear out.'}
+          : 'Keep listening. If it is right, you will hear from us.'}
       </p>
     </td>
   </tr>

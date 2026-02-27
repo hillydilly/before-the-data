@@ -32,10 +32,10 @@ export default async (req) => {
   <tr>
     <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 16px;text-align:center;">
       <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
-        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772200667/btd/btd-email-header.png"
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201268/btd/btd-email-header-2x.png"
              alt="BEFORE THE DATA"
-             width="320"
-             style="display:block;width:320px;max-width:100%;border:0;margin:0 auto;"
+             width="480"
+             style="display:block;width:480px;max-width:100%;border:0;margin:0 auto;"
         />
         <p style="margin:12px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
       </a>
