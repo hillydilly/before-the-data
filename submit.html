@@ -277,6 +277,10 @@
 
     const params = new URLSearchParams(window.location.search);
     const paidReturn = params.get('paid') === '1';
+    // Clean up URL immediately so a second submission doesn't inherit paid=1
+    if (paidReturn) {
+      try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
+    }
     const sessionId = params.get('session_id') || '';
 
     let capturedEmail = '';
