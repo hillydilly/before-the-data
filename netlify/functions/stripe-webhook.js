@@ -64,14 +64,14 @@ export default async (req) => {
           html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+<body style="margin:0;padding:0;background:#f2f2f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
   <!-- Banner -->
   <tr>
-    <td align="center" bgcolor="#000000" style="padding:0;">
+    <td align="center" bgcolor="#000000" style="padding:28px 32px 20px;">
       <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201268/btd/btd-email-header-2x.png"
            alt="Before The Data - Heard First"
            width="480"
@@ -79,45 +79,77 @@ export default async (req) => {
     </td>
   </tr>
 
-  <!-- Headline -->
+  <!-- Body -->
   <tr>
-    <td bgcolor="#000000" style="padding:36px 32px 0;">
-      <h2 style="margin:0 0 20px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">YOU ARE IN.</h2>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">Welcome to Heard First. You now get early access to every Artist Discovery pick, 48 hours before it goes public.</p>
-      <p style="margin:0 0 24px;font-size:15px;color:#aaaaaa;line-height:1.8;">Here is what is coming to your inbox:</p>
+    <td bgcolor="#ffffff" style="padding:40px 40px 16px;">
+      <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">PAID SUBSCRIBER</p>
+      <h2 style="margin:0 0 20px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">YOU'RE IN.</h2>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Welcome to Heard First. You now get every Artist Discovery pick 48 hours before the public, plus the full A&amp;R data behind it. This is what the industry pays for. You just got it for $9.</p>
+    </td>
+  </tr>
 
-      <!-- Perks list -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+  <!-- Divider -->
+  <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
+
+  <!-- Perks -->
+  <tr>
+    <td bgcolor="#ffffff" style="padding:24px 40px 32px;">
+      <p style="margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">WHAT YOU GET</p>
+      <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="padding:12px 0;border-bottom:1px solid #1a1a1a;">
-            <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;">Early Access Drops</p>
-            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.6;">Every Artist Discovery pick lands in your inbox 48 hours before it goes live on the site.</p>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">48hr early access</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Every Artist Discovery pick lands in your inbox before it goes public.</p>
           </td>
         </tr>
         <tr>
-          <td style="padding:12px 0;border-bottom:1px solid #1a1a1a;">
-            <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;">Weekly Tracker</p>
-            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.6;">Every Monday. How every artist on our radar moved this week. Streams, UGC, followers.</p>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Full A&amp;R scouting report</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Spotify listeners, TikTok UGC, YouTube views, Instagram following. The data at the moment of discovery.</p>
           </td>
         </tr>
         <tr>
-          <td style="padding:12px 0;">
-            <p style="margin:0;font-size:13px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;">Monthly Ones To Watch</p>
-            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.6;">First of every month. Chad's personal picks for the artists worth watching right now.</p>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Weekly artist tracker</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Every artist we're watching, updated weekly. Who's breaking out. Who stalled.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Monthly ones to watch</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Top momentum artists of the month, ranked by data. Before the industry catches on.</p>
           </td>
         </tr>
       </table>
+    </td>
+  </tr>
 
-      <p style="margin:0 0 32px;font-size:15px;color:#aaaaaa;line-height:1.8;">The next drop is coming. Keep an ear out.</p>
-      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;">Start listening →</a>
+  <!-- Divider -->
+  <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
+
+  <!-- Closing -->
+  <tr>
+    <td bgcolor="#ffffff" style="padding:24px 40px 40px;">
+      <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">Your first pick is coming. When the next artist gets flagged, you will hear it here before the blogs, before the playlists, before anyone else. Keep an ear out.</p>
+    </td>
+  </tr>
+
+  <!-- CTA -->
+  <tr>
+    <td bgcolor="#000000" style="padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">START LISTENING &#x2192;</a>
     </td>
   </tr>
 
   <!-- Footer -->
   <tr>
-    <td bgcolor="#000000" style="padding:40px 32px 0;">
-      <p style="margin:32px 0 0;font-size:11px;color:#333333;">
-        <a href="https://beforethedata.com" style="color:#555555;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
+      <p style="margin:0;font-size:11px;color:#555555;">
+        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
         &nbsp;·&nbsp; Heard First member
       </p>
     </td>

@@ -79,41 +79,38 @@ export default async (req) => {
       ? `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+<body style="margin:0;padding:0;background:#f2f2f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
-
-  <!-- Banner -->
   <tr>
-    <td align="center" bgcolor="#000000" style="padding:0;">
+    <td align="center" bgcolor="#000000" style="padding:28px 32px 20px;">
       <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
-           alt="Before The Data — Music Discovery"
-           width="480"
-           style="display:block;max-width:100%;border:0;">
+           alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
-
-  <!-- Headline -->
   <tr>
-    <td bgcolor="#000000" style="padding:36px 32px 0;">
-      <h2 style="margin:0 0 20px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">WE LIKE IT.</h2>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">We listened to your submission and we want to post it on Before The Data.</p>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">Check the site within 48 hours. Your track will be live.</p>
-      <p style="margin:0 0 32px;font-size:15px;color:#aaaaaa;line-height:1.8;">Keep making music. We will keep watching.</p>
-      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;">Check the site →</a>
+    <td bgcolor="#ffffff" style="padding:40px 40px 16px;">
+      <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">SUBMISSION APPROVED</p>
+      <h2 style="margin:0 0 20px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">WE LIKE IT.</h2>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">We listened to your submission and we want to post it on Before The Data.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Check the site within 48 hours. Your track will be live.</p>
+      <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">Keep making music. We will keep watching.</p>
     </td>
   </tr>
-
-  <!-- Footer -->
+  <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
   <tr>
-    <td bgcolor="#000000" style="padding:40px 32px 0;border-top:0;">
-      <p style="margin:32px 0 0;font-size:11px;color:#333333;text-align:left;">
-        <a href="https://beforethedata.com" style="color:#555555;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#000000" style="padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">CHECK THE SITE &#x2192;</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
+      <p style="margin:0;font-size:11px;color:#555555;">
+        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
       </p>
     </td>
   </tr>
-
 </table>
 </td></tr>
 </table>
@@ -121,42 +118,39 @@ export default async (req) => {
       : `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+<body style="margin:0;padding:0;background:#f2f2f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
-
-  <!-- Banner -->
   <tr>
-    <td align="center" bgcolor="#000000" style="padding:0;">
+    <td align="center" bgcolor="#000000" style="padding:28px 32px 20px;">
       <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
-           alt="Before The Data — Music Discovery"
-           width="480"
-           style="display:block;max-width:100%;border:0;">
+           alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
-
-  <!-- Headline -->
   <tr>
-    <td bgcolor="#000000" style="padding:36px 32px 0;">
-      <h2 style="margin:0 0 20px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">THANK YOU.</h2>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">We genuinely appreciate you submitting to Before The Data.</p>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">After listening, this one is not the right fit for us right now. We are going to pass.</p>
-      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">Please know this is just our opinion, and opinions change. We approve on a song by song basis, so we encourage you to keep submitting. You never know what will land.</p>
-      <p style="margin:0 0 32px;font-size:15px;color:#aaaaaa;line-height:1.8;">Keep creating. The right one is coming.</p>
-      <a href="https://beforethedata.com/submit.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;">Submit again →</a>
+    <td bgcolor="#ffffff" style="padding:40px 40px 16px;">
+      <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">SUBMISSION REVIEWED</p>
+      <h2 style="margin:0 0 20px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">THANK YOU.</h2>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">We genuinely appreciate you submitting to Before The Data.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">After listening, this one is not the right fit for us right now. We are going to pass.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Please know this is just our opinion, and opinions change. We approve on a song by song basis, so we encourage you to keep submitting. You never know what will land.</p>
+      <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">Keep creating. The right one is coming.</p>
     </td>
   </tr>
-
-  <!-- Footer -->
+  <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
   <tr>
-    <td bgcolor="#000000" style="padding:40px 32px 0;">
-      <p style="margin:32px 0 0;font-size:11px;color:#333333;text-align:left;">
-        <a href="https://beforethedata.com" style="color:#555555;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#000000" style="padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com/submit.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">SUBMIT AGAIN &#x2192;</a>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
+      <p style="margin:0;font-size:11px;color:#555555;">
+        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
       </p>
     </td>
   </tr>
-
 </table>
 </td></tr>
 </table>
