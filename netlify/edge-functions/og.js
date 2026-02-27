@@ -19,6 +19,8 @@ export default async (request, context) => {
   const docId = `btd_post_${slug}`;
 
   try {
+    // Hard timeout — never crash the page
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000));
     const firebaseUrl = `https://firestore.googleapis.com/v1/projects/${PROJECT}/databases/(default)/documents/config/${docId}?key=${FIREBASE_KEY}`;
     const resp = await fetch(firebaseUrl);
     if (!resp.ok) return context.next();
@@ -55,4 +57,4 @@ export default async (request, context) => {
   }
 };
 
-export const config = { path: '/*' };
+// Path scoping handled by netlify.toml
