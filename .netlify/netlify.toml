@@ -7,7 +7,7 @@ headers = []
 [build]
 edge_functions = "/Users/clawdbot/before-the-data/netlify/edge-functions"
 publish = "/Users/clawdbot/before-the-data"
-publishOrigin = "default"
+publishOrigin = "config"
 functions = "/Users/clawdbot/before-the-data/netlify/functions"
 
 [build.environment]
@@ -40,6 +40,18 @@ function = "og"
 
 [functions."*"]
 node_bundler = "esbuild"
+
+[[redirects]]
+from = "/artist/*"
+to = "/artist.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
 
 [[redirects]]
 from = "/:slug"

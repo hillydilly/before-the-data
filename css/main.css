@@ -974,3 +974,58 @@ ul { list-style: none; }
   flex: 1;
   min-width: 0;
 }
+
+/* ── Heard First nav highlight ─────────────────────────────────── */
+.nav-heard-first {
+  color: #000 !important;
+  font-weight: 700 !important;
+  background: #f5f0e8;
+  border-radius: 8px;
+  margin-top: 4px;
+}
+.nav-heard-first:hover {
+  background: #ebe4d4 !important;
+}
+[data-theme="dark"] .nav-heard-first {
+  color: #ffd700 !important;
+  background: rgba(255,215,0,0.08);
+}
+[data-theme="dark"] .nav-heard-first:hover {
+  background: rgba(255,215,0,0.14) !important;
+}
+
+/* ── Mobile Heard First sticky CTA ─────────────────────────────── */
+#hf-mobile-cta {
+  display: none;
+}
+@media (max-width: 700px) {
+  #hf-mobile-cta {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: #000;
+    border-top: 1px solid #222;
+  }
+  #hf-mobile-cta a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  #hf-mobile-cta .hf-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: #888;
+  }
+  /* Pad bottom of page so content isn't hidden behind the bar */
+  body { padding-bottom: 56px; }
+}

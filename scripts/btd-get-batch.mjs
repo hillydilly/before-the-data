@@ -6,12 +6,13 @@
  * Usage: node btd-get-batch.mjs [--batch 25] [--dry-run]
  */
 
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 const FIREBASE_PROJECT = 'ar-scouting-dashboard';
 const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
 const BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT}/databases/(default)/documents`;
 const CSV_PATH = '/Users/clawdbot/before-the-data/data/new-music-playlist.csv';
+const ID_CACHE_PATH = '/Users/clawdbot/before-the-data/data/btd-posted-ids.json';
 
 const args = process.argv.slice(2);
 const batchSize = parseInt(args[args.indexOf('--batch') + 1] || '25');
@@ -55,14 +56,42 @@ function trackIdFromUri(uri) {
   return uri.replace('spotify:track:', '');
 }
 
-// --- Fetch existing Firebase post IDs ---
+// --- Local ID cache ---
+function loadIdCache() {
+  try {
+    const raw = readFileSync(ID_CACHE_PATH, 'utf8');
+    return new Set(JSON.parse(raw));
+  } catch { return null; }
+}
+
+function saveIdCache(ids) {
+  try {
+    writeFileSync(ID_CACHE_PATH, JSON.stringify([...ids]), 'utf8');
+  } catch { /* non-fatal */ }
+}
+
+// --- Fetch existing Firebase post IDs (with retry on 429) ---
 async function getExistingPostIds() {
   const ids = new Set();
   let nextPageToken = null;
+  let fetchFailed = false;
+
   do {
     const url = `${BASE_URL}/config?key=${FIREBASE_KEY}&pageSize=100${nextPageToken ? `&pageToken=${nextPageToken}` : ''}`;
-    const res = await fetch(url);
-    if (!res.ok) break;
+    let res;
+    // Retry up to 4 times with backoff on rate-limit
+    for (let attempt = 0; attempt < 4; attempt++) {
+      res = await fetch(url);
+      if (res.status !== 429) break;
+      const wait = (attempt + 1) * 2000;
+      process.stderr.write(`  ⏳ Firebase rate limited, retrying in ${wait / 1000}s...\n`);
+      await new Promise(r => setTimeout(r, wait));
+    }
+    if (!res.ok) {
+      process.stderr.write(`  ⚠️  Firebase fetch failed (${res.status}) — falling back to local cache\n`);
+      fetchFailed = true;
+      break;
+    }
     const data = await res.json();
     for (const doc of (data.documents || [])) {
       const name = doc.name?.split('/').pop() || '';
@@ -72,6 +101,21 @@ async function getExistingPostIds() {
     }
     nextPageToken = data.nextPageToken || null;
   } while (nextPageToken);
+
+  if (fetchFailed) {
+    // Merge with local cache so we don't re-post anything we know about
+    const cached = loadIdCache();
+    if (cached) {
+      process.stderr.write(`  📁 Using local cache (${cached.size} known IDs)\n`);
+      for (const id of cached) ids.add(id);
+    } else {
+      process.stderr.write(`  ❌ No local cache found — cannot safely determine posted tracks\n`);
+    }
+  } else {
+    // Save successful fetch to cache
+    saveIdCache(ids);
+  }
+
   return ids;
 }
 
