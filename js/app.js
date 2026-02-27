@@ -59,11 +59,11 @@ function createMusicCard(post) {
   // Click title or artist → navigate to post
   card.querySelector('.card-title').addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = `/${post.id}`;
+    window.location.href = `/${post.slug || post.id}`;
   });
   card.querySelector('.card-artist').addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = `/${post.id}`;
+    window.location.href = `/${post.slug || post.id}`;
   });
   return card;
 }
@@ -89,7 +89,7 @@ function createChartRow(post, rank) {
     Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
   });
   row.addEventListener('click', () => {
-    window.location.href = `/${post.id}`;
+    window.location.href = `/${post.slug || post.id}`;
   });
   return row;
 }
@@ -191,7 +191,7 @@ function createListItem(post) {
   });
 
   item.querySelector('.list-info').addEventListener('click', () => {
-    window.location.href = `/${post.id}`;
+    window.location.href = `/${post.slug || post.id}`;
   });
 
   return item;

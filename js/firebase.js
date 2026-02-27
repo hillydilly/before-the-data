@@ -267,9 +267,11 @@ async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limi
 }
 
 async function fetchPostById(id) {
+  // Strip btd_post_ prefix if already present (avoid double-prefix)
+  const cleanId = id.replace(/^btd_post_/, '');
   try {
     const res = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${id}?key=${FIREBASE_CONFIG.apiKey}`
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${cleanId}?key=${FIREBASE_CONFIG.apiKey}`
     );
     if (res.ok) return parsePostDoc(await res.json());
   } catch(e) {}
