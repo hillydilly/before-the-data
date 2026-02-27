@@ -8,7 +8,7 @@ export default async (req) => {
     return new Response('Method not allowed', { status: 405 });
   }
 
-  const STRIPE_SECRET = 'STRIPE_SECRET_REMOVED';
+  const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
   const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
   const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
   const RESEND_KEY = 're_GEpDNamo_ES7dvBB6SzemdjpATYtErpGb';
