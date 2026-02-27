@@ -307,6 +307,20 @@
       showStep('step-form');
       document.querySelector('.tier-toggle').style.display = 'none';
       selectedTier = 'paid';
+      // Try to restore form fields from localStorage
+      try {
+        const pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}');
+        if (pending.spotifyUrl) document.getElementById('spotify-url').value = pending.spotifyUrl;
+        if (pending.artistName) document.getElementById('artist-name').value = pending.artistName;
+        if (pending.genre) document.getElementById('genre').value = pending.genre;
+        if (pending.instagramUrl) document.getElementById('instagram-url').value = pending.instagramUrl;
+        if (pending.tiktokUrl) document.getElementById('tiktok-url').value = pending.tiktokUrl;
+        if (pending.bio) {
+          document.getElementById('bio').value = pending.bio;
+          document.getElementById('bio-count').textContent = pending.bio.length;
+        }
+      } catch(e) {}
+      document.getElementById('submit-btn').textContent = 'Submit Track →';
     } else if (capturedEmail) {
       showStep('step-form');
     }
