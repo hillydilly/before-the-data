@@ -282,11 +282,14 @@
       try { window.history.replaceState({}, '', window.location.pathname); } catch(e) {}
     }
     const sessionId = params.get('session_id') || '';
+    const emailFromUrl = params.get('e') || '';
 
     let capturedEmail = '';
     let selectedTier = 'paid'; // default to recommended
 
-    try { capturedEmail = localStorage.getItem('btd_submit_email') || ''; } catch(e) {}
+    try { capturedEmail = emailFromUrl || localStorage.getItem('btd_submit_email') || ''; } catch(e) {
+      capturedEmail = emailFromUrl || '';
+    }
 
     function showStep(id) {
       document.querySelectorAll('.step-block').forEach(el => el.classList.remove('active'));

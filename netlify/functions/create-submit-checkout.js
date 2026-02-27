@@ -22,7 +22,7 @@ export default async (req) => {
       'line_items[0][price_data][product_data][description]': 'One-time submission fee. Chad listens to everything personally.',
       'line_items[0][price_data][unit_amount]': '500',
       'line_items[0][quantity]': '1',
-      'success_url': `${origin}/submit.html?paid=1&session_id={CHECKOUT_SESSION_ID}`,
+      'success_url': `${origin}/submit.html?paid=1&session_id={CHECKOUT_SESSION_ID}&e=${encodeURIComponent(email)}`,
       'cancel_url': `${origin}/submit.html`,
       'billing_address_collection': 'auto',
       'allow_promotion_codes': 'true',
