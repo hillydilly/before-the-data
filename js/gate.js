@@ -58,14 +58,13 @@ const BTDGate = (() => {
           <div class="gate-logo">
             <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32">
           </div>
-          <h2 class="gate-headline">You just heard it early.</h2>
-          <p class="gate-sub">That's the whole idea. Before The Data has been finding artists before anyone else since 2007. Billie Eilish, Lorde, Halsey, LANY, Daniel Caesar. All found here first.</p>
-          <p class="gate-sub2">Drop your email and get every pick like this. Free.</p>
+          <h2 class="gate-headline">Enter your email.</h2>
+          <p class="gate-sub">Already a member? Enter your email to get back in. New here? Enter your email to get access. Free.</p>
           <form class="gate-form" id="btd-gate-form">
             <input type="email" class="gate-input" id="gate-email" placeholder="your@email.com" required autocomplete="email">
-            <button type="submit" class="gate-submit">I'm In. Keep Me Posted</button>
+            <button type="submit" class="gate-submit">Continue →</button>
           </form>
-          <p class="gate-fine">No spam. Unsubscribe anytime. Already on the list? Just enter your email above.</p>
+          <p class="gate-fine">No spam. Unsubscribe anytime.</p>
         </div>
       </div>
     `;
