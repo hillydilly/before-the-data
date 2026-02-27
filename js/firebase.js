@@ -235,22 +235,32 @@ function parsePostDoc(doc) {
   };
 }
 
-/* Fetch all posts from config collection (btd_post_* docs) via REST — paginates if needed */
+/* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
 async function fetchPostsFromFirebase() {
+  const CACHE_KEY = 'btd_posts_cache';
+  const CACHE_TTL = 10 * 60 * 1000;
   try {
-    let allDocs = [];
-    let pageToken = null;
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { ts, posts } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) return posts;
+    }
+  } catch(e) {}
+  try {
+    let allDocs = [], pageToken = null;
     do {
       const url = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500${pageToken ? '&pageToken=' + pageToken : ''}`;
       const res = await fetch(url);
-      if (!res.ok) break;
+      if (!res.ok) { if (res.status === 429) console.warn('[BTD] Firebase quota exceeded'); break; }
       const data = await res.json();
       const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
       allDocs = allDocs.concat(docs);
       pageToken = data.nextPageToken || null;
     } while (pageToken);
     if (allDocs.length === 0) return null;
-    return allDocs.map(parsePostDoc);
+    const posts = allDocs.map(parsePostDoc);
+    try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
+    return posts;
   } catch (e) {
     console.warn('[BTD] Posts fetch failed:', e.message);
     return null;
