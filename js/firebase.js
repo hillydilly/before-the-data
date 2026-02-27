@@ -226,6 +226,7 @@ function parsePostDoc(doc) {
     country: strVal(f.country),
     publishedAt: { seconds: Math.floor(new Date(strVal(f.publishedAt) || Date.now()).getTime() / 1000) },
     tags: arrVal(f.tags),
+    genres: arrVal(f.genres) || (strVal(f.genre) ? [strVal(f.genre)] : []),
     socialLinks: mapVal(f.socialLinks),
     writeup: strVal(f.writeup),
     tracks: [],
