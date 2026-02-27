@@ -55,7 +55,7 @@ export default async (req) => {
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="padding:10px 0;">
-            <p style="margin:0;font-size:14px;color:#000000;font-weight:600;">Full catalog. 30-second previews. Real write-ups.</p>
+            <p style="margin:0;font-size:14px;color:#000000;font-weight:600;">Full catalog. 30-second previews. Write-ups on every pick.</p>
             <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Every pick we've ever made. Context behind each one: what it is, why it matters, where it's going. No algorithm. Just taste.</p>
           </td>
         </tr>
