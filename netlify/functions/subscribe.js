@@ -31,7 +31,7 @@ export default async (req) => {
   <!-- Header -->
   <tr>
     <td style="background:#000000;padding:32px;text-align:center;">
-      <img src="https://beforethedata.com/assets/brand/wordmark-full.png" alt="Before The Data" width="160" style="display:inline-block;max-width:160px;">
+      <img src="https://beforethedata.com/assets/brand/logo-dark-bg.jpg" alt="Before The Data" width="160" style="display:inline-block;max-width:160px;">
     </td>
   </tr>
 
