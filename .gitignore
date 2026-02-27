@@ -4,3 +4,4 @@ remotion/output/
 remotion/node_modules/
 *.mp4
 *.mov
+remotion/public/frames/
