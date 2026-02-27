@@ -303,24 +303,53 @@
 
     // On load
     if (paidReturn) {
-      // Came back from Stripe — show form, prefill as paid, skip tier choice
-      showStep('step-form');
-      document.querySelector('.tier-toggle').style.display = 'none';
+      // Came back from Stripe — auto-submit immediately
       selectedTier = 'paid';
-      // Try to restore form fields from localStorage
-      try {
-        const pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}');
-        if (pending.spotifyUrl) document.getElementById('spotify-url').value = pending.spotifyUrl;
-        if (pending.artistName) document.getElementById('artist-name').value = pending.artistName;
-        if (pending.genre) document.getElementById('genre').value = pending.genre;
-        if (pending.instagramUrl) document.getElementById('instagram-url').value = pending.instagramUrl;
-        if (pending.tiktokUrl) document.getElementById('tiktok-url').value = pending.tiktokUrl;
-        if (pending.bio) {
-          document.getElementById('bio').value = pending.bio;
-          document.getElementById('bio-count').textContent = pending.bio.length;
-        }
-      } catch(e) {}
-      document.getElementById('submit-btn').textContent = 'Submit Track →';
+      let pending = {};
+      try { pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}'); } catch(e) {}
+
+      if (pending.spotifyUrl && pending.artistName && pending.genre) {
+        // We have the data — submit silently, show success
+        showStep('step-form'); // show briefly while submitting
+        (async () => {
+          try {
+            const res = await fetch('/api/submit-music', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: capturedEmail,
+                ...pending,
+                tier: 'paid',
+                stripeSessionId: sessionId
+              })
+            });
+            if (!res.ok) throw new Error('Failed');
+            try { localStorage.removeItem('btd_pending_submission'); localStorage.removeItem('btd_submit_email'); } catch(e) {}
+            document.getElementById('success-headline').textContent = 'You Are In.';
+            document.getElementById('success-msg').innerHTML = 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.<br><br>Check your inbox for a confirmation email.';
+            showStep('step-success');
+          } catch(err) {
+            // Show form as fallback so they can retry
+            document.querySelector('.tier-toggle').style.display = 'none';
+            if (pending.spotifyUrl) document.getElementById('spotify-url').value = pending.spotifyUrl;
+            if (pending.artistName) document.getElementById('artist-name').value = pending.artistName;
+            if (pending.genre) document.getElementById('genre').value = pending.genre;
+            if (pending.instagramUrl) document.getElementById('instagram-url').value = pending.instagramUrl;
+            if (pending.tiktokUrl) document.getElementById('tiktok-url').value = pending.tiktokUrl;
+            if (pending.bio) { document.getElementById('bio').value = pending.bio; document.getElementById('bio-count').textContent = pending.bio.length; }
+            document.getElementById('submit-btn').textContent = 'Submit Track →';
+            showStep('step-form');
+          }
+        })();
+      } else {
+        // No stored data — show form for manual re-entry
+        document.querySelector('.tier-toggle').style.display = 'none';
+        document.getElementById('submit-btn').textContent = 'Submit Track →';
+        const errEl = document.getElementById('submit-error');
+        errEl.textContent = 'Your payment went through. Please fill in your details below and hit submit — you will not be charged again.';
+        errEl.classList.add('visible');
+        showStep('step-form');
+      }
     } else if (capturedEmail) {
       showStep('step-form');
     }
