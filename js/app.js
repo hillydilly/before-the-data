@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     case 'popular': await renderPopular(); break;
     case 'search': initSearch(); break;
     case 'post': await renderPost(); break;
+    case 'artist': await renderArtist(); break;
   }
 });
 
@@ -169,19 +170,25 @@ function createListItem(post) {
   const writeupText = rawWriteup.replace(/<[^>]*>/g, '').trim();
 
   item.innerHTML = `
-    <div class="list-art">
+    <div class="list-art" data-post-link="${post.slug || post.id}">
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="list-play-overlay">
         <button class="list-play-btn">&#9654;</button>
       </div>
     </div>
     <div class="list-info">
-      <div class="list-artist">${post.artist}</div>
+      <a class="list-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
       <div class="list-title">${post.title}</div>
       ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
       <div class="list-date">${timeAgo(post.publishedAt)}</div>
     </div>
   `;
+
+  // Artwork click → post page
+  item.querySelector('.list-art').addEventListener('click', (e) => {
+    if (e.target.classList.contains('list-play-btn')) return;
+    window.location.href = `/${post.slug || post.id}`;
+  });
 
   item.querySelector('.list-play-btn').addEventListener('click', (e) => {
     e.stopPropagation();
@@ -193,7 +200,8 @@ function createListItem(post) {
     }
   });
 
-  item.querySelector('.list-info').addEventListener('click', () => {
+  // Title click → post page
+  item.querySelector('.list-title').addEventListener('click', () => {
     window.location.href = `/${post.slug || post.id}`;
   });
 
@@ -320,6 +328,49 @@ function initSearch() {
 }
 
 /* --- Post Detail Page --- */
+function artistSlug(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+async function renderArtist() {
+  // Get artist from URL: /artist/tame-impala
+  const pathParts = window.location.pathname.split('/').filter(Boolean);
+  const slug = pathParts[1] || pathParts[0] || '';
+  if (!slug) return;
+
+  const allPosts = await fetchPosts('publishedAt', 'desc', 500);
+  // Match by artistSlug
+  const posts = allPosts.filter(p => artistSlug(p.artist || '') === slug || (p.artist || '').split(',').some(a => artistSlug(a.trim()) === slug));
+
+  const artistName = posts[0]?.artist?.split(',')[0]?.trim() || slug.replace(/-/g, ' ');
+
+  // Hero
+  const hero = document.getElementById('artist-hero');
+  if (hero) {
+    hero.innerHTML = `
+      <div class="artist-hero-inner">
+        ${posts[0]?.artUrl ? `<img class="artist-hero-art" src="${posts[0].artUrl}" alt="${artistName}">` : ''}
+        <div class="artist-hero-meta">
+          <div class="artist-hero-name">${artistName}</div>
+          <div class="artist-hero-count">${posts.length} post${posts.length !== 1 ? 's' : ''} on Before The Data</div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Posts grid
+  const postsEl = document.getElementById('artist-posts');
+  if (postsEl) {
+    if (posts.length === 0) {
+      postsEl.innerHTML = '<div class="loading-msg">No posts found for this artist.</div>';
+      return;
+    }
+    postsEl.className = 'artist-posts music-grid list-view';
+    Player.setQueue(posts);
+    posts.forEach(p => postsEl.appendChild(createListItem(p)));
+  }
+}
+
 async function renderPost() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
@@ -350,7 +401,7 @@ async function renderPost() {
       ${post.previewUrl ? `<div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>` : ''}
     </div>
     <div class="post-hero-meta">
-      <div class="post-artist">${post.artist}</div>
+      <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">  ${post.artist}</a>
       <div class="post-title">${post.title}</div>
       <div class="post-date">Published ${timeAgo(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>

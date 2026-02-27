@@ -884,3 +884,53 @@ ul { list-style: none; }
 }
 .genre-btn:hover { background: #e0e0e0; }
 .genre-btn.active { background: #000; color: #fff; }
+
+/* ── Artist Pages ─────────────────────────────────────────────── */
+.artist-hero {
+  padding: 0;
+  margin-bottom: 24px;
+}
+.artist-hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 24px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #eee;
+}
+.artist-hero-art {
+  width: 100px; height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.artist-hero-name {
+  font-size: 32px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.artist-hero-count {
+  font-size: 13px;
+  color: #888;
+}
+.artist-posts {
+  padding: 0 24px 40px;
+}
+
+/* Artist name links — no underline, inherit color, pointer */
+.list-artist, .card-artist, .post-artist {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.list-artist:hover, .card-artist:hover, .post-artist:hover {
+  text-decoration: underline;
+}
+
+/* Artwork is clickable */
+.list-art {
+  cursor: pointer;
+}

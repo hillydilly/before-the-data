@@ -1,3 +1,5 @@
 # Static pages served directly (no redirect needed for .html files)
+# Artist pages
+/artist/*  /artist.html  200
 # Catch-all: clean post URLs → post.html (Netlify rewrite, URL stays clean)
 /:slug  /post.html  200

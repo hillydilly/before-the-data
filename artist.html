@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist — Before The Data</title>
+  <meta name="description" content="Free music discovery — Before The Data.">
+  <meta name="keywords" content="free music discovery, new music, indie music, emerging artists, before the data, hillydilly, chad hillard">
+  <meta name="author" content="Chad Hillard">
+  <link rel="canonical" href="https://beforethedata.com/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://beforethedata.com/">
+  <meta property="og:title" content="Before The Data — Free Music Discovery">
+  <meta property="og:description" content="Free music discovery — Before The Data.">
+  <meta property="og:image" content="https://beforethedata.com/assets/og-image.jpg">
+  <meta property="og:site_name" content="Before The Data">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@beforethedata">
+  <meta name="twitter:title" content="Before The Data — Free Music Discovery">
+  <meta name="twitter:description" content="Free music discovery — Before The Data.">
+  <meta name="twitter:image" content="https://beforethedata.com/assets/og-image.jpg">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon"></head>
+<body data-page="artist">
+  <div id="player-bar">
+    <img class="player-art" src="assets/brand/logo-black.jpg" alt="">
+    <div class="player-controls">
+      <button class="prev-btn" title="Previous">&#9198;</button>
+      <button class="play-btn" title="Play">&#9654;</button>
+      <button class="next-btn" title="Next">&#9197;</button>
+    </div>
+    <div class="player-info">
+      <div class="player-title">Select a track to play</div>
+      <div class="player-source">SPOTIFY</div>
+    </div>
+    <div class="player-right">
+      <button class="heart-btn" title="Like">&#9825;</button>
+      <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.8">
+    </div>
+    <div class="player-progress"><div class="player-progress-fill"></div></div>
+  </div>
+
+  <aside id="sidebar">
+    <a href="index.html" class="sidebar-brand">
+      <img src="assets/brand/logo-black.jpg" alt="BTD">
+      <span class="brand-name">Before The Data</span>
+    </a>
+    <nav>
+      <a href="index.html"><span class="nav-icon">◈</span> Discover</a>
+      <a href="new-music.html"><span class="nav-icon">♪</span> New Music</a>
+      <a href="popular.html"><span class="nav-icon">▲</span> Popular</a>
+      <a href="search.html"><span class="nav-icon">⌕</span> Search</a>
+      <a href="submit.html"><span class="nav-icon">📬</span> Submit Music</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="about.html">About</a>
+      <a href="heard-first.html" style="font-weight:700;">★ Heard First</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div id="artist-content">
+      <div id="artist-hero" class="artist-hero">
+        <div class="loading-msg">Loading…</div>
+      </div>
+      <div class="post-body-wrap">
+        <div class="artist-info" id="artist-info"></div>
+
+      </div>
+      <div id="artist-posts" class="artist-posts"></div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js?v=20260227d"></script>
+  <script src="js/gate.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js?v=20260227d"></script>
+</body>
+</html>
