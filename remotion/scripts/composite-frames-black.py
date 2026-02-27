@@ -46,7 +46,22 @@ def flood_fill_exterior(alpha_data, w, h):
 def composite_frame(frame_path, art_img, output_path):
     frame = Image.open(frame_path).convert('RGBA')
     w, h = frame.size
-    art_resized = art_img.resize((w, h), Image.LANCZOS)
+    # Center-crop to fill the frame without stretching
+    art_w, art_h = art_img.size
+    art_ratio = art_w / art_h
+    frame_ratio = w / h
+    if art_ratio > frame_ratio:
+        new_h = h
+        new_w = int(art_ratio * h)
+        art_scaled = art_img.resize((new_w, new_h), Image.LANCZOS)
+        left = (new_w - w) // 2
+        art_resized = art_scaled.crop((left, 0, left + w, h))
+    else:
+        new_w = w
+        new_h = int(w / art_ratio)
+        art_scaled = art_img.resize((new_w, new_h), Image.LANCZOS)
+        top = (new_h - h) // 3
+        art_resized = art_scaled.crop((0, top, w, top + h))
 
     alpha_data = list(frame.split()[3].getdata())
     exterior = flood_fill_exterior(alpha_data, w, h)

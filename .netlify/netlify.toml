@@ -1,12 +1,13 @@
 functionsDirectory = "/Users/clawdbot/before-the-data/netlify/functions"
-functionsDirectoryOrigin = "default"
+functionsDirectoryOrigin = "config"
+redirectsOrigin = "config"
 plugins = []
 headers = []
 
 [build]
 edge_functions = "/Users/clawdbot/before-the-data/netlify/edge-functions"
 publish = "/Users/clawdbot/before-the-data"
-publishOrigin = "ui"
+publishOrigin = "default"
 functions = "/Users/clawdbot/before-the-data/netlify/functions"
 
 [build.environment]
@@ -24,16 +25,73 @@ functions = "/Users/clawdbot/before-the-data/netlify/functions"
 [build.services]
 
 [[edge_functions]]
-path = "/*"
+path = "/og"
+function = "og"
+
+[[edge_functions]]
+path = "/new-music"
+function = "og"
+
+[[edge_functions]]
+path = "/post/*"
 function = "og"
 
 [functions]
 
 [functions."*"]
+node_bundler = "esbuild"
 
 [[redirects]]
 from = "/:slug"
 to = "/post.html"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/submit-music"
+to = "/.netlify/functions/submit-music"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/subscribe"
+to = "/.netlify/functions/subscribe"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/create-checkout"
+to = "/.netlify/functions/create-checkout"
+status = 200.0
+force = false
+
+[redirects.query]
+
+[redirects.conditions]
+
+[redirects.headers]
+
+[[redirects]]
+from = "/api/stripe-webhook"
+to = "/.netlify/functions/stripe-webhook"
 status = 200.0
 force = false
 

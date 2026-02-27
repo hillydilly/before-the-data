@@ -156,7 +156,12 @@ export const BTDReel: React.FC<BTDReelProps> = ({
     : interpolate(tPhase, [0, 1], [548, 1028], { easing: easeIO, ...clamp });
   const footSz = inTitle ? 60 : 42;
 
-  const audioVol = interpolate(frame, [0, 45], [0, 1], { extrapolateRight: 'clamp' });
+  const audioVol = interpolate(
+    frame,
+    [0, 45, 400, 440],
+    [0, 1, 1, 0],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+  );
 
   return (
     <div style={{ width, height, position: 'relative', overflow: 'hidden', backgroundColor: resolvedBg }}>
@@ -168,22 +173,7 @@ export const BTDReel: React.FC<BTDReelProps> = ({
 
       {previewUrl && <Audio src={previewUrl} volume={audioVol} />}
 
-      {/* ── TEXTURE — dark grain looped over red bg via screen blend ─────────── */}
-      <Video
-        src={staticFile('background/texture.mp4')}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          mixBlendMode: 'screen',
-          opacity: 0.6,
-          zIndex: 1,
-        }}
-        loop
-        muted
-      />
+      {/* TEXTURE removed */}
 
       {/* ── COMPOSITE FRAME — drives entire animation after title card ───────── */}
       {/* Composite frames are 1500×1500. Content (card) lives at x=262-1238, y=266-1227 (976×961px).

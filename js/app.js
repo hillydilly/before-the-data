@@ -80,9 +80,8 @@ function createChartRow(post, rank) {
       <div class="chart-artist">${post.artist}</div>
       <div class="chart-title">${post.title}</div>
     </div>
-    <div class="chart-actions">
-      <button title="Like">&#9825;</button>
-      <button title="More">&#8943;</button>
+    <div class="chart-trend ${rank <= 5 ? 'trend-up' : rank <= 15 ? 'trend-neutral' : 'trend-down'}">
+      ${rank <= 5 ? '▲' : rank <= 15 ? '—' : '▼'}
     </div>
   `;
   row.querySelector('.chart-play').addEventListener('click', (e) => {
@@ -107,8 +106,8 @@ function createChartRowFromTrack(track) {
       <div class="chart-artist">${track.artist}${track.explicit ? ' <span class="explicit">E</span>' : ''}</div>
       <div class="chart-title">${track.title}</div>
     </div>
-    <div class="chart-actions">
-      <button title="Like">&#9825;</button>
+    <div class="chart-trend ${track.rank <= 5 ? 'trend-up' : track.rank <= 15 ? 'trend-neutral' : 'trend-down'}">
+      ${track.rank <= 5 ? '▲' : track.rank <= 15 ? '—' : '▼'}
     </div>
   `;
   // Disable play button if no preview available

@@ -16,7 +16,6 @@ const Player = (() => {
   const playBtn = bar?.querySelector('.play-btn');
   const prevBtn = bar?.querySelector('.prev-btn');
   const nextBtn = bar?.querySelector('.next-btn');
-  const heartBtn = bar?.querySelector('.heart-btn');
   const progressFill = bar?.querySelector('.player-progress-fill');
   const volumeSlider = bar?.querySelector('.volume-slider');
 

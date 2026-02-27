@@ -934,3 +934,18 @@ ul { list-style: none; }
 .list-art {
   cursor: pointer;
 }
+
+/* ── Chart Trend Arrows ───────────────────────────────────────── */
+.chart-trend {
+  font-size: 13px;
+  font-weight: 700;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.trend-up   { color: #22c55e; } /* green */
+.trend-down { color: #ef4444; } /* red */
+.trend-neutral { color: #999; font-size: 11px; }
+
+/* Remove old chart-actions styles */
+.chart-actions { display: none; }
