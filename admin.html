@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BTD Admin — Submissions</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #f5f5f5;
+      color: #000;
+      min-height: 100vh;
+    }
+
+    /* ── Login Screen ── */
+    #login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #000;
+    }
+    #login-screen.hidden { display: none; }
+    .login-card {
+      background: #111; padding: 48px 40px; width: 100%; max-width: 360px;
+      border: 1px solid #222;
+    }
+    .login-card h1 {
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      color: #666; margin-bottom: 32px;
+    }
+    .login-card h1 span { color: #fff; }
+    .login-input {
+      width: 100%; padding: 13px 16px; background: #000; border: 1px solid #333;
+      color: #fff; font-size: 15px; font-family: inherit; outline: none;
+      margin-bottom: 12px;
+    }
+    .login-input:focus { border-color: #fff; }
+    .login-btn {
+      width: 100%; padding: 13px; background: #fff; color: #000;
+      font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; cursor: pointer; border: none;
+      font-family: inherit;
+    }
+    .login-btn:hover { background: #ddd; }
+    .login-error { font-size: 12px; color: #f87171; margin-top: 10px; }
+
+    /* ── Main App ── */
+    #app { display: none; }
+    #app.visible { display: block; }
+
+    .topbar {
+      background: #000; padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .topbar-title { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #fff; }
+    .topbar-meta { font-size: 11px; color: #555; }
+    .topbar-logout {
+      font-size: 11px; color: #555; cursor: pointer; text-decoration: underline;
+      background: none; border: none; font-family: inherit;
+    }
+    .topbar-logout:hover { color: #fff; }
+
+    .filter-bar {
+      background: #fff; border-bottom: 1px solid #eee;
+      padding: 12px 32px; display: flex; gap: 8px; align-items: center;
+    }
+    .filter-btn {
+      padding: 6px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; cursor: pointer; border: 1px solid #e0e0e0;
+      background: #fff; font-family: inherit; color: #999;
+    }
+    .filter-btn.active { background: #000; color: #fff; border-color: #000; }
+    .filter-count { font-size: 11px; color: #999; margin-left: auto; }
+
+    .main-layout {
+      display: grid; grid-template-columns: 340px 1fr;
+      height: calc(100vh - 97px);
+    }
+
+    /* ── List Panel ── */
+    .list-panel {
+      background: #fff; border-right: 1px solid #eee;
+      overflow-y: auto;
+    }
+    .list-item {
+      padding: 16px 20px; border-bottom: 1px solid #f5f5f5;
+      cursor: pointer; transition: background 0.1s;
+    }
+    .list-item:hover { background: #fafafa; }
+    .list-item.selected { background: #000; }
+    .list-item.selected .li-name { color: #fff; }
+    .list-item.selected .li-meta { color: #888; }
+    .list-item.selected .li-badge { background: #333; color: #aaa; }
+    .li-name { font-size: 14px; font-weight: 700; color: #000; margin-bottom: 3px; }
+    .li-meta { font-size: 11px; color: #999; }
+    .li-badge {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      padding: 2px 7px; margin-left: 6px; vertical-align: middle;
+    }
+    .li-badge.paid { background: #000; color: #fff; }
+    .li-badge.free { background: #f0f0f0; color: #999; }
+    .li-badge.approved { background: #dcfce7; color: #166534; }
+    .li-badge.denied { background: #fee2e2; color: #991b1b; }
+    .list-empty { padding: 40px 20px; text-align: center; font-size: 13px; color: #aaa; }
+
+    /* ── Detail Panel ── */
+    .detail-panel {
+      background: #fafafa; overflow-y: auto; padding: 32px;
+    }
+    .detail-empty {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; font-size: 13px; color: #aaa;
+    }
+    .detail-header { margin-bottom: 24px; }
+    .detail-artist { font-size: 28px; font-weight: 700; color: #000; margin-bottom: 4px; }
+    .detail-genre { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #999; }
+
+    .detail-actions { display: flex; gap: 10px; margin-bottom: 28px; }
+    .action-btn {
+      padding: 12px 28px; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; cursor: pointer; border: none; font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .action-btn:disabled { opacity: 0.4; cursor: default; }
+    .btn-approve { background: #000; color: #fff; }
+    .btn-approve:hover:not(:disabled) { background: #222; }
+    .btn-deny { background: #fff; color: #000; border: 1px solid #e0e0e0; }
+    .btn-deny:hover:not(:disabled) { background: #fee2e2; border-color: #fca5a5; }
+
+    .shortcut-hint { font-size: 11px; color: #bbb; margin-top: -20px; margin-bottom: 24px; }
+
+    .detail-section { margin-bottom: 24px; }
+    .detail-label {
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      color: #999; margin-bottom: 8px; font-weight: 600;
+    }
+    .detail-value { font-size: 14px; color: #333; line-height: 1.6; }
+
+    .spotify-btn {
+      display: inline-block; background: #000; color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 10px 20px;
+      text-decoration: none; margin-bottom: 12px;
+    }
+    .spotify-btn:hover { background: #333; }
+
+    .audio-player {
+      width: 100%; margin-bottom: 8px;
+      accent-color: #000;
+    }
+    .audio-loading { font-size: 12px; color: #aaa; }
+
+    .social-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .social-link {
+      font-size: 12px; color: #000; text-decoration: none;
+      padding: 6px 12px; border: 1px solid #e0e0e0;
+    }
+    .social-link:hover { border-color: #000; }
+
+    .detail-meta {
+      font-size: 11px; color: #bbb; border-top: 1px solid #eee;
+      padding-top: 16px; margin-top: 8px;
+    }
+
+    .status-banner {
+      padding: 10px 16px; font-size: 12px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .status-banner.approved { background: #dcfce7; color: #166534; }
+    .status-banner.denied { background: #fee2e2; color: #991b1b; }
+
+    .loading-state { padding: 40px; text-align: center; font-size: 13px; color: #aaa; }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>Before The Data <span>/ Admin</span></h1>
+    <input type="password" class="login-input" id="password-input" placeholder="Password" autocomplete="current-password">
+    <button class="login-btn" id="login-btn">Enter →</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-title">BTD / Submissions</div>
+    <div style="display:flex;gap:20px;align-items:center;">
+      <span class="topbar-meta" id="topbar-meta">Loading...</span>
+      <button class="topbar-logout" id="logout-btn">Log out</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="pending">Pending</button>
+    <button class="filter-btn" data-filter="approved">Approved</button>
+    <button class="filter-btn" data-filter="denied">Denied</button>
+    <button class="filter-btn" data-filter="all">All</button>
+    <span class="filter-count" id="filter-count"></span>
+  </div>
+
+  <div class="main-layout">
+    <div class="list-panel" id="list-panel">
+      <div class="loading-state">Loading submissions...</div>
+    </div>
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-empty">Select a submission to review</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
+const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
+const ADMIN_PASSWORD = 'btd2024admin';
+
+let allSubmissions = [];
+let currentFilter = 'pending';
+let selectedId = null;
+let actionInProgress = false;
+
+// ── Auth ──
+function checkAuth() {
+  return sessionStorage.getItem('btd_admin') === 'ok';
+}
+
+document.getElementById('password-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') attemptLogin();
+});
+document.getElementById('login-btn').addEventListener('click', attemptLogin);
+
+function attemptLogin() {
+  const pw = document.getElementById('password-input').value;
+  if (pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem('btd_admin', 'ok');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    init();
+  } else {
+    document.getElementById('login-error').textContent = 'Wrong password.';
+  }
+}
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem('btd_admin');
+  location.reload();
+});
+
+// ── Init ──
+function init() {
+  if (checkAuth()) {
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    loadSubmissions();
+  }
+}
+
+// ── Load ──
+async function loadSubmissions() {
+  try {
+    const res = await fetch(`https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents:runQuery?key=${FIREBASE_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        structuredQuery: {
+          from: [{ collectionId: 'config' }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: 'submittedAt' },
+              op: 'GREATER_THAN_OR_EQUAL',
+              value: { stringValue: '2026-01-01' }
+            }
+          },
+          orderBy: [{ field: { fieldPath: 'submittedAt' }, direction: 'DESCENDING' }],
+          limit: 500
+        }
+      })
+    });
+    const results = await res.json();
+    allSubmissions = (Array.isArray(results) ? results : [])
+      .filter(d => d.document?.name?.includes('btd_submission_') && !d.document?.name?.includes('btd_submission_test'))
+      .map(d => {
+        const doc = d.document;
+        const f = doc.fields || {};
+        return {
+          id: doc.name.split('/').pop(),
+          email: f.email?.stringValue || '',
+          spotifyUrl: f.spotifyUrl?.stringValue || '',
+          artistName: f.artistName?.stringValue || '(no name)',
+          genre: f.genre?.stringValue || '',
+          instagramUrl: f.instagramUrl?.stringValue || '',
+          tiktokUrl: f.tiktokUrl?.stringValue || '',
+          bio: f.bio?.stringValue || '',
+          status: f.status?.stringValue || 'pending',
+          tier: f.tier?.stringValue || 'free',
+          submittedAt: f.submittedAt?.stringValue || '',
+          stripeSessionId: f.stripeSessionId?.stringValue || ''
+        };
+      });
+
+    updateTopbar();
+    renderList();
+  } catch(err) {
+    document.getElementById('list-panel').innerHTML = `<div class="loading-state">Error loading submissions: ${err.message}</div>`;
+  }
+}
+
+function updateTopbar() {
+  const pending = allSubmissions.filter(s => s.status === 'pending').length;
+  document.getElementById('topbar-meta').textContent = `${allSubmissions.length} total · ${pending} pending`;
+}
+
+// ── Filter ──
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    selectedId = null;
+    renderList();
+    document.getElementById('detail-panel').innerHTML = '<div class="detail-empty">Select a submission to review</div>';
+  });
+});
+
+function filteredSubmissions() {
+  if (currentFilter === 'all') return allSubmissions;
+  return allSubmissions.filter(s => s.status === currentFilter);
+}
+
+// ── Render List ──
+function renderList() {
+  const items = filteredSubmissions();
+  document.getElementById('filter-count').textContent = `${items.length} submission${items.length !== 1 ? 's' : ''}`;
+
+  if (items.length === 0) {
+    document.getElementById('list-panel').innerHTML = '<div class="list-empty">No submissions.</div>';
+    return;
+  }
+
+  document.getElementById('list-panel').innerHTML = items.map(s => {
+    const date = s.submittedAt ? new Date(s.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    const tierBadge = `<span class="li-badge ${s.tier}">${s.tier}</span>`;
+    const statusBadge = s.status !== 'pending' ? `<span class="li-badge ${s.status}">${s.status}</span>` : '';
+    return `<div class="list-item${selectedId === s.id ? ' selected' : ''}" data-id="${s.id}">
+      <div class="li-name">${esc(s.artistName)}${tierBadge}${statusBadge}</div>
+      <div class="li-meta">${esc(s.genre)} · ${date} · ${esc(s.email)}</div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.list-item').forEach(el => {
+    el.addEventListener('click', () => selectSubmission(el.dataset.id));
+  });
+
+  // Auto-select first if none selected
+  if (!selectedId && items.length > 0) selectSubmission(items[0].id);
+}
+
+// ── Select ──
+function selectSubmission(id) {
+  selectedId = id;
+  // Re-render list to update selected state
+  const items = filteredSubmissions();
+  document.querySelectorAll('.list-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.id === id);
+  });
+  const s = allSubmissions.find(x => x.id === id);
+  if (!s) return;
+  renderDetail(s);
+}
+
+// ── Render Detail ──
+function renderDetail(s) {
+  const date = s.submittedAt ? new Date(s.submittedAt).toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : '';
+  const isPending = s.status === 'pending';
+
+  const statusBanner = s.status !== 'pending'
+    ? `<div class="status-banner ${s.status}">${s.status === 'approved' ? '✓ Approved' : '✕ Denied'}</div>`
+    : '';
+
+  const socials = [
+    s.instagramUrl ? `<a href="${s.instagramUrl}" target="_blank" class="social-link">Instagram ↗</a>` : '',
+    s.tiktokUrl ? `<a href="${s.tiktokUrl}" target="_blank" class="social-link">TikTok ↗</a>` : ''
+  ].filter(Boolean).join('');
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="detail-header">
+      <div class="detail-artist">${esc(s.artistName)}</div>
+      <div class="detail-genre">${esc(s.genre)} · ${s.tier === 'paid' ? '★ Guaranteed Listen' : 'Standard'}</div>
+    </div>
+
+    ${statusBanner}
+
+    ${isPending ? `
+    <div class="detail-actions">
+      <button class="action-btn btn-approve" id="btn-approve" onclick="handleAction('${s.id}', 'approve')">✓ Approve (A)</button>
+      <button class="action-btn btn-deny" id="btn-deny" onclick="handleAction('${s.id}', 'deny')">✕ Deny (D)</button>
+    </div>
+    <p class="shortcut-hint">Keyboard: A to approve · D to deny</p>
+    ` : ''}
+
+    <div class="detail-section">
+      <div class="detail-label">Listen</div>
+      <a href="${s.spotifyUrl}" target="_blank" class="spotify-btn">▶ Open on Spotify</a>
+      <div class="audio-loading" id="audio-status">Looking up preview...</div>
+      <audio class="audio-player" id="audio-player" controls style="display:none;"></audio>
+    </div>
+
+    ${s.bio ? `<div class="detail-section">
+      <div class="detail-label">Bio / Notes</div>
+      <div class="detail-value">${esc(s.bio)}</div>
+    </div>` : ''}
+
+    ${socials ? `<div class="detail-section">
+      <div class="detail-label">Socials</div>
+      <div class="social-links">${socials}</div>
+    </div>` : ''}
+
+    <div class="detail-meta">
+      Submitted by ${esc(s.email)} · ${date} CST
+      ${s.stripeSessionId ? ' · Stripe: ' + s.stripeSessionId.slice(0, 20) + '...' : ''}
+    </div>
+  `;
+
+  // Load iTunes preview
+  loadPreview(s.artistName);
+}
+
+async function loadPreview(artistName) {
+  try {
+    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artistName)}&entity=song&limit=3`);
+    const data = await res.json();
+    const track = data.results?.find(r => r.previewUrl);
+    if (track) {
+      const audio = document.getElementById('audio-player');
+      const status = document.getElementById('audio-status');
+      if (audio && status) {
+        audio.src = track.previewUrl;
+        audio.style.display = 'block';
+        status.textContent = `Preview: ${track.trackName}`;
+      }
+    } else {
+      const status = document.getElementById('audio-status');
+      if (status) status.textContent = 'No preview available — open Spotify above.';
+    }
+  } catch(e) {
+    const status = document.getElementById('audio-status');
+    if (status) status.textContent = '';
+  }
+}
+
+// ── Actions ──
+async function handleAction(id, action) {
+  if (actionInProgress) return;
+  actionInProgress = true;
+  const approveBtn = document.getElementById('btn-approve');
+  const denyBtn = document.getElementById('btn-deny');
+  if (approveBtn) { approveBtn.disabled = true; approveBtn.textContent = action === 'approve' ? 'Approving...' : '✓ Approve (A)'; }
+  if (denyBtn) { denyBtn.disabled = true; denyBtn.textContent = action === 'deny' ? 'Denying...' : '✕ Deny (D)'; }
+
+  try {
+    const res = await fetch('/api/review-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // Update local state
+    const newStatus = action === 'approve' ? 'approved' : 'denied';
+    allSubmissions = allSubmissions.map(s => s.id === id ? { ...s, status: newStatus } : s);
+    updateTopbar();
+
+    // Auto-advance to next pending
+    const remaining = filteredSubmissions().filter(s => s.id !== id);
+    selectedId = remaining.length > 0 ? remaining[0].id : null;
+    renderList();
+    if (selectedId) {
+      renderDetail(allSubmissions.find(s => s.id === selectedId));
+    } else {
+      document.getElementById('detail-panel').innerHTML = '<div class="detail-empty">All done.</div>';
+    }
+  } catch(err) {
+    alert(`Failed: ${err.message}`);
+    if (approveBtn) { approveBtn.disabled = false; approveBtn.textContent = '✓ Approve (A)'; }
+    if (denyBtn) { denyBtn.disabled = false; denyBtn.textContent = '✕ Deny (D)'; }
+  } finally {
+    actionInProgress = false;
+  }
+}
+
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', e => {
+  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if (!selectedId || actionInProgress) return;
+  const s = allSubmissions.find(x => x.id === selectedId);
+  if (!s || s.status !== 'pending') return;
+  if (e.key === 'a' || e.key === 'A') handleAction(selectedId, 'approve');
+  if (e.key === 'd' || e.key === 'D') handleAction(selectedId, 'deny');
+});
+
+// ── Utils ──
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Boot ──
+if (checkAuth()) init();
+</script>
+</body>
+</html>
