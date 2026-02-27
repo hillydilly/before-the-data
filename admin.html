@@ -98,8 +98,8 @@
       letter-spacing: 1px; text-transform: uppercase;
       padding: 2px 7px; margin-left: 6px; vertical-align: middle;
     }
-    .li-badge.paid { background: #000; color: #fff; }
-    .li-badge.free { background: #f0f0f0; color: #999; }
+    .li-badge.paid { background: #000; color: #fff; font-weight: 700; }
+    .li-badge.free { background: #f0f0f0; color: #aaa; }
     .li-badge.approved { background: #dcfce7; color: #166534; }
     .li-badge.denied { background: #fee2e2; color: #991b1b; }
     .list-empty { padding: 40px 20px; text-align: center; font-size: 13px; color: #aaa; }
@@ -343,7 +343,7 @@ function renderList() {
 
   document.getElementById('list-panel').innerHTML = items.map(s => {
     const date = s.submittedAt ? new Date(s.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-    const tierBadge = `<span class="li-badge ${s.tier}">${s.tier}</span>`;
+    const tierBadge = `<span class="li-badge ${s.tier}">${s.tier.toUpperCase()}</span>`;
     const statusBadge = s.status !== 'pending' ? `<span class="li-badge ${s.status}">${s.status}</span>` : '';
     return `<div class="list-item${selectedId === s.id ? ' selected' : ''}" data-id="${s.id}">
       <div class="li-name">${esc(s.artistName)}${tierBadge}${statusBadge}</div>
@@ -389,7 +389,7 @@ function renderDetail(s) {
   document.getElementById('detail-panel').innerHTML = `
     <div class="detail-header">
       <div class="detail-artist">${esc(s.artistName)}</div>
-      <div class="detail-genre">${esc(s.genre)} · ${s.tier === 'paid' ? '★ Guaranteed Listen' : 'Standard'}</div>
+      <div class="detail-genre">${esc(s.genre)} · ${s.tier === 'paid' ? '★ PAID — Guaranteed Listen' : 'FREE — Standard Queue'}</div>
     </div>
 
     ${statusBanner}
@@ -425,29 +425,47 @@ function renderDetail(s) {
     </div>
   `;
 
-  // Load iTunes preview
-  loadPreview(s.artistName);
+  // Load iTunes preview from submitted Spotify URL
+  loadPreview(s.artistName, s.spotifyUrl);
 }
 
-async function loadPreview(artistName) {
+async function loadPreview(artistName, spotifyUrl) {
+  const audio = document.getElementById('audio-player');
+  const status = document.getElementById('audio-status');
   try {
-    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(artistName)}&entity=song&limit=3`);
+    // Step 1: get real track name via Spotify oEmbed (no auth needed)
+    let trackName = '';
+    if (spotifyUrl) {
+      try {
+        const oembed = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(spotifyUrl)}`);
+        const odata = await oembed.json();
+        // oEmbed title is usually "Track Name by Artist"
+        const titleRaw = odata.title || '';
+        trackName = titleRaw.includes(' by ') ? titleRaw.split(' by ')[0].trim() : titleRaw.trim();
+      } catch(e) { /* fall through to artist-only search */ }
+    }
+
+    // Step 2: search iTunes with artist + track name
+    const query = trackName ? `${artistName} ${trackName}` : artistName;
+    const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&entity=song&limit=5`);
     const data = await res.json();
-    const track = data.results?.find(r => r.previewUrl);
+
+    // Prefer exact track name match if we have one
+    let track = trackName
+      ? data.results?.find(r => r.previewUrl && r.trackName?.toLowerCase().includes(trackName.toLowerCase()))
+      : null;
+    if (!track) track = data.results?.find(r => r.previewUrl);
+
     if (track) {
-      const audio = document.getElementById('audio-player');
-      const status = document.getElementById('audio-status');
       if (audio && status) {
         audio.src = track.previewUrl;
         audio.style.display = 'block';
         status.textContent = `Preview: ${track.trackName}`;
       }
     } else {
-      const status = document.getElementById('audio-status');
       if (status) status.textContent = 'No preview available — open Spotify above.';
     }
   } catch(e) {
-    const status = document.getElementById('audio-status');
     if (status) status.textContent = '';
   }
 }
