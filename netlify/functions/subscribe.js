@@ -17,7 +17,7 @@ export default async (req) => {
       });
     }
 
-    const RESEND_KEY = 're_GEpDNamo_ES7dvBB6SzemdjpATYtErpGb';
+    const RESEND_KEY = process.env.RESEND_API_KEY;
     const FROM = 'Before The Data <hello@beforethedata.com>';
 
     const html = `<!DOCTYPE html>

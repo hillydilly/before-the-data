@@ -9,9 +9,9 @@ export default async (req) => {
   }
 
   const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
-  const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
+  const FIREBASE_KEY = process.env.FIREBASE_API_KEY;
   const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
-  const RESEND_KEY = 're_GEpDNamo_ES7dvBB6SzemdjpATYtErpGb';
+  const RESEND_KEY = process.env.RESEND_API_KEY;
 
   try {
     const body = await req.text();
