@@ -85,6 +85,7 @@ export default async (req) => {
       <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">PAID SUBSCRIBER</p>
       <h2 style="margin:0 0 20px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">YOU'RE IN.</h2>
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Welcome to Heard First. You now get every Artist Discovery pick 48 hours before the public, plus the full A&amp;R data behind it. This is what the industry pays for. You just got it for $9.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is then curated by Chad. You get the signal before anyone else does.</p>
     </td>
   </tr>
 
