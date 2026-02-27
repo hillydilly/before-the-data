@@ -93,7 +93,7 @@ export default async (req) => {
       <div style="margin-top:28px;text-align:center;">
         <a href="https://beforethedata.com/heard-first.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">JOIN HEARD FIRST &#x2192;</a>
       </div>
-      <p style="margin:16px 0 0;text-align:center;font-size:11px;color:#555555;">$7/mo or $60/yr. Cancel anytime.</p>
+      <p style="margin:16px 0 0;text-align:center;font-size:11px;color:#555555;">$9/mo or $90/yr. Cancel anytime.</p>
     </td>
   </tr>
 
