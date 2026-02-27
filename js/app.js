@@ -241,6 +241,7 @@ async function renderNewMusic() {
   let currentView = localStorage.getItem('btd-view') || 'list';
 
   function renderView(view) {
+    currentView = view;
     const posts = activeGenre ? allPosts.filter(p => (p.genres || [p.genre]).includes(activeGenre)) : allPosts;
     grid.innerHTML = '';
     if (view === 'list') {
@@ -264,8 +265,8 @@ async function renderNewMusic() {
 
   renderView(currentView);
 
-  document.getElementById('view-list')?.addEventListener('click', () => renderView('list'));
-  document.getElementById('view-grid')?.addEventListener('click', () => renderView('grid'));
+  document.getElementById('view-list')?.addEventListener('click', () => { renderView('list'); localStorage.setItem('btd-view', 'list'); });
+  document.getElementById('view-grid')?.addEventListener('click', () => { renderView('grid'); localStorage.setItem('btd-view', 'grid'); });
 }
 
 /* --- Popular Page --- */
