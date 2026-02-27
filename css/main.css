@@ -975,23 +975,29 @@ ul { list-style: none; }
   min-width: 0;
 }
 
-/* ── Heard First nav highlight ─────────────────────────────────── */
-.nav-heard-first {
+/* ── Heard First nav — always visible, never hidden ────────────── */
+.nav-heard-first,
+.nav-heard-first.active {
+  display: flex !important;
   color: #000 !important;
   font-weight: 700 !important;
-  background: #f5f0e8;
-  border-radius: 8px;
+  background: #f5f0e8 !important;
+  border-radius: 8px !important;
+  border-left-color: transparent !important;
   margin-top: 4px;
 }
-.nav-heard-first:hover {
+.nav-heard-first:hover,
+.nav-heard-first.active:hover {
   background: #ebe4d4 !important;
+  color: #000 !important;
 }
-[data-theme="dark"] .nav-heard-first {
+[data-theme="dark"] .nav-heard-first,
+[data-theme="dark"] .nav-heard-first.active {
   color: #ffd700 !important;
-  background: rgba(255,215,0,0.08);
+  background: rgba(255,215,0,0.1) !important;
 }
 [data-theme="dark"] .nav-heard-first:hover {
-  background: rgba(255,215,0,0.14) !important;
+  background: rgba(255,215,0,0.16) !important;
 }
 
 /* ── Mobile Heard First sticky CTA ─────────────────────────────── */
