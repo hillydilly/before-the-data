@@ -233,17 +233,22 @@ function parsePostDoc(doc) {
   };
 }
 
-/* Fetch all posts from config collection (btd_post_* docs) via REST */
+/* Fetch all posts from config collection (btd_post_* docs) via REST — paginates if needed */
 async function fetchPostsFromFirebase() {
   try {
-    const res = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500`
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
-    if (docs.length === 0) return null;
-    return docs.map(parsePostDoc);
+    let allDocs = [];
+    let pageToken = null;
+    do {
+      const url = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500${pageToken ? '&pageToken=' + pageToken : ''}`;
+      const res = await fetch(url);
+      if (!res.ok) break;
+      const data = await res.json();
+      const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
+      allDocs = allDocs.concat(docs);
+      pageToken = data.nextPageToken || null;
+    } while (pageToken);
+    if (allDocs.length === 0) return null;
+    return allDocs.map(parsePostDoc);
   } catch (e) {
     console.warn('[BTD] Posts fetch failed:', e.message);
     return null;
@@ -273,11 +278,21 @@ async function fetchPostById(id) {
     const res = await fetch(
       `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${cleanId}?key=${FIREBASE_CONFIG.apiKey}`
     );
+    if (res.ok) {
+      const doc = await res.json();
+      if (doc.fields) return parsePostDoc(doc);
+    }
+  } catch(e) {}
+  // Try direct doc fetch with slug (if id was the full doc name)
+  try {
+    const res = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${cleanId}?key=${FIREBASE_CONFIG.apiKey}`
+    );
     if (res.ok) return parsePostDoc(await res.json());
   } catch(e) {}
-  // Try slug lookup
-  const all = await fetchPosts('publishedAt', 'desc', 100);
-  return all.find(p => p.id === id || p.slug === id) || DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
+  // Fallback: scan all posts (up to 500)
+  const all = await fetchPosts('publishedAt', 'desc', 500);
+  return all.find(p => p.id === cleanId || p.slug === cleanId || p.id === id || p.slug === id) || DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
 }
 
 async function fetchPostBySlug(slug) {
