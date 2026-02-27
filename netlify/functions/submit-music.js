@@ -79,57 +79,90 @@ export default async (req) => {
   <meta charset="UTF-8">
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
-  <style>
-    :root { color-scheme: light only; }
-  </style>
+  <style>:root { color-scheme: light only; }</style>
 </head>
-<body style="margin:0;padding:0;background:#f4f4f4;font-family:system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
-    <tr><td align="center" style="padding:32px 16px;">
-      <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+<body style="margin:0;padding:0;background:#f2f2f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;">
+<tr><td align="center" style="padding:40px 16px;">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-        <!-- HEADER: real logo on forced black bg — dark/light mode safe -->
-        <tr>
-          <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 16px;text-align:center;">
-            <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
-              <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772199219/btd/btd-logo.jpg"
-                   alt="BEFORE THE DATA"
-                   width="320"
-                   style="display:block;width:320px;max-width:100%;border:0;margin:0 auto;"
-              />
-              <p style="margin:12px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
-            </a>
-          </td>
-        </tr>
+  <!-- HEADER: logo on forced black -->
+  <tr>
+    <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 20px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772199219/btd/btd-logo.jpg"
+             alt="BEFORE THE DATA" width="280"
+             style="display:block;width:280px;max-width:100%;border:0;margin:0 auto;" />
+        <p style="margin:10px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
+      </a>
+    </td>
+  </tr>
 
-        <!-- BODY -->
-        <tr>
-          <td bgcolor="#ffffff" style="background:#ffffff;padding:40px 40px 32px;">
-            <h2 style="font-size:26px;font-weight:700;color:#000000;margin:0 0 20px;letter-spacing:-0.5px;">
-              ${isPaid ? 'You are in. Guaranteed.' : 'We got it.'}
-            </h2>
-            <p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 20px;">
-              ${isPaid
-                ? 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.'
-                : "Your track is in the queue. No guarantee on timeline. But it is in there. If it is right for us, you will hear back."}
-            </p>
-            ${!isPaid ? `<p style="font-size:14px;color:#666666;line-height:1.6;margin:0 0 20px;">Want a guaranteed listen within 7 days? <a href="https://beforethedata.com/submit.html" style="color:#000000;font-weight:600;text-decoration:underline;">Upgrade to Heard First ($5)</a> and jump to the top of the queue.</p>` : ''}
-            <p style="font-size:14px;color:#666666;margin:0;">Before The Data</p>
-          </td>
-        </tr>
+  <!-- BODY -->
+  <tr>
+    <td bgcolor="#ffffff" style="background:#ffffff;padding:40px 40px 16px;">
+      <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">${isPaid ? 'GUARANTEED LISTEN' : 'SUBMISSION RECEIVED'}</p>
+      <h1 style="margin:0 0 24px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">${isPaid ? "YOU'RE IN." : 'WE GOT IT.'}</h1>
+      <p style="margin:0 0 24px;font-size:15px;color:#333333;line-height:1.75;">
+        ${isPaid
+          ? 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.'
+          : 'Your track is in the queue. No guarantee on timeline. But it is in there. If it is right for us, you will hear back.'}
+      </p>
+    </td>
+  </tr>
 
-        <!-- FOOTER -->
-        <tr>
-          <td bgcolor="#000000" style="background:#000000;padding:24px 40px;text-align:center;">
-            <p style="margin:0;font-size:11px;color:#888888;">
-              <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
-            </p>
-          </td>
-        </tr>
+  <!-- DIVIDER -->
+  <tr><td bgcolor="#ffffff" style="background:#ffffff;padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
 
-      </table>
-    </td></tr>
-  </table>
+  <!-- WHAT HAPPENS NEXT -->
+  <tr>
+    <td bgcolor="#ffffff" style="background:#ffffff;padding:24px 40px 16px;">
+      <p style="margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">WHAT HAPPENS NEXT</p>
+      ${isPaid ? `
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">Chad listens within 7 days</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Personal listen. Every guaranteed submission gets heard.</p></td></tr>
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">You hear back either way</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Not ghosted. Feedback or a pass — but always a response.</p></td></tr>
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">If it connects, we talk</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">We work with artists early. If there is something here, we will find it.</p></td></tr>
+      </table>` : `
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">It goes into the queue</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">No timeline guarantee. We go through submissions when we go through them.</p></td></tr>
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">If it connects, you hear from us</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">We do not respond to every submission. But if it is right, we will reach out.</p></td></tr>
+        <tr><td style="padding:8px 0;vertical-align:top;width:24px;font-size:14px;color:#000;">&#x2192;</td><td style="padding:8px 0;"><p style="margin:0;font-size:14px;color:#000000;font-weight:600;line-height:1.4;">Want to jump the queue?</p><p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;"><a href="https://beforethedata.com/submit.html" style="color:#000000;font-weight:600;text-decoration:underline;">Upgrade to Heard First ($5)</a> — guaranteed listen within 7 days, you hear back either way.</p></td></tr>
+      </table>`}
+    </td>
+  </tr>
+
+  <!-- CLOSING -->
+  <tr>
+    <td bgcolor="#ffffff" style="background:#ffffff;padding:24px 40px 40px;">
+      <div style="height:1px;background:#eeeeee;margin-bottom:24px;"></div>
+      <p style="margin:0;font-size:14px;color:#333333;line-height:1.75;">
+        ${isPaid
+          ? 'Keep an ear out. You will hear back within 7 days.'
+          : 'Your first pick from us is coming. Keep an ear out.'}
+      </p>
+    </td>
+  </tr>
+
+  <!-- CTA FOOTER -->
+  <tr>
+    <td bgcolor="#000000" style="background:#000000;padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">START LISTENING &#x2192;</a>
+    </td>
+  </tr>
+
+  <!-- FOOTER -->
+  <tr>
+    <td bgcolor="#000000" style="background:#000000;padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
+      <p style="margin:0;font-size:11px;color:#555555;">
+        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
+      </p>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
 </body>
 </html>`;
 
