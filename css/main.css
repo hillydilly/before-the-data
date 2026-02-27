@@ -82,7 +82,7 @@ ul { list-style: none; }
   background: var(--acc);
   color: #fff;
 }
-#player-bar .player-controls .play-btn:hover { opacity: .85; }
+#player-bar .player-controls .play-btn:hover { opacity: .85; background: var(--acc); color: #fff; }
 #player-bar .player-info {
   flex: 1; min-width: 0;
   display: flex; flex-direction: column; gap: 2px;
