@@ -336,7 +336,7 @@
               })
             });
             if (!res.ok) throw new Error('Failed');
-            try { localStorage.removeItem('btd_pending_submission'); localStorage.removeItem('btd_submit_email'); } catch(e) {}
+            try { localStorage.removeItem('btd_pending_submission'); } catch(e) {}
             document.getElementById('success-headline').textContent = 'You Are In.';
             document.getElementById('success-msg').innerHTML = 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.<br><br>Check your inbox for a confirmation email.';
             showStep('step-success');
@@ -363,6 +363,8 @@
         showStep('step-form');
       }
     } else if (capturedEmail) {
+      // Pre-fill email field in case they end up on email step
+      try { document.getElementById('gate-email').value = capturedEmail; } catch(e) {}
       showStep('step-form');
     }
 
@@ -483,7 +485,7 @@
           const d = await res.json().catch(() => ({}));
           throw new Error(d.error || 'Submission failed');
         }
-        try { localStorage.removeItem('btd_submit_email'); localStorage.removeItem('btd_pending_submission'); } catch(e) {}
+        try { localStorage.removeItem('btd_pending_submission'); } catch(e) {}
         const successHeadline = document.getElementById('success-headline');
         const successMsg = document.getElementById('success-msg');
         if (paidReturn) {
