@@ -72,31 +72,60 @@ export default async (req) => {
 
   // Send confirmation email to artist (fire and don't block on failure)
   if (email) {
+    const isPaid = tier === 'paid';
     const emailHtml = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:system-ui,-apple-system,sans-serif;">
-  <div style="max-width:520px;margin:0 auto;">
-    <div style="background:#000000;padding:24px 32px;">
-      <h1 style="color:#ffffff;font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0;letter-spacing:0.5px;">Before The Data</h1>
-    </div>
-    <div style="padding:40px 32px;">
-      <h2 style="font-size:28px;font-weight:700;color:#000;margin:0 0 20px;letter-spacing:-0.5px;">We got it.</h2>
-      <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">
-        ${tier === 'paid'
-          ? "Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You'll hear back either way."
-          : "Your track is in the queue. No guarantee on timeline. But it's in there. If it's right for us, you'll hear back."}
-      </p>
-      <p style="font-size:14px;color:#666;line-height:1.6;margin:0;">
-        Before The Data
-      </p>
-    </div>
-    <div style="padding:24px 32px;border-top:1px solid #eee;">
-      <p style="font-size:11px;color:#aaa;margin:0;">
-        <a href="https://beforethedata.com" style="color:#000;text-decoration:none;">beforethedata.com</a>
-      </p>
-    </div>
-  </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <style>
+    :root { color-scheme: light only; }
+  </style>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;">
+    <tr><td align="center" style="padding:32px 16px;">
+      <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
+
+        <!-- HEADER: pure HTML/CSS, forced black, works in dark + light mode -->
+        <tr>
+          <td bgcolor="#000000" style="background:#000000 !important;padding:32px 40px 24px;text-align:center;">
+            <a href="https://beforethedata.com" style="text-decoration:none;">
+              <p style="margin:0 0 8px;font-size:42px;font-weight:900;letter-spacing:-1px;color:#ffffff;font-family:'Arial Black','Arial Bold',Arial,sans-serif;line-height:1;text-transform:uppercase;">BEFORE<br>THE DATA</p>
+              <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
+            </a>
+          </td>
+        </tr>
+
+        <!-- BODY -->
+        <tr>
+          <td bgcolor="#ffffff" style="background:#ffffff;padding:40px 40px 32px;">
+            <h2 style="font-size:26px;font-weight:700;color:#000000;margin:0 0 20px;letter-spacing:-0.5px;">
+              ${isPaid ? 'You are in. Guaranteed.' : 'We got it.'}
+            </h2>
+            <p style="font-size:15px;color:#333333;line-height:1.7;margin:0 0 20px;">
+              ${isPaid
+                ? 'Your track is in the guaranteed listen queue. Chad personally listens within 7 days. You will hear back either way.'
+                : "Your track is in the queue. No guarantee on timeline. But it is in there. If it is right for us, you will hear back."}
+            </p>
+            ${!isPaid ? `<p style="font-size:14px;color:#666666;line-height:1.6;margin:0 0 20px;">Want a guaranteed listen within 7 days? <a href="https://beforethedata.com/submit.html" style="color:#000000;font-weight:600;text-decoration:underline;">Upgrade to Heard First ($5)</a> and jump to the top of the queue.</p>` : ''}
+            <p style="font-size:14px;color:#666666;margin:0;">Before The Data</p>
+          </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+          <td bgcolor="#000000" style="background:#000000;padding:24px 40px;text-align:center;">
+            <p style="margin:0;font-size:11px;color:#888888;">
+              <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
 </body>
 </html>`;
 
