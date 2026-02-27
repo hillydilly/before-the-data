@@ -949,3 +949,28 @@ ul { list-style: none; }
 
 /* Remove old chart-actions styles */
 .chart-actions { display: none; }
+
+/* ── Artist page list fix ─────────────────────────────────────── */
+.artist-posts .music-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+.artist-posts .list-art {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+}
+.artist-posts .list-art img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+.artist-posts .list-info {
+  flex: 1;
+  min-width: 0;
+}
