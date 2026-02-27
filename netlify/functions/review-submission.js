@@ -71,42 +71,96 @@ export default async (req) => {
   if (submission.email) {
     const isApprove = action === 'approve';
 
-    // Extract a short track descriptor from spotify URL or artist name
-    const trackLabel = submission.artistName || 'your track';
-
     const subject = isApprove
-      ? 'We listened. (Before The Data)'
-      : 'Thanks for submitting. (Before The Data)';
+      ? `We are posting this. (Before The Data)`
+      : `Thanks for submitting. (Before The Data)`;
 
-    const bodyText = isApprove
-      ? `We listened to ${trackLabel}. Keep going. We're watching.`
-      : `Not right for us right now. Keep creating. The right moment comes.`;
+    const emailHtml = isApprove
+      ? `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+<tr><td align="center" style="padding:40px 16px;">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-    const emailHtml = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:system-ui,-apple-system,sans-serif;">
-  <div style="max-width:520px;margin:0 auto;">
-    <div style="background:#000000;padding:24px 32px;">
-      <h1 style="color:#ffffff;font-family:Georgia,serif;font-size:18px;font-weight:400;margin:0;letter-spacing:0.5px;">Before The Data</h1>
-    </div>
-    <div style="padding:40px 32px;">
-      <h2 style="font-size:28px;font-weight:700;color:#000;margin:0 0 20px;letter-spacing:-0.5px;">${isApprove ? 'We listened.' : 'Thanks for submitting.'}</h2>
-      <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">
-        ${bodyText}
+  <!-- Banner -->
+  <tr>
+    <td align="center" bgcolor="#000000" style="padding:0;">
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
+           alt="Before The Data — Music Discovery"
+           width="480"
+           style="display:block;max-width:100%;border:0;">
+    </td>
+  </tr>
+
+  <!-- Headline -->
+  <tr>
+    <td bgcolor="#000000" style="padding:36px 32px 0;">
+      <h2 style="margin:0 0 20px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">WE LIKE IT.</h2>
+      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">We listened to your submission and we want to post it on Before The Data.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">Check the site within 48 hours. Your track will be live.</p>
+      <p style="margin:0 0 32px;font-size:15px;color:#aaaaaa;line-height:1.8;">Keep making music. We will keep watching.</p>
+      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;">Check the site →</a>
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td bgcolor="#000000" style="padding:40px 32px 0;border-top:0;">
+      <p style="margin:32px 0 0;font-size:11px;color:#333333;text-align:left;">
+        <a href="https://beforethedata.com" style="color:#555555;text-decoration:none;">beforethedata.com</a>
       </p>
-      <p style="font-size:14px;color:#666;line-height:1.6;margin:0;">
-        Before The Data
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`
+      : `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#000000">
+<tr><td align="center" style="padding:40px 16px;">
+<table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+  <!-- Banner -->
+  <tr>
+    <td align="center" bgcolor="#000000" style="padding:0;">
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
+           alt="Before The Data — Music Discovery"
+           width="480"
+           style="display:block;max-width:100%;border:0;">
+    </td>
+  </tr>
+
+  <!-- Headline -->
+  <tr>
+    <td bgcolor="#000000" style="padding:36px 32px 0;">
+      <h2 style="margin:0 0 20px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">THANK YOU.</h2>
+      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">We genuinely appreciate you submitting to Before The Data.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">After listening, this one is not the right fit for us right now. We are going to pass.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#aaaaaa;line-height:1.8;">Please know this is just our opinion, and opinions change. We approve on a song by song basis, so we encourage you to keep submitting. You never know what will land.</p>
+      <p style="margin:0 0 32px;font-size:15px;color:#aaaaaa;line-height:1.8;">Keep creating. The right one is coming.</p>
+      <a href="https://beforethedata.com/submit.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:13px 28px;text-decoration:none;">Submit again →</a>
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td bgcolor="#000000" style="padding:40px 32px 0;">
+      <p style="margin:32px 0 0;font-size:11px;color:#333333;text-align:left;">
+        <a href="https://beforethedata.com" style="color:#555555;text-decoration:none;">beforethedata.com</a>
       </p>
-    </div>
-    <div style="padding:24px 32px;border-top:1px solid #eee;">
-      <p style="font-size:11px;color:#aaa;margin:0;">
-        <a href="https://beforethedata.com" style="color:#000;text-decoration:none;">beforethedata.com</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>`;
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>`;
 
     try {
       await fetch('https://api.resend.com/emails', {
