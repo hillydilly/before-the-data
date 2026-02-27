@@ -23,7 +23,7 @@ export default async (req) => {
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f2f2f2;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#000000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f2f2f2;">
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
@@ -37,14 +37,14 @@ export default async (req) => {
 
   <!-- Hero -->
   <tr>
-    <td style="background:#ffffff;padding:40px 40px 32px;">
-      <h1 style="margin:0 0 16px;font-size:32px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:1px;line-height:1;">Welcome.</h1>
-      <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;">Before The Data is a music discovery project built on one thing: finding artists before anyone else. Billie Eilish. Lorde. Halsey. LANY. Daniel Caesar. All found here first. Now you're part of that.</p>
+    <td style="background:#111111;padding:40px 40px 32px;">
+      <h1 style="margin:0 0 16px;font-size:32px;font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1;">Welcome.</h1>
+      <p style="margin:0;font-size:15px;color:#aaaaaa;line-height:1.8;">Before The Data is a music discovery project built on one thing: finding artists before anyone else. Billie Eilish. Lorde. Halsey. LANY. Daniel Caesar. All found here first. Now you're part of that.</p>
     </td>
   </tr>
 
   <!-- Divider -->
-  <tr><td style="background:#ffffff;padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
+  <tr><td style="background:#111111;padding:0 40px;"><div style="height:1px;background:#222222;"></div></td></tr>
 
   <!-- Free tier -->
   <tr>
@@ -68,7 +68,7 @@ export default async (req) => {
   </tr>
 
   <!-- Divider -->
-  <tr><td style="background:#ffffff;padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
+  <tr><td style="background:#111111;padding:0 40px;"><div style="height:1px;background:#222222;"></div></td></tr>
 
   <!-- Paid tier -->
   <tr>
@@ -77,27 +77,27 @@ export default async (req) => {
       <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.7;">For the people who want the edge. Not just the pick. The intelligence behind it.</p>
       <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eeeeee;">
         <tr>
-          <td style="padding:16px 20px;border-bottom:1px solid #f5f5f5;">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">48hr early access</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Every ARTIST DISCOVERY pick lands in your inbox the moment it's found. 48 hours before it goes public.</p>
+          <td style="padding:16px 20px;border-bottom:1px solid #222222;">
+            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#ffffff;">48hr early access</p>
+            <p style="margin:0;font-size:12px;color:#999999;line-height:1.5;">Every ARTIST DISCOVERY pick lands in your inbox the moment it's found. 48 hours before it goes public.</p>
           </td>
         </tr>
-        <tr style="background:#fafafa;">
-          <td style="padding:16px 20px;border-bottom:1px solid #f5f5f5;">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">Full A&amp;R scouting report</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Spotify listeners, TikTok UGC count, viral gap ratio, save ratio, stream trajectory. The data behind every pick.</p>
+        <tr style="background:#1a1a1a;">
+          <td style="padding:16px 20px;border-bottom:1px solid #222222;">
+            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#ffffff;">Full A&amp;R scouting report</p>
+            <p style="margin:0;font-size:12px;color:#999999;line-height:1.5;">Spotify listeners, TikTok UGC count, viral gap ratio, save ratio, stream trajectory. The data behind every pick.</p>
           </td>
         </tr>
         <tr>
-          <td style="padding:16px 20px;border-bottom:1px solid #f5f5f5;">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">Weekly artist tracker</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Auto-pulled from our A&amp;R dashboard every week. See how every scouted artist's numbers moved since we called them: streams, followers, UGC..</p>
+          <td style="padding:16px 20px;border-bottom:1px solid #222222;">
+            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#ffffff;">Weekly artist tracker</p>
+            <p style="margin:0;font-size:12px;color:#999999;line-height:1.5;">Auto-pulled from our A&amp;R dashboard every week. See how every scouted artist's numbers moved since we called them: streams, followers, UGC..</p>
           </td>
         </tr>
-        <tr style="background:#fafafa;">
+        <tr style="background:#1a1a1a;">
           <td style="padding:16px 20px;">
-            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#000;">Monthly ones to watch</p>
-            <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">Top momentum artists of the month, ranked by data. The names worth paying attention to before the industry does.</p>
+            <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#ffffff;">Monthly ones to watch</p>
+            <p style="margin:0;font-size:12px;color:#999999;line-height:1.5;">Top momentum artists of the month, ranked by data. The names worth paying attention to before the industry does.</p>
           </td>
         </tr>
       </table>
@@ -113,13 +113,13 @@ export default async (req) => {
 
   <!-- Footer -->
   <tr>
-    <td style="background:#f2f2f2;padding:24px 40px;text-align:center;">
-      <p style="margin:0 0 6px;font-size:11px;color:#999999;">
+    <td style="background:#000000;padding:24px 40px;text-align:center;">
+      <p style="margin:0 0 6px;font-size:11px;color:#666666;">
         <a href="https://beforethedata.com" style="color:#000000;font-weight:600;text-decoration:none;">beforethedata.com</a>
         &nbsp;&nbsp;·&nbsp;&nbsp;
         <a href="https://twitter.com/beforethedata" style="color:#999999;text-decoration:none;">@beforethedata</a>
       </p>
-      <p style="margin:0;font-size:11px;color:#bbbbbb;">You signed up at beforethedata.com.</p>
+      <p style="margin:0;font-size:11px;color:#555555;">You signed up at beforethedata.com.</p>
     </td>
   </tr>
 
