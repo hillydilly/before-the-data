@@ -309,16 +309,25 @@
       try { pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}'); } catch(e) {}
 
       if (pending.spotifyUrl && pending.artistName && pending.genre) {
-        // We have the data — submit silently, show success
-        showStep('step-form'); // show briefly while submitting
+        // We have the data — auto-submit, show submitting state
+        showStep('step-form');
+        document.querySelector('.tier-toggle').style.display = 'none';
+        const btn = document.getElementById('submit-btn');
+        btn.textContent = 'Submitting...';
+        btn.disabled = true;
         (async () => {
           try {
             const res = await fetch('/api/submit-music', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                email: capturedEmail,
-                ...pending,
+                email: capturedEmail || pending.email || '',
+                spotifyUrl: pending.spotifyUrl,
+                artistName: pending.artistName,
+                genre: pending.genre,
+                instagramUrl: pending.instagramUrl || '',
+                tiktokUrl: pending.tiktokUrl || '',
+                bio: pending.bio || '',
                 tier: 'paid',
                 stripeSessionId: sessionId
               })
@@ -413,7 +422,7 @@
       if (selectedTier === 'paid' && !paidReturn) {
         // Store form data so we can restore after return
         try {
-          localStorage.setItem('btd_pending_submission', JSON.stringify({ spotifyUrl, artistName, genre, instagramUrl, tiktokUrl, bio }));
+          localStorage.setItem('btd_pending_submission', JSON.stringify({ spotifyUrl, artistName, genre, instagramUrl, tiktokUrl, bio, email: capturedEmail }));
         } catch(e) {}
         // Redirect to Stripe
         btn.textContent = 'Redirecting to checkout...';
