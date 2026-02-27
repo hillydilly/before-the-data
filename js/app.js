@@ -204,6 +204,11 @@ function createListItem(post) {
     window.location.href = `/${post.slug || post.id}`;
   });
 
+  // Artist link — stop propagation so it doesn't bubble to post navigation
+  item.querySelector('.list-artist')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
   return item;
 }
 
@@ -400,7 +405,7 @@ async function renderPost() {
       ${post.previewUrl ? `<div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>` : ''}
     </div>
     <div class="post-hero-meta">
-      <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">  ${post.artist}</a>
+      <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
       <div class="post-title">${post.title}</div>
       <div class="post-date">Published ${timeAgo(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
