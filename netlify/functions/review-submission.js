@@ -158,7 +158,7 @@ export default async (req) => {
 </body></html>`;
 
     try {
-      await fetch('https://api.resend.com/emails', {
+      const emailRes = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${RESEND_KEY}`,
@@ -171,9 +171,10 @@ export default async (req) => {
           html: emailHtml
         })
       });
+      const emailData = await emailRes.json();
+      console.log('Resend response:', emailRes.status, JSON.stringify(emailData));
     } catch (err) {
       console.warn('Review email send failed:', err);
-      // Don't fail the whole request — status was updated
     }
   }
 
