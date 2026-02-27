@@ -61,7 +61,8 @@ const Player = (() => {
 
   function updatePlayButton() {
     if (playBtn) {
-      playBtn.innerHTML = isPlaying ? '&#9646;&#9646;' : '&#9654;';
+      playBtn.innerHTML = isPlaying ? '&#9646;&thinsp;&#9646;' : '&#9654;';
+      playBtn.classList.toggle('is-paused', !isPlaying);
     }
     // Update all page play buttons
     document.querySelectorAll('[data-playing-id]').forEach(el => {

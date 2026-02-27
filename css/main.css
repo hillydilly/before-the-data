@@ -71,7 +71,16 @@ ul { list-style: none; }
   background: var(--acc);
   color: #fff;
   border-radius: 50%;
-  font-size: 16px;
+  font-size: 14px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -1px;
+}
+#player-bar .player-controls .play-btn.is-paused {
+  background: var(--acc);
+  color: #fff;
 }
 #player-bar .player-controls .play-btn:hover { opacity: .85; }
 #player-bar .player-info {
