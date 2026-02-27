@@ -1035,3 +1035,38 @@ ul { list-style: none; }
   /* Pad bottom of page so content isn't hidden behind the bar */
   body { padding-bottom: 56px; }
 }
+
+/* ── Mobile sticky search bar ──────────────────────────────────── */
+#mobile-search-bar {
+  display: none; /* hidden on desktop */
+}
+@media (max-width: 700px) {
+  #mobile-search-bar {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: var(--bg-1);
+    padding: 10px 16px;
+    margin: -24px -16px 12px;
+    border-bottom: 1px solid var(--bd);
+  }
+  #mobile-search-input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--bd);
+    background: var(--bg-3);
+    color: var(--tx-1);
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  #mobile-search-input::placeholder {
+    color: var(--tx-3);
+  }
+  #mobile-search-input:focus {
+    border-color: var(--acc);
+    background: var(--bg-2);
+  }
+}

@@ -24,7 +24,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       a.classList.add('active');
   });
 
-  // Page-specific logic
+  // Mobile sticky search — filter new music list on index page
+  const mobileSearchInput = document.getElementById('mobile-search-input');
+  if (mobileSearchInput) {
+    mobileSearchInput.addEventListener('input', () => {
+      const q = mobileSearchInput.value.toLowerCase().trim();
+      document.querySelectorAll('#new-music-scroll .music-list-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = (!q || text.includes(q)) ? '' : 'none';
+      });
+    });
+  }
+
+// Page-specific logic
   switch (page) {
     case 'discover': await renderDiscover(); break;
     case 'new-music': await renderNewMusic(); break;
