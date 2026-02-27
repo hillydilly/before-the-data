@@ -24,8 +24,27 @@ const BTDGate = (() => {
     try { return !!localStorage.getItem(SUBSCRIBER_KEY); } catch(e) { return false; }
   }
 
-  function markSubscribed(email) {
-    try { localStorage.setItem(SUBSCRIBER_KEY, email); } catch(e) {}
+  function markSubscribed(email, tier) {
+    try {
+      localStorage.setItem(SUBSCRIBER_KEY, email);
+      if (tier) localStorage.setItem('btd_tier', tier);
+    } catch(e) {}
+  }
+
+  function getStoredTier() {
+    try { return localStorage.getItem('btd_tier') || 'free'; } catch(e) { return 'free'; }
+  }
+
+  // Check Firebase for existing subscriber — returns { found, tier } or null
+  async function lookupSubscriber(email) {
+    try {
+      const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      const res = await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const tier = data.fields?.tier?.stringValue || 'free';
+      return { found: true, tier };
+    } catch(e) { return null; }
   }
 
   function createModal() {
@@ -46,18 +65,13 @@ const BTDGate = (() => {
             <input type="email" class="gate-input" id="gate-email" placeholder="your@email.com" required autocomplete="email">
             <button type="submit" class="gate-submit">I'm In. Keep Me Posted</button>
           </form>
-          <p class="gate-fine">No spam. Unsubscribe anytime. Already subscribed? <a href="#" id="gate-already">Continue listening.</a></p>
+          <p class="gate-fine">No spam. Unsubscribe anytime. Already on the list? Just enter your email above.</p>
         </div>
       </div>
     `;
     document.body.appendChild(el);
 
     el.querySelector('.gate-backdrop').addEventListener('click', () => hideModal());
-    el.querySelector('#gate-already').addEventListener('click', (e) => {
-      e.preventDefault();
-      markSubscribed('returning');
-      hideModal();
-    });
 
     el.querySelector('#btd-gate-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -84,13 +98,31 @@ const BTDGate = (() => {
 
   async function submitEmail(email, el) {
     const btn = el.querySelector('.gate-submit');
-    btn.textContent = 'Saving...';
+    btn.textContent = 'Checking...';
     btn.disabled = true;
 
     try {
-      // Save to Firebase config/btd_subscribers_{hash}
+      // Check Firebase first — existing subscriber?
+      const existing = await lookupSubscriber(email);
+
+      if (existing) {
+        // Returning subscriber — just let them in, no welcome email
+        markSubscribed(email, existing.tier);
+        const greeting = existing.tier === 'paid'
+          ? `<h2 class="gate-headline">Welcome back.</h2><p class="gate-sub">You're a Heard First member. Full access unlocked.</p>`
+          : `<h2 class="gate-headline">Welcome back.</h2><p class="gate-sub">Good to see you. Keep listening.</p>`;
+        el.querySelector('.gate-body').innerHTML = `
+          <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>
+          ${greeting}
+          <button class="gate-submit" id="gate-close-btn">Keep Listening →</button>
+        `;
+        el.querySelector('#gate-close-btn').addEventListener('click', () => hideModal());
+        return;
+      }
+
+      // New subscriber — save to Firebase + send welcome email
       const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-      await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}`, {
+      await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}&updateMask.fieldPaths=email&updateMask.fieldPaths=subscribedAt&updateMask.fieldPaths=source&updateMask.fieldPaths=tier`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields: {
@@ -101,14 +133,14 @@ const BTDGate = (() => {
         }})
       });
 
-      // Send welcome email via Netlify function (fire and forget)
+      // Send welcome email (fire and forget)
       fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
-      }).catch(() => {}); // silent fail — email is bonus, not blocking
+      }).catch(() => {});
 
-      markSubscribed(email);
+      markSubscribed(email, 'free');
       el.querySelector('.gate-body').innerHTML = `
         <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>
         <h2 class="gate-headline">You're in.</h2>
@@ -120,8 +152,7 @@ const BTDGate = (() => {
       btn.textContent = 'Get Access';
       btn.disabled = false;
       console.warn('[BTD Gate] Submit failed:', err);
-      // Still let them in
-      markSubscribed(email);
+      markSubscribed(email, 'free');
       hideModal();
     }
   }
