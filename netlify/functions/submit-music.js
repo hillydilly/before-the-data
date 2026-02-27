@@ -93,7 +93,7 @@ export default async (req) => {
         <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
              alt="BEFORE THE DATA" width="280"
              style="display:block;width:280px;max-width:100%;border:0;margin:0 auto;" />
-        <p style="margin:10px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
+
       </a>
     </td>
   </tr>
