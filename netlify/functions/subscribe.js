@@ -41,7 +41,7 @@ export default async (req) => {
   <tr>
     <td bgcolor="#ffffff" style="padding:40px 40px 16px;">
       <h1 style="margin:0 0 16px;font-size:32px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:1px;line-height:1;">Welcome.</h1>
-      <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">Before The Data is a music discovery project built on one thing: finding artists before anyone else. Billie Eilish. Lorde. Halsey. LANY. Daniel Caesar. Dominic Fike. All found here first. Now you're part of that.</p>
+      <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">We find things early. 16+ years of curation, from Hillydilly to Before The Data. Billie Eilish, Lorde, Halsey, LANY, Daniel Caesar, Dominic Fike before anyone else. That ear doesn't stop. Welcome.</p>
     </td>
   </tr>
 
