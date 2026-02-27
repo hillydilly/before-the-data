@@ -39,13 +39,14 @@
 
     /* Tier toggle */
     .tier-toggle {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; margin-top: 14px;
     }
     .tier-option {
       border: 2px solid #e8e8e8; padding: 20px 16px; cursor: pointer;
       transition: border-color 0.15s, background 0.15s; position: relative;
       text-align: center;
     }
+    #tier-paid { padding-top: 28px; }
     .tier-option:hover { border-color: #ccc; }
     .tier-option.selected { border-color: #000; background: #000; color: #fff; }
     .tier-option.selected .tier-label { color: #fff; }
