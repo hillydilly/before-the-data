@@ -399,6 +399,18 @@
           const pending = JSON.parse(localStorage.getItem('btd_pending_submission') || '{}');
           if (pending.spotifyUrl) finalData = { ...pending };
         } catch(e) {}
+        // If still no spotifyUrl after restore attempt, form data is missing — use what's in the form
+        if (!finalData.spotifyUrl) {
+          finalData = { spotifyUrl, artistName, genre, instagramUrl, tiktokUrl, bio };
+        }
+        // Final check — if spotifyUrl is still empty, we can't submit
+        if (!finalData.spotifyUrl || !finalData.artistName || !finalData.genre) {
+          errEl.textContent = 'Your payment went through but we lost your form data. Please fill in the fields above and submit again — you will not be charged again.';
+          errEl.classList.add('visible');
+          btn.textContent = 'Pay $5 & Submit →';
+          btn.disabled = false;
+          return;
+        }
       }
 
       try {
