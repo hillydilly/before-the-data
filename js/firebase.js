@@ -238,7 +238,7 @@ function parsePostDoc(doc) {
 /* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
 async function fetchPostsFromFirebase() {
   const CACHE_KEY = 'btd_posts_cache';
-  const CACHE_TTL = 10 * 60 * 1000;
+  const CACHE_TTL = 2 * 60 * 1000; // 2 min — keeps posts fresh after batch imports
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
     if (cached) {
@@ -250,12 +250,19 @@ async function fetchPostsFromFirebase() {
     let allDocs = [], pageToken = null;
     do {
       const url = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500${pageToken ? '&pageToken=' + pageToken : ''}`;
-      const res = await fetch(url);
-      if (!res.ok) { if (res.status === 429) console.warn('[BTD] Firebase quota exceeded'); break; }
+      let res;
+      for (let attempt = 0; attempt < 4; attempt++) {
+        res = await fetch(url);
+        if (res.status !== 429) break;
+        console.warn(`[BTD] Firebase rate limited, retrying in ${(attempt+1)*1500}ms...`);
+        await new Promise(r => setTimeout(r, (attempt+1) * 1500));
+      }
+      if (!res.ok) { console.warn('[BTD] Firebase fetch failed:', res.status); break; }
       const data = await res.json();
       const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
       allDocs = allDocs.concat(docs);
       pageToken = data.nextPageToken || null;
+      if (pageToken) await new Promise(r => setTimeout(r, 300));
     } while (pageToken);
     if (allDocs.length === 0) return null;
     const posts = allDocs.map(parsePostDoc);
