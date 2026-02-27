@@ -36,6 +36,3 @@
 [[edge_functions]]
   path = "/post/*"
   function = "og"
-
-[secrets_scanning]
-  enabled = false
