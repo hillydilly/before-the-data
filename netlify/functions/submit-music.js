@@ -166,19 +166,23 @@ export default async (req) => {
 </body>
 </html>`;
 
-    fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: 'Before The Data <hello@beforethedata.com>',
-        to: [email],
-        subject: "We got it. (Before The Data)",
-        html: emailHtml
-      })
-    }).catch(err => console.warn('Confirmation email failed:', err));
+    try {
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'Before The Data <hello@beforethedata.com>',
+          to: [email],
+          subject: isPaid ? "You are in. (Before The Data)" : "We got it. (Before The Data)",
+          html: emailHtml
+        })
+      });
+    } catch (err) {
+      console.warn('Confirmation email failed:', err);
+    }
   }
 
   return new Response(JSON.stringify({ success: true, id: docId }), {
