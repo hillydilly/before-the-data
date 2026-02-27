@@ -1,7 +1,8 @@
 /**
  * Netlify Function: POST /api/review-submission
- * Called from Mission Control to approve or deny a music submission.
+ * Called from admin page to approve or deny a music submission.
  * Updates Firebase status and sends email to artist.
+ * v2 — no preview prefixes in subject lines
  */
 
 const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
