@@ -88,12 +88,16 @@ export default async (req) => {
     <tr><td align="center" style="padding:32px 16px;">
       <table width="520" cellpadding="0" cellspacing="0" style="max-width:520px;width:100%;">
 
-        <!-- HEADER: pure HTML/CSS, forced black, works in dark + light mode -->
+        <!-- HEADER: real logo on forced black bg — dark/light mode safe -->
         <tr>
-          <td bgcolor="#000000" style="background:#000000 !important;padding:32px 40px 24px;text-align:center;">
-            <a href="https://beforethedata.com" style="text-decoration:none;">
-              <p style="margin:0 0 8px;font-size:42px;font-weight:900;letter-spacing:-1px;color:#ffffff;font-family:'Arial Black','Arial Bold',Arial,sans-serif;line-height:1;text-transform:uppercase;">BEFORE<br>THE DATA</p>
-              <p style="margin:0;font-size:11px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
+          <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 16px;text-align:center;">
+            <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
+              <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772199219/btd/btd-logo.jpg"
+                   alt="BEFORE THE DATA"
+                   width="320"
+                   style="display:block;width:320px;max-width:100%;border:0;margin:0 auto;"
+              />
+              <p style="margin:12px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
             </a>
           </td>
         </tr>

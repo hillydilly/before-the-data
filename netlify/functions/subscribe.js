@@ -28,10 +28,17 @@ export default async (req) => {
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
 
-  <!-- Header -->
+  <!-- Header: real logo on forced black bg — dark/light mode safe -->
   <tr>
-    <td style="background:#000000;padding:32px;text-align:center;">
-      <p style="margin:0;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#ffffff;">BEFORE THE DATA</p>
+    <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 16px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772199219/btd/btd-logo.jpg"
+             alt="BEFORE THE DATA"
+             width="320"
+             style="display:block;width:320px;max-width:100%;border:0;margin:0 auto;"
+        />
+        <p style="margin:12px 0 0;font-size:10px;font-weight:600;letter-spacing:6px;color:#888888;font-family:Arial,sans-serif;text-transform:uppercase;">HEARD FIRST</p>
+      </a>
     </td>
   </tr>
 
