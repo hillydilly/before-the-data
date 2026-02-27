@@ -224,7 +224,7 @@ function parsePostDoc(doc) {
     previewUrl: strVal(f.previewUrl),
     spotifyId: strVal(f.spotifyId),
     country: strVal(f.country),
-    publishedAt: { seconds: Math.floor(new Date(strVal(f.publishedAt) || Date.now()).getTime() / 1000) },
+    publishedAt: { seconds: strVal(f.publishedAt) ? Math.floor(new Date(strVal(f.publishedAt)).getTime() / 1000) : 0 },
     tags: arrVal(f.tags),
     genres: arrVal(f.genres) || (strVal(f.genre) ? [strVal(f.genre)] : []),
     socialLinks: mapVal(f.socialLinks),
