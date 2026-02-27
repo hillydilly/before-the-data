@@ -2,5 +2,13 @@
   directory = "netlify/functions"
 
 [[edge_functions]]
-  path = "/*"
+  path = "/og"
+  function = "og"
+
+[[edge_functions]]
+  path = "/new-music"
+  function = "og"
+
+[[edge_functions]]
+  path = "/post/*"
   function = "og"
