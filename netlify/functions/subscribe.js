@@ -81,7 +81,7 @@ export default async (req) => {
   <tr>
     <td style="background:#ffffff;padding:32px 40px 40px;">
       <p style="margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">HEARD FIRST: PAID TIER (COMING SOON)</p>
-      <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.7;">For the people who want the edge. Not just the pick. The intelligence behind it.</p>
+      <p style="margin:0 0 20px;font-size:14px;color:#444;line-height:1.7;">For the people who want the edge. We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is then curated by Chad. You get the signal before anyone else does.</p>
       <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #eeeeee;">
         <tr>
           <td style="padding:16px 20px;border-bottom:1px solid #222222;">
