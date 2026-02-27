@@ -25,6 +25,7 @@ export default async (req) => {
       'success_url': `${origin}/submit.html?paid=1&session_id={CHECKOUT_SESSION_ID}`,
       'cancel_url': `${origin}/submit.html`,
       'billing_address_collection': 'auto',
+      'allow_promotion_codes': 'true',
     });
 
     // Pre-fill email if provided
