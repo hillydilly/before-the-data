@@ -26,6 +26,7 @@ export default async (req) => {
       'cancel_url': `${origin}/submit.html`,
       'billing_address_collection': 'auto',
       'allow_promotion_codes': 'true',
+      'metadata[type]': 'submit',
     });
 
     // Pre-fill email if provided

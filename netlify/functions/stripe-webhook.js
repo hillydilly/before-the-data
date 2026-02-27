@@ -31,9 +31,16 @@ export default async (req) => {
       const session = event.data.object;
       const email = session.customer_details?.email;
       const customerId = session.customer;
+      const sessionType = session.metadata?.type || '';
 
       if (!email) {
         console.warn('No email in checkout session');
+        return new Response('OK', { status: 200 });
+      }
+
+      // If this is a music submission payment — not a Heard First subscription
+      if (sessionType === 'submit') {
+        console.log(`Submit payment from ${email} — no Heard First email fired`);
         return new Response('OK', { status: 200 });
       }
 
