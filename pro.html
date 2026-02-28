@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Heard First Pro — Before The Data</title>
+  <meta name="description" content="Real-time access to our scouting database. The artists we're watching before anyone else.">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+    /* ── Paywall ─────────────────────────────────── */
+    .pro-paywall {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .pro-eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--tx-3);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+    .pro-headline {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--tx-1);
+      line-height: 1;
+      margin: 0 0 12px;
+    }
+    .pro-subhead {
+      font-size: 15px;
+      color: var(--tx-3);
+      line-height: 1.6;
+      margin: 0 0 40px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pro-price-block {
+      background: var(--tx-1);
+      color: #fff;
+      padding: 36px;
+      margin: 0 0 16px;
+    }
+    .pro-price {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .pro-price-sub {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.6;
+      display: block;
+      margin-bottom: 24px;
+    }
+    .pro-cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 40px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity 0.15s;
+      text-decoration: none;
+      width: 100%;
+      max-width: 280px;
+    }
+    .pro-cta-btn:hover { opacity: 0.85; }
+    .pro-fine {
+      font-size: 11px;
+      color: var(--tx-3);
+      text-align: center;
+      margin: 12px 0 0;
+    }
+    .pro-features {
+      text-align: left;
+      margin: 0 0 40px;
+      padding: 0;
+      list-style: none;
+    }
+    .pro-features li {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--bd);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .pro-features li:last-child { border-bottom: none; }
+    .pro-feat-arrow {
+      font-size: 13px;
+      color: var(--tx-1);
+      font-weight: 700;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .pro-feat-title {
+      font-weight: 700;
+      color: var(--tx-1);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .pro-feat-desc {
+      color: var(--tx-3);
+    }
+
+    /* ── Dashboard ───────────────────────────────── */
+    .pro-dash {
+      display: none;
+    }
+    .pro-dash.active {
+      display: block;
+    }
+    .pro-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .pro-toolbar h1 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .pro-search {
+      flex: 1;
+      min-width: 160px;
+      padding: 10px 14px;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-1);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .pro-search:focus { border-color: var(--acc); }
+    .pro-search::placeholder { color: var(--tx-3); }
+    .pro-sort {
+      padding: 10px 14px;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-1);
+      font-size: 13px;
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+    .pro-meta {
+      font-size: 11px;
+      color: var(--tx-3);
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Table ────────────────────────────────────── */
+    .pro-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pro-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--bd);
+      white-space: nowrap;
+    }
+    .pro-table td {
+      padding: 12px 10px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--bd);
+      vertical-align: middle;
+    }
+    .pro-table tbody tr {
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .pro-table tbody tr:hover {
+      background: var(--bg-2);
+    }
+    .pro-artist-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pro-artist-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg-2);
+      flex-shrink: 0;
+    }
+    .pro-artist-name {
+      font-weight: 600;
+      color: var(--tx-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pro-num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+    .pro-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .pro-delta.up { background: rgba(16,185,129,0.12); color: #10b981; }
+    .pro-delta.down { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .pro-delta.flat { background: var(--bg-2); color: var(--tx-3); }
+    .pro-heat {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .pro-heat.hot { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .pro-heat.warm { background: rgba(251,191,36,0.12); color: #f59e0b; }
+    .pro-heat.cool { background: var(--bg-2); color: var(--tx-3); }
+    .pro-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-3);
+      transition: background 0.12s, color 0.12s;
+      text-decoration: none;
+    }
+    .pro-links a:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-links { display: flex; gap: 4px; }
+
+    /* ── Expanded Detail ─────────────────────────── */
+    .pro-detail {
+      display: none;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      margin: -1px 0 12px;
+      padding: 20px;
+    }
+    .pro-detail.open { display: block; }
+    .pro-detail h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 12px;
+    }
+    .pro-songs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .pro-songs-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-songs-table td {
+      padding: 8px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-song-links a {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: var(--tx-2);
+      transition: background 0.12s;
+      margin-right: 4px;
+    }
+    .pro-song-links a:hover { background: var(--bd); }
+
+    /* ── Sparkline ────────────────────────────────── */
+    .pro-spark { display: inline-block; vertical-align: middle; }
+
+    /* ── Loading ──────────────────────────────────── */
+    .pro-loading {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--tx-3);
+      font-size: 14px;
+    }
+
+    /* ── Responsive ───────────────────────────────── */
+    .pro-table .col-tk,
+    .pro-table .col-ig,
+    .pro-table .col-ugc,
+    .pro-table .col-links {
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .pro-table .col-ig,
+      .pro-table .col-ugc,
+      .pro-table .col-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .pro-table .col-tk,
+      .pro-table .col-heat { display: none; }
+      .pro-toolbar { gap: 10px; }
+      .pro-toolbar h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body data-page="pro">
+
+  <div id="player-bar">
+    <img class="player-art" src="/assets/brand/logo-black.jpg" alt="">
+    <div class="player-controls">
+      <button class="prev-btn" title="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h1.5v5.4L13 2.2v11.6L4.5 8.6V14H3z"/></svg></button>
+      <button class="play-btn" title="Play">&#9654;</button>
+      <button class="next-btn" title="Next"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13 2h-1.5v5.4L3 2.2v11.6l8.5-5.2V14H13z"/></svg></button>
+    </div>
+    <div class="player-info">
+      <div class="player-title">Select a track to play</div>
+      <div class="player-source">SPOTIFY</div>
+    </div>
+    <div class="player-right">
+      <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.8">
+    </div>
+    <div class="player-progress"><div class="player-progress-fill"></div></div>
+  </div>
+
+  <aside id="sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="/assets/brand/logo-black.jpg" alt="BTD">
+      <span class="brand-name">Before The Data</span>
+    </a>
+    <nav>
+      <a href="/"><span class="nav-icon">&#9672;</span> Discover</a>
+      <a href="/new-music.html"><span class="nav-icon">&#9834;</span> New Music</a>
+      <a href="/popular.html"><span class="nav-icon">&#9650;</span> Popular</a>
+      <a href="/search.html"><span class="nav-icon">&#8981;</span> Search</a>
+      <a href="/submit.html"><span class="nav-icon">&#128236;</span> Submit Music</a>
+      <a href="/heard-first.html" class="nav-heard-first"><span class="nav-icon">&#9733;</span> Heard First</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </aside>
+
+  <main id="main">
+
+    <!-- ── PAYWALL ──────────────────────────────── -->
+    <div class="pro-paywall" id="pro-paywall">
+      <p class="pro-eyebrow">Before The Data</p>
+      <h1 class="pro-headline">Heard First Pro</h1>
+      <p class="pro-subhead">Real-time access to our scouting database. The artists we're watching before anyone else.</p>
+
+      <ul class="pro-features">
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Live scouting dashboard</span>
+            <span class="pro-feat-desc">Every artist in our pipeline. Spotify streams, TikTok UGC, Instagram followers, updated in real time.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Momentum heat scores</span>
+            <span class="pro-feat-desc">Proprietary 0 to 100 scoring system based on stream velocity and UGC growth.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Song-level breakdowns</span>
+            <span class="pro-feat-desc">Individual stream counts, TikTok sound pages, Instagram audio links for every track.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Sort, search, filter</span>
+            <span class="pro-feat-desc">Sort by streams, daily velocity, TikTok followers, or momentum. Search by artist name.</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="pro-price-block">
+        <span class="pro-price">$49.99</span>
+        <span class="pro-price-sub">per month</span>
+        <a href="/api/create-checkout?plan=pro" class="pro-cta-btn" id="pro-checkout-btn" onclick="startProCheckout(event)">Upgrade to Pro &rarr;</a>
+      </div>
+      <p class="pro-fine">Secure payment via Stripe. Cancel anytime.</p>
+    </div>
+
+    <!-- ── DASHBOARD ────────────────────────────── -->
+    <div class="pro-dash" id="pro-dash">
+      <div class="pro-toolbar">
+        <h1>Scouting Dashboard</h1>
+        <input type="text" class="pro-search" id="pro-search" placeholder="Search artists...">
+        <select class="pro-sort" id="pro-sort">
+          <option value="streams">Sort: Streams</option>
+          <option value="daily">Sort: Daily Change</option>
+          <option value="tiktok">Sort: TikTok</option>
+          <option value="momentum">Sort: Momentum</option>
+        </select>
+      </div>
+      <div class="pro-meta" id="pro-meta"></div>
+
+      <div id="pro-table-wrap">
+        <p class="pro-loading" id="pro-loading">Loading scouting data...</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Firebase v8 compat (same as AR dashboard) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script src="/js/firebase.js"></script>
+  <script src="/js/gate.js"></script>
+  <script src="/js/player.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // ── Auth gate ──────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      localStorage.setItem('btd_pro_token', sessionId);
+      window.history.replaceState({}, '', '/pro');
+    }
+
+    const token = localStorage.getItem('btd_pro_token');
+    const paywallEl = document.getElementById('pro-paywall');
+    const dashEl = document.getElementById('pro-dash');
+
+    if (!token) {
+      paywallEl.style.display = 'block';
+      dashEl.classList.remove('active');
+      return;
+    }
+
+    paywallEl.style.display = 'none';
+    dashEl.classList.add('active');
+
+    // ── Firebase init (separate from BTD's firebase.js) ──
+    const PRO_FB_CONFIG = {
+      apiKey: "AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec",
+      authDomain: "ar-scouting-dashboard.firebaseapp.com",
+      projectId: "ar-scouting-dashboard"
+    };
+
+    let proDb = null;
+    try {
+      // Use existing firebase app if already initialized, otherwise init
+      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(PRO_FB_CONFIG);
+      proDb = firebase.firestore(app);
+    } catch(e) {
+      console.error('[Pro] Firebase init failed:', e);
+      document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
+      return;
+    }
+
+    // ── Data helpers ───────────────────────────────
+    function fmt(n) {
+      if (!n || n === 0) return '0';
+      if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+      return n.toLocaleString();
+    }
+
+    function fmtD(n) {
+      if (!n || n === 0) return '0';
+      var a = Math.abs(n), p = n >= 0 ? '+' : '-';
+      if (a >= 1e6) return p + (a / 1e6).toFixed(1) + 'M';
+      if (a >= 1e3) return p + (a / 1e3).toFixed(1) + 'K';
+      return p + a.toLocaleString();
+    }
+
+    function vel(h, days) {
+      if (!h || h.length < 2) return null;
+      var sorted = h.slice().sort(function(a, b) { return a.d.localeCompare(b.d); });
+      var latest = sorted[sorted.length - 1];
+      if (days === 1) {
+        var prev = sorted[sorted.length - 2];
+        if (!prev) return null;
+        return (latest.v || 0) - (prev.v || 0);
+      }
+      var targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - days);
+      var targetStr = targetDate.toISOString().split('T')[0];
+      var oldEntry = null;
+      for (var i = sorted.length - 1; i >= 0; i--) {
+        if (sorted[i].d <= targetStr) { oldEntry = sorted[i]; break; }
+      }
+      if (!oldEntry) oldEntry = sorted[0];
+      return (latest.v || 0) - (oldEntry.v || 0);
+    }
+
+    function getSpotifyStreams(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.st || 0); });
+      return s;
+    }
+
+    function totUGC(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.ug || 0) + (x.igu || 0); });
+      return s;
+    }
+
+    function dayStr(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (vel(x.h && x.h.st, 1) || 0); });
+      return s;
+    }
+
+    function calcMomentum(a) {
+      if (!a.sm) return { score: 0, surging: false };
+      var songs = Object.values(a.sm);
+      var ytLast7 = 0, ytPrior7 = 0;
+      songs.forEach(function(s) {
+        var l = vel(s.h && s.h.yt, 7) || 0;
+        var p = (vel(s.h && s.h.yt, 14) || 0) - (vel(s.h && s.h.yt, 7) || 0);
+        ytLast7 += l; ytPrior7 += p;
+      });
+      var ugLast7 = 0, ugPrior7 = 0;
+      songs.forEach(function(s) {
+        var l = vel(s.h && s.h.ug, 7) || 0;
+        var p = (vel(s.h && s.h.ug, 14) || 0) - (vel(s.h && s.h.ug, 7) || 0);
+        ugLast7 += l; ugPrior7 += p;
+      });
+      function scoreVel(last, prior) {
+        if (last <= 0) return 0;
+        if (prior <= 0) return last > 0 ? 20 : 0;
+        var ratio = last / Math.abs(prior);
+        return Math.min(33, Math.round(ratio * 16));
+      }
+      var ytScore = scoreVel(ytLast7, ytPrior7);
+      var ugScore = scoreVel(ugLast7, ugPrior7);
+      var now = new Date();
+      var cutoff = new Date(now - 48 * 3600 * 1000).toISOString().split('T')[0];
+      var fresh = songs.some(function(s) {
+        return (s.h && s.h.yt || []).some(function(e) { return e.d >= cutoff; }) ||
+               (s.h && s.h.ug || []).some(function(e) { return e.d >= cutoff; });
+      });
+      var freshBonus = fresh ? 34 : 0;
+      var score = Math.min(100, ytScore + ugScore + freshBonus);
+      var surging = score >= 70 ||
+        (ytLast7 > 0 && ytPrior7 > 0 && ytLast7 / ytPrior7 >= 2) ||
+        (ugLast7 > 0 && ugPrior7 > 0 && ugLast7 / ugPrior7 >= 2);
+      return { score: score, surging: surging };
+    }
+
+    function getLastUpdated(a) {
+      var latest = null;
+      if (a.sm) {
+        Object.values(a.sm).forEach(function(m) {
+          ['st', 'yt', 'ug'].forEach(function(k) {
+            var h = m.h && m.h[k];
+            if (h && h.length > 0) {
+              var last = h[h.length - 1] && h[h.length - 1].d;
+              if (last && (!latest || last > latest)) latest = last;
+            }
+          });
+        });
+      }
+      if (a.h) {
+        ['tk', 'ig', 'sf', 'yt'].forEach(function(k) {
+          var h = a.h[k];
+          if (h && h.length > 0) {
+            var last = h[h.length - 1] && h[h.length - 1].d;
+            if (last && (!latest || last > latest)) latest = last;
+          }
+        });
+      }
+      return latest;
+    }
+
+    function buildSparkline(data, w, h) {
+      if (!data || data.length < 2) return '';
+      var vs = data.map(function(d) { return d.v || 0; });
+      var mn = Math.min.apply(null, vs);
+      var mx = Math.max.apply(null, vs);
+      var rg = mx - mn || 1;
+      var pts = vs.map(function(v, i) {
+        return (i / (vs.length - 1)) * w + ',' + (h - ((v - mn) / rg) * (h - 4) - 2);
+      }).join(' ');
+      var up = vs[vs.length - 1] >= vs[0];
+      var c = up ? '#10b981' : '#ef4444';
+      return '<svg class="pro-spark" width="' + w + '" height="' + h + '">' +
+        '<polygon points="0,' + h + ' ' + pts + ' ' + w + ',' + h + '" fill="' + c + '" fill-opacity="0.12"/>' +
+        '<polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="1.5" stroke-linecap="round"/>' +
+        '</svg>';
+    }
+
+    function buildStreamSparkData(sm) {
+      if (!sm) return [];
+      var map = {};
+      Object.values(sm).forEach(function(s) {
+        (s.h && s.h.st || []).forEach(function(e) {
+          map[e.d] = (map[e.d] || 0) + (e.v || 0);
+        });
+      });
+      return Object.entries(map).sort(function(a, b) { return a[0].localeCompare(b[0]); })
+        .slice(-14).map(function(e) { return { d: e[0], v: e[1] }; });
+    }
+
+    function escHtml(s) {
+      var d = document.createElement('div');
+      d.textContent = s || '';
+      return d.innerHTML;
+    }
+
+    // ── Render ─────────────────────────────────────
+    var allArtists = [];
+    var expandedId = null;
+    var currentSort = 'streams';
+    var currentSearch = '';
+
+    function sortArtists(arr) {
+      return arr.slice().sort(function(a, b) {
+        switch(currentSort) {
+          case 'daily': return dayStr(b) - dayStr(a);
+          case 'tiktok': return ((b.m && b.m.tk) || 0) - ((a.m && a.m.tk) || 0);
+          case 'momentum': return calcMomentum(b).score - calcMomentum(a).score;
+          default: return getSpotifyStreams(b) - getSpotifyStreams(a);
+        }
+      });
+    }
+
+    function filterArtists(arr) {
+      if (!currentSearch) return arr;
+      var q = currentSearch.toLowerCase();
+      return arr.filter(function(a) {
+        return (a.n || '').toLowerCase().indexOf(q) !== -1;
+      });
+    }
+
+    function renderDelta(v) {
+      if (v === null || v === undefined || v === 0) return '<span class="pro-delta flat">0</span>';
+      var cls = v > 0 ? 'up' : 'down';
+      var arrow = v > 0 ? '&#9650; ' : '&#9660; ';
+      return '<span class="pro-delta ' + cls + '">' + arrow + fmtD(v) + '</span>';
+    }
+
+    function renderHeat(score) {
+      var cls = score >= 70 ? 'hot' : score >= 35 ? 'warm' : 'cool';
+      var icon = score >= 70 ? '&#128293; ' : '';
+      return '<span class="pro-heat ' + cls + '">' + icon + score + '</span>';
+    }
+
+    function renderSongRow(song, songId, sm) {
+      var metrics = sm && sm[songId];
+      var streams = metrics ? (metrics.st || 0) : 0;
+      var ugc = metrics ? ((metrics.ug || 0) + (metrics.igu || 0)) : 0;
+      var links = '';
+      if (song.tkUrl) links += '<a href="' + escHtml(song.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>';
+      if (song.igUrl) links += '<a href="' + escHtml(song.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>';
+      return '<tr>' +
+        '<td>' + escHtml(song.t || '') + '</td>' +
+        '<td class="pro-num">' + fmt(streams) + '</td>' +
+        '<td class="pro-num">' + fmt(ugc) + '</td>' +
+        '<td class="pro-song-links">' + (links || '<span style="color:var(--tx-3)">-</span>') + '</td>' +
+        '</tr>';
+    }
+
+    function renderDetail(a) {
+      var songs = a.sg || [];
+      var html = '<h3>Songs</h3>';
+      if (songs.length === 0) {
+        html += '<p style="font-size:12px;color:var(--tx-3);">No songs tracked yet.</p>';
+      } else {
+        html += '<table class="pro-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>UGC</th><th>Links</th>' +
+          '</tr></thead><tbody>';
+        songs.forEach(function(song) {
+          html += renderSongRow(song, song.id, a.sm);
+        });
+        html += '</tbody></table>';
+      }
+
+      // Stream sparkline
+      var sparkData = buildStreamSparkData(a.sm);
+      if (sparkData.length >= 2) {
+        html += '<div style="margin-top:8px;">' +
+          '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx-3);font-weight:600;">Stream History (14d)</span>' +
+          '<div style="margin-top:6px;">' + buildSparkline(sparkData, 200, 32) + '</div>' +
+          '</div>';
+      }
+
+      return html;
+    }
+
+    function renderTable(artists) {
+      if (artists.length === 0) {
+        document.getElementById('pro-table-wrap').innerHTML =
+          '<p class="pro-loading">No scouting artists found.</p>';
+        return;
+      }
+
+      var html = '<div style="overflow-x:auto;"><table class="pro-table"><thead><tr>' +
+        '<th>Artist</th>' +
+        '<th>Streams</th>' +
+        '<th>Daily</th>' +
+        '<th class="col-tk">TikTok</th>' +
+        '<th class="col-ig">Instagram</th>' +
+        '<th class="col-ugc">UGC</th>' +
+        '<th class="col-heat">Momentum</th>' +
+        '<th class="col-links">Links</th>' +
+        '</tr></thead><tbody>';
+
+      artists.forEach(function(a) {
+        var streams = getSpotifyStreams(a);
+        var daily = dayStr(a);
+        var tk = (a.m && a.m.tk) || 0;
+        var ig = (a.m && a.m.ig) || 0;
+        var ugc = totUGC(a);
+        var mom = calcMomentum(a);
+        var pic = a.pic ? '<img class="pro-artist-pic" src="' + escHtml(a.pic) + '" alt="">' :
+          '<div class="pro-artist-pic" style="display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tx-3);">' +
+          escHtml((a.n || '?')[0].toUpperCase()) + '</div>';
+
+        var links = '';
+        if (a.l && a.l.sp) links += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener" title="Spotify"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg></a>';
+        if (a.l && a.l.tk) links += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener" title="TikTok"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg></a>';
+        if (a.l && a.l.ig) links += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg></a>';
+
+        html += '<tr data-id="' + escHtml(a.id) + '">' +
+          '<td><div class="pro-artist-cell">' + pic + '<span class="pro-artist-name">' + escHtml(a.n || '') + '</span></div></td>' +
+          '<td class="pro-num">' + fmt(streams) + '</td>' +
+          '<td>' + renderDelta(daily) + '</td>' +
+          '<td class="col-tk pro-num">' + fmt(tk) + '</td>' +
+          '<td class="col-ig pro-num">' + fmt(ig) + '</td>' +
+          '<td class="col-ugc pro-num">' + fmt(ugc) + '</td>' +
+          '<td class="col-heat">' + renderHeat(mom.score) + '</td>' +
+          '<td class="col-links"><div class="pro-links">' + (links || '<span style="color:var(--tx-3);">-</span>') + '</div></td>' +
+          '</tr>';
+
+        // Detail row (hidden by default)
+        var isOpen = expandedId === a.id;
+        html += '<tr class="pro-detail-row" data-detail="' + escHtml(a.id) + '" style="' + (isOpen ? '' : 'display:none;') + '">' +
+          '<td colspan="8"><div class="pro-detail ' + (isOpen ? 'open' : '') + '">' + renderDetail(a) + '</div></td></tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('pro-table-wrap').innerHTML = html;
+
+      // Attach row click handlers
+      document.querySelectorAll('.pro-table tbody tr[data-id]').forEach(function(row) {
+        row.addEventListener('click', function(e) {
+          // Don't toggle if clicking a link
+          if (e.target.closest('a')) return;
+          var id = row.getAttribute('data-id');
+          if (expandedId === id) {
+            expandedId = null;
+          } else {
+            expandedId = id;
+          }
+          render();
+        });
+      });
+    }
+
+    function render() {
+      var filtered = filterArtists(allArtists);
+      var sorted = sortArtists(filtered);
+      renderTable(sorted);
+    }
+
+    function updateMeta() {
+      var latest = null;
+      allArtists.forEach(function(a) {
+        var lu = getLastUpdated(a);
+        if (lu && (!latest || lu > latest)) latest = lu;
+      });
+      var metaHtml = '<span>' + allArtists.length + ' scouting artists</span>';
+      if (latest) {
+        metaHtml += '<span>Last scraped: ' + latest + '</span>';
+      }
+      document.getElementById('pro-meta').innerHTML = metaHtml;
+    }
+
+    // ── Events ─────────────────────────────────────
+    document.getElementById('pro-search').addEventListener('input', function(e) {
+      currentSearch = e.target.value;
+      render();
+    });
+
+    document.getElementById('pro-sort').addEventListener('change', function(e) {
+      currentSort = e.target.value;
+      render();
+    });
+
+    // ── Firebase listener ──────────────────────────
+    proDb.collection('artists').onSnapshot(function(snapshot) {
+      allArtists = [];
+      snapshot.forEach(function(doc) {
+        var data = doc.data();
+        if (data.division === 'scouting') {
+          allArtists.push(Object.assign({ id: doc.id }, data));
+        }
+      });
+      updateMeta();
+      render();
+    }, function(err) {
+      console.error('[Pro] Firestore error:', err);
+      document.getElementById('pro-loading').textContent = 'Error loading data. Please refresh.';
+    });
+
+  })();
+
+  function startProCheckout(e) {
+    e.preventDefault();
+    var btn = document.getElementById('pro-checkout-btn');
+    btn.textContent = 'Loading...';
+    btn.style.pointerEvents = 'none';
+    fetch('/api/create-checkout?plan=pro', { method: 'POST' })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          btn.textContent = 'Upgrade to Pro \u2192';
+          btn.style.pointerEvents = 'auto';
+          alert('Something went wrong. Please try again.');
+        }
+      })
+      .catch(function() {
+        btn.textContent = 'Upgrade to Pro \u2192';
+        btn.style.pointerEvents = 'auto';
+        alert('Something went wrong. Please try again.');
+      });
+  }
+  </script>
+</body>
+</html>
