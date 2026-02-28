@@ -204,8 +204,11 @@ function createListItem(post) {
     }
   });
 
-  // Title click → post page
+  // Title + writeup click → post page
   item.querySelector('.list-title').addEventListener('click', () => {
+    window.location.href = `/${post.slug || post.id}`;
+  });
+  item.querySelector('.list-writeup')?.addEventListener('click', () => {
     window.location.href = `/${post.slug || post.id}`;
   });
 

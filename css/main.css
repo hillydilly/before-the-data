@@ -1121,3 +1121,11 @@ ul { list-style: none; }
   background: var(--acc);
   color: #fff;
 }
+
+/* ── List writeup — clickable ───────────────────────────────────── */
+.music-list-item .list-writeup {
+  cursor: pointer;
+}
+.music-list-item .list-writeup:hover {
+  color: var(--tx-1);
+}
