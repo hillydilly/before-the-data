@@ -600,7 +600,9 @@ ul { list-style: none; }
   #sidebar nav a.active { border-left-color: transparent; border-top-color: var(--acc); }
   #sidebar nav a .nav-icon { font-size: 20px; }
   #sidebar nav a[href='/search.html'],
-  #sidebar nav a[href='search.html'] { display: none !important; }
+  #sidebar nav a[href='search.html'],
+  #sidebar nav a[href='/search'],
+  #sidebar nav a[href='search'] { display: none !important; }
 
   #main {
     margin-left: 0;

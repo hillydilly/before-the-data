@@ -258,9 +258,7 @@ async function renderNewMusic() {
   Player.setQueue(allPosts);
 
   // Default: list view
-  // Force grid on mobile — list mode has layout issues on small screens
-  const isMobile = window.innerWidth < 768;
-  let currentView = isMobile ? 'grid' : (localStorage.getItem('btd-view') || 'grid');
+  let currentView = localStorage.getItem('btd-view') || 'grid';
 
   function renderView(view) {
     currentView = view;
