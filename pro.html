@@ -611,7 +611,7 @@
         <li>
           <span class="pro-feat-arrow">&rarr;</span>
           <div>
-            <span class="pro-feat-title">Momentum heat scores</span>
+            <span class="pro-feat-title">Social score</span>
             <span class="pro-feat-desc">Proprietary 0 to 100 scoring system based on stream velocity and UGC growth.</span>
           </div>
         </li>
@@ -662,7 +662,7 @@
           <option value="streams">Sort: Streams</option>
           <option value="daily">Sort: Daily Change</option>
           <option value="tiktok">Sort: TikTok</option>
-          <option value="momentum">Sort: Momentum</option>
+          <option value="social">Sort: Social Score</option>
         </select>
       </div>
       <div class="pro-meta" id="pro-meta"></div>
@@ -785,7 +785,7 @@
       return s;
     }
 
-    function calcMomentum(a) {
+    function calcSocialScore(a) {
       if (!a.sm) return { score: 0, surging: false };
       var songs = Object.values(a.sm);
       var ytLast7 = 0, ytPrior7 = 0;
@@ -894,7 +894,7 @@
         switch(currentSort) {
           case 'daily': return dayStr(b) - dayStr(a);
           case 'tiktok': return ((b.m && b.m.tk) || 0) - ((a.m && a.m.tk) || 0);
-          case 'momentum': return calcMomentum(b).score - calcMomentum(a).score;
+          case 'social': return calcSocialScore(b).score - calcSocialScore(a).score;
           default: return getSpotifyStreams(b) - getSpotifyStreams(a);
         }
       });
@@ -978,7 +978,7 @@
       var ig = (a.m && a.m.ig) || 0;
       var ml = (a.m && a.m.ml) || 0;
       var ugc = totUGC(a);
-      var mom = calcMomentum(a);
+      var mom = calcSocialScore(a);
 
       var initials = (a.n || '?').split(' ').map(function(w) { return w[0]; }).join('').substring(0, 2).toUpperCase();
       var pic = a.pic
@@ -1003,8 +1003,8 @@
       stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '');
 
       var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
-      var momentum = '<div class="pro-dv-momentum">' +
-        '<div class="pro-dv-momentum-label"><span>Momentum</span>' + renderHeat(mom.score) + '</div>' +
+      var socialScore = '<div class="pro-dv-momentum">' +
+        '<div class="pro-dv-momentum-label"><span>Social Score</span>' + renderHeat(mom.score) + '</div>' +
         '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
         '</div>';
 
@@ -1057,7 +1057,7 @@
         '<h1 class="pro-dv-name">' + escHtml(a.n || '') + '</h1>' +
         '<div class="pro-dv-badges">' + (badges || '') + '</div></div></div>' +
         '<div class="pro-dv-stats">' + stats + '</div>' +
-        momentum + songsHtml;
+        socialScore + songsHtml;
     }
 
     function renderTable(artists) {
@@ -1084,7 +1084,7 @@
         var tk = (a.m && a.m.tk) || 0;
         var ig = (a.m && a.m.ig) || 0;
         var ugc = totUGC(a);
-        var mom = calcMomentum(a);
+        var mom = calcSocialScore(a);
         var pic = a.pic ? '<img class="pro-artist-pic" src="' + escHtml(a.pic) + '" alt="">' :
           '<div class="pro-artist-pic" style="display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tx-3);">' +
           escHtml((a.n || '?')[0].toUpperCase()) + '</div>';
