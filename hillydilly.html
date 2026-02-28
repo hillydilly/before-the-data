@@ -11,6 +11,7 @@
   <meta property="og:url" content="https://beforethedata.com/hillydilly">
   <meta property="og:title" content="Hillydilly Is Now Before The Data">
   <meta property="og:description" content="Chad Hillard, founder of Hillydilly, continues discovering artists before they break — now at Before The Data.">
+  <meta property="og:image" content="https://beforethedata.com/assets/og-image.jpg">
   <meta property="og:site_name" content="Before The Data">
   <script type="application/ld+json">
   {
@@ -29,50 +30,192 @@
     }
   }
   </script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    .hd-page {
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #fff;
+      color: #111;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 56px;
+      background: #fff;
+      border-bottom: 1px solid #e8e8e8;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100;
+    }
+    nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 0.04em;
+      color: #111;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 120px 24px 80px;
       text-align: center;
-      padding: 40px 24px;
-      max-width: 640px;
+      max-width: 700px;
       margin: 0 auto;
+      width: 100%;
     }
-    .hd-logo { font-size: 48px; margin-bottom: 24px; }
-    .hd-page h1 { font-size: 2rem; font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
-    .hd-page p { font-size: 1.1rem; line-height: 1.7; color: var(--text-secondary, #888); margin-bottom: 16px; }
-    .hd-page p strong { color: var(--text-primary, #fff); }
-    .hd-cta {
-      display: inline-block; margin-top: 32px; padding: 14px 32px;
-      background: #fff; color: #000; font-weight: 700; font-size: 1rem;
-      border-radius: 999px; text-decoration: none; transition: opacity 0.2s;
+
+    .eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 20px;
     }
-    .hd-cta:hover { opacity: 0.85; }
-    .hd-artists { margin-top: 40px; font-size: 0.85rem; color: var(--text-secondary, #666); line-height: 1.8; }
+
+    h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      color: #000;
+    }
+    h1 span { color: #999; }
+
+    .divider {
+      width: 40px;
+      height: 2px;
+      background: #000;
+      margin: 0 auto 32px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #555;
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+    p strong { color: #111; font-weight: 600; }
+
+    .artists-line {
+      margin: 32px 0;
+      font-size: 0.9rem;
+      color: #bbb;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+    .artists-line strong {
+      color: #777;
+      font-weight: 500;
+    }
+
+    .cta-wrap {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      background: #000;
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: opacity 0.15s;
+    }
+    .cta-btn:hover { opacity: 0.8; }
+
+    .cta-sub {
+      font-size: 0.8rem;
+      color: #bbb;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.8rem;
+      color: #ccc;
+      border-top: 1px solid #f0f0f0;
+    }
+    footer a { color: #999; text-decoration: none; }
+    footer a:hover { color: #111; }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2.6rem; }
+      p { font-size: 1rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="hd-page">
-    <div class="hd-logo">🎵</div>
-    <h1>Hillydilly is now Before The Data.</h1>
+
+  <nav>
+    <a href="/">Before The Data</a>
+  </nav>
+
+  <div class="hero">
+    <div class="eyebrow">You're looking for Hillydilly</div>
+
+    <h1>Hillydilly <span>is now</span><br>Before The Data.</h1>
+
+    <div class="divider"></div>
+
     <p>
-      In 2007, <strong>Chad Hillard</strong> launched Hillydilly with a simple idea: find the best new music before anyone else.
-      Over 13 years, the blog discovered <strong>Billie Eilish, Lorde, Halsey, LANY, Dominic Fike, and Daniel Caesar</strong> before they broke.
+      In 2007, <strong>Chad Hillard</strong> launched Hillydilly with one idea:
+      find the best new music before anyone else.
     </p>
     <p>
-      In May 2020, Hillydilly closed. In 2022, Chad brought it back under a new name: <strong>Before The Data</strong>.
-      Same ear. Same mission. A new chapter.
+      Over 13 years, the blog discovered <strong>Billie Eilish, Lorde, Halsey,
+      LANY, Dominic Fike, and Daniel Caesar</strong> — before they were household names.
     </p>
-    <p>If you're looking for what Hillydilly was — this is it.</p>
-    <a href="/" class="hd-cta">Go to Before The Data →</a>
-    <div class="hd-artists">
-      Artists discovered before they broke:<br>
-      Billie Eilish &middot; Lorde &middot; Halsey &middot; LANY &middot; Dominic Fike &middot; Daniel Caesar &middot; and thousands more
+    <p>
+      Hillydilly closed in May 2020. In 2022, Chad brought it back under a new name.
+      Same ear. Same obsession. A new chapter.
+    </p>
+
+    <div class="artists-line">
+      <strong>Discovered here first:</strong> Billie Eilish &middot; Lorde &middot; Halsey &middot; LANY &middot; Dominic Fike &middot; Daniel Caesar
+    </div>
+
+    <div class="cta-wrap">
+      <a href="/" class="cta-btn">Go to Before The Data &rarr;</a>
+      <span class="cta-sub">Free music discovery. No algorithm.</span>
     </div>
   </div>
+
+  <footer>
+    &copy; 2025 Before The Data &mdash; <a href="/about">Our Story</a>
+  </footer>
+
 </body>
 </html>
