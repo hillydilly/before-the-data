@@ -221,6 +221,24 @@ async function renderNewMusic() {
   const grid = document.getElementById('music-grid');
   if (!grid) return;
 
+  // Attach toggle listeners immediately (before async fetch) so clicks always register
+  let currentView = localStorage.getItem('btd-view') || 'list';
+  const _setView = (view) => {
+    currentView = view;
+    localStorage.setItem('btd-view', view);
+    document.getElementById('view-list')?.classList.toggle('active', view === 'list');
+    document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
+  };
+  _setView(currentView); // set initial button state right away
+  document.getElementById('view-list')?.addEventListener('click', () => {
+    _setView('list');
+    if (typeof renderView === 'function') renderView('list');
+  });
+  document.getElementById('view-grid')?.addEventListener('click', () => {
+    _setView('grid');
+    if (typeof renderView === 'function') renderView('grid');
+  });
+
   const allPosts = await fetchPosts('publishedAt', 'desc', 500);
 
   // Genre filter from URL param
@@ -254,11 +272,9 @@ async function renderNewMusic() {
 
   Player.setQueue(allPosts);
 
-  // Default: list view
-  let currentView = localStorage.getItem('btd-view') || 'list';
-
   function renderView(view) {
     currentView = view;
+    _setView(view);
     const posts = activeGenre ? allPosts.filter(p => (p.genres || [p.genre]).includes(activeGenre)) : allPosts;
     grid.innerHTML = '';
     if (view === 'list') {
@@ -275,15 +291,10 @@ async function renderNewMusic() {
         grid.appendChild(card);
       });
     }
-    document.getElementById('view-list')?.classList.toggle('active', view === 'list');
-    document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
-    localStorage.setItem('btd-view', view);
   }
 
   renderView(currentView);
 
-  document.getElementById('view-list')?.addEventListener('click', () => { renderView('list'); localStorage.setItem('btd-view', 'list'); });
-  document.getElementById('view-grid')?.addEventListener('click', () => { renderView('grid'); localStorage.setItem('btd-view', 'grid'); });
 }
 
 /* --- Popular Page --- */
