@@ -41,6 +41,50 @@
       border-top: 1px solid var(--bd);
       margin: 32px 0;
     }
+    .hf-tiers-teaser {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0 8px;
+    }
+    .hf-tier-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--bd);
+      background: var(--bg-2);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .hf-tier-pill:hover { border-color: var(--acc); background: var(--bg-3); }
+    .hf-tier-pill--pro { border-color: rgba(255,255,255,0.2); background: #111; }
+    .hf-tier-pill--pro:hover { border-color: #fff; }
+    .hf-tier-pill-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--tx-1);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .hf-tier-pill--pro .hf-tier-pill-label { color: #fff; }
+    .hf-tier-pill-price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--tx-1);
+      line-height: 1.2;
+    }
+    .hf-tier-pill--pro .hf-tier-pill-price { color: #fff; }
+    .hf-tier-pill-desc {
+      font-size: 11px;
+      color: var(--tx-3);
+      line-height: 1.4;
+    }
+    .hf-tier-pill--pro .hf-tier-pill-desc { color: rgba(255,255,255,0.5); }
+    @media (max-width: 480px) {
+      .hf-tiers-teaser { flex-direction: column; }
+    }
     .hf-desc {
       font-size: 15px;
       color: var(--tx-2);
@@ -187,10 +231,23 @@
   <main id="main">
     <div class="hf-page">
 
-      <div id="hf-form">
+      <div id="hf-form" id="hf-standard">
         <p class="hf-eyebrow">Before The Data</p>
         <h1 class="hf-headline">Heard First.</h1>
         <p class="hf-tagline">A&R intel. 48 hours early. $9/mo.</p>
+
+        <div class="hf-tiers-teaser">
+          <a href="#hf-standard" class="hf-tier-pill hf-tier-pill--active">
+            <span class="hf-tier-pill-label">Heard First</span>
+            <span class="hf-tier-pill-price">$9/mo</span>
+            <span class="hf-tier-pill-desc">48hr early access to every pick</span>
+          </a>
+          <a href="#hf-pro" class="hf-tier-pill hf-tier-pill--pro">
+            <span class="hf-tier-pill-label">Heard First Pro ★</span>
+            <span class="hf-tier-pill-price">$49.99/mo</span>
+            <span class="hf-tier-pill-desc">7-day exclusive + live scouting database</span>
+          </a>
+        </div>
 
         <hr class="hf-divider">
 
@@ -244,7 +301,7 @@
 
         <hr class="hf-divider">
 
-        <div class="hf-price-block" style="background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+        <div id="hf-pro" class="hf-price-block" style="background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
           <span style="font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;">For A&amp;R professionals</span>
           <span class="hf-price">$49.99</span>
           <span class="hf-price-sub">per month</span>
