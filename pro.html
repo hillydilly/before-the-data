@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Heard First Pro — Before The Data</title>
+  <title>Heard First Pro - Before The Data</title>
   <meta name="description" content="Real-time access to our scouting database. The artists we're watching before anyone else.">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -354,6 +354,204 @@
       .pro-toolbar { gap: 10px; }
       .pro-toolbar h1 { font-size: 18px; }
     }
+
+    /* -- Artist Detail View ---------------------- */
+    .pro-dv { display: none; }
+    .pro-dv.active { display: block; }
+    .pro-dv-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--bg-2);
+      color: var(--tx-2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.12s;
+      margin-bottom: 20px;
+    }
+    .pro-dv-back:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-dv-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .pro-dv-pic {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid var(--bd);
+      flex-shrink: 0;
+    }
+    .pro-dv-pic-fallback {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pro-dv-name {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pro-dv-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pro-dv-badges a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      background: var(--bg-2);
+      color: var(--tx-2);
+      font-size: 11px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.15s;
+      border: 1px solid var(--bd);
+    }
+    .pro-dv-badges a:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-dv-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .pro-dv-stat {
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+    }
+    .pro-dv-stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--tx-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .pro-dv-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 6px;
+    }
+    .pro-dv-stat-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pro-dv-momentum {
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+    }
+    .pro-dv-momentum-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--tx-2);
+    }
+    .pro-dv-momentum-track {
+      height: 8px;
+      background: var(--bg-3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pro-dv-momentum-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .pro-dv-songs {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .pro-dv-songs-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-dv-songs-header h2 {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .pro-dv-songs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pro-dv-songs-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--bd);
+      white-space: nowrap;
+    }
+    .pro-dv-songs-table td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--bd);
+      vertical-align: middle;
+    }
+    .pro-dv-songs-table tbody tr:hover { background: var(--bg-3); }
+    .pro-dv-song-link {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-3);
+      border: 1px solid var(--bd);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: var(--tx-2);
+      transition: background 0.12s;
+      margin-right: 4px;
+    }
+    .pro-dv-song-link:hover { background: var(--bd); }
+    @media (max-width: 900px) {
+      .pro-dv-songs-table .col-igu,
+      .pro-dv-songs-table .col-ig-link,
+      .pro-dv-songs-table .col-spark { display: none; }
+    }
+    @media (max-width: 600px) {
+      .pro-dv-songs-table .col-tku,
+      .pro-dv-songs-table .col-tk-link { display: none; }
+      .pro-dv-header { gap: 12px; }
+      .pro-dv-name { font-size: 18px; }
+      .pro-dv-stats { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body data-page="pro">
@@ -458,6 +656,7 @@
       <div id="pro-table-wrap">
         <p class="pro-loading" id="pro-loading">Loading scouting data...</p>
       </div>
+      <div class="pro-dv" id="pro-detail-view"></div>
     </div>
 
   </main>
@@ -672,6 +871,7 @@
     // ── Render ─────────────────────────────────────
     var allArtists = [];
     var expandedId = null;
+    var selectedArtist = null;
     var currentSort = 'streams';
     var currentSearch = '';
 
@@ -749,6 +949,103 @@
       return html;
     }
 
+    function buildStatCard(label, value, color, delta, spark) {
+      return '<div class="pro-dv-stat">' +
+        '<div class="pro-dv-stat-label">' + label + '</div>' +
+        '<div class="pro-dv-stat-value" style="color:' + color + ';">' + value + '</div>' +
+        '<div class="pro-dv-stat-foot">' + (delta || '<span></span>') + (spark || '') + '</div>' +
+        '</div>';
+    }
+
+    function renderDetailView(a) {
+      var ts = getSpotifyStreams(a);
+      var daily = dayStr(a);
+      var tk = (a.m && a.m.tk) || 0;
+      var ig = (a.m && a.m.ig) || 0;
+      var ml = (a.m && a.m.ml) || 0;
+      var ugc = totUGC(a);
+      var mom = calcMomentum(a);
+
+      var initials = (a.n || '?').split(' ').map(function(w) { return w[0]; }).join('').substring(0, 2).toUpperCase();
+      var pic = a.pic
+        ? '<img class="pro-dv-pic" src="' + escHtml(a.pic) + '" alt="">'
+        : '<div class="pro-dv-pic-fallback">' + escHtml(initials) + '</div>';
+
+      var badges = '';
+      if (a.l && a.l.sp) badges += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg> Spotify</a>';
+      if (a.l && a.l.tk) badges += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg> TikTok</a>';
+      if (a.l && a.l.ig) badges += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg> Instagram</a>';
+
+      var streamSparkData = buildStreamSparkData(a.sm);
+      var tkSparkData = (a.h && a.h.tk) ? a.h.tk.slice(-14) : [];
+      var igSparkData = (a.h && a.h.ig) ? a.h.ig.slice(-14) : [];
+      var sfSparkData = (a.h && a.h.sf) ? a.h.sf.slice(-14) : [];
+
+      var stats = '';
+      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20));
+      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20));
+      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20));
+      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20));
+      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '');
+
+      var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
+      var momentum = '<div class="pro-dv-momentum">' +
+        '<div class="pro-dv-momentum-label"><span>Momentum</span>' + renderHeat(mom.score) + '</div>' +
+        '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
+        '</div>';
+
+      var songs = (a.sg || []).slice();
+      songs.sort(function(x, y) {
+        var xSt = (a.sm && a.sm[x.id]) ? (a.sm[x.id].st || 0) : 0;
+        var ySt = (a.sm && a.sm[y.id]) ? (a.sm[y.id].st || 0) : 0;
+        return ySt - xSt;
+      });
+
+      var songsHtml = '<div class="pro-dv-songs"><div class="pro-dv-songs-header"><h2>Songs</h2></div>';
+      if (songs.length === 0) {
+        songsHtml += '<p style="padding:24px;text-align:center;color:var(--tx-3);font-size:13px;">No songs tracked yet.</p>';
+      } else {
+        songsHtml += '<div style="overflow-x:auto;"><table class="pro-dv-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>Daily</th>' +
+          '<th class="col-tku">TikTok UGC</th><th class="col-igu">IG UGC</th>' +
+          '<th class="col-tk-link">TikTok Sound</th><th class="col-ig-link">IG Audio</th>' +
+          '<th class="col-spark">14d Trend</th></tr></thead><tbody>';
+        songs.forEach(function(s) {
+          var m = (a.sm && a.sm[s.id]) || {};
+          var streams = m.st || 0;
+          var dailyChange = vel(m.h && m.h.st, 1);
+          var tkUgc = m.ug || 0;
+          var igUgc = m.igu || 0;
+          var songSparkData = (m.h && m.h.st) ? m.h.st.slice(-14) : [];
+          var tkLink = s.tkUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          var igLink = s.igUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          songsHtml += '<tr>' +
+            '<td style="font-weight:500;">' + escHtml(s.t || '') + '</td>' +
+            '<td class="pro-num">' + fmt(streams) + '</td>' +
+            '<td>' + renderDelta(dailyChange) + '</td>' +
+            '<td class="col-tku pro-num">' + fmt(tkUgc) + '</td>' +
+            '<td class="col-igu pro-num">' + fmt(igUgc) + '</td>' +
+            '<td class="col-tk-link">' + tkLink + '</td>' +
+            '<td class="col-ig-link">' + igLink + '</td>' +
+            '<td class="col-spark">' + buildSparkline(songSparkData, 80, 24) + '</td>' +
+            '</tr>';
+        });
+        songsHtml += '</tbody></table></div>';
+      }
+      songsHtml += '</div>';
+
+      return '<button class="pro-dv-back" id="pro-dv-back-btn">&larr; Back to list</button>' +
+        '<div class="pro-dv-header">' + pic + '<div>' +
+        '<h1 class="pro-dv-name">' + escHtml(a.n || '') + '</h1>' +
+        '<div class="pro-dv-badges">' + (badges || '') + '</div></div></div>' +
+        '<div class="pro-dv-stats">' + stats + '</div>' +
+        momentum + songsHtml;
+    }
+
     function renderTable(artists) {
       if (artists.length === 0) {
         document.getElementById('pro-table-wrap').innerHTML =
@@ -809,17 +1106,33 @@
           // Don't toggle if clicking a link
           if (e.target.closest('a')) return;
           var id = row.getAttribute('data-id');
-          if (expandedId === id) {
-            expandedId = null;
-          } else {
-            expandedId = id;
-          }
+          selectedArtist = id;
           render();
         });
       });
     }
 
     function render() {
+      var dvEl = document.getElementById('pro-detail-view');
+      if (selectedArtist) {
+        var a = allArtists.find(function(x) { return x.id === selectedArtist; });
+        if (a) {
+          document.querySelector('.pro-toolbar').style.display = 'none';
+          document.getElementById('pro-meta').style.display = 'none';
+          document.getElementById('pro-table-wrap').style.display = 'none';
+          dvEl.classList.add('active');
+          dvEl.innerHTML = renderDetailView(a);
+          document.getElementById('pro-dv-back-btn').addEventListener('click', function() {
+            selectedArtist = null;
+            render();
+          });
+          return;
+        }
+      }
+      document.querySelector('.pro-toolbar').style.display = '';
+      document.getElementById('pro-meta').style.display = '';
+      document.getElementById('pro-table-wrap').style.display = '';
+      dvEl.classList.remove('active');
       var filtered = filterArtists(allArtists);
       var sorted = sortArtists(filtered);
       renderTable(sorted);
