@@ -1129,3 +1129,12 @@ ul { list-style: none; }
 .music-list-item .list-writeup:hover {
   color: var(--tx-1);
 }
+
+/* ── Author avatar — photo ──────────────────────────────────────── */
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
