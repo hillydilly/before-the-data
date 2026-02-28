@@ -258,7 +258,9 @@ async function renderNewMusic() {
   Player.setQueue(allPosts);
 
   // Default: list view
-  let currentView = localStorage.getItem('btd-view') || 'list';
+  // Force grid on mobile — list mode has layout issues on small screens
+  const isMobile = window.innerWidth < 768;
+  let currentView = isMobile ? 'grid' : (localStorage.getItem('btd-view') || 'grid');
 
   function renderView(view) {
     currentView = view;
@@ -456,6 +458,17 @@ async function renderPost() {
   // Body
   const body = document.getElementById('post-body');
   body.innerHTML = post.writeup || '<p>No writeup available.</p>';
+
+  // Spotify embed — below writeup
+  if (post.trackId) {
+    const embedWrap = document.createElement('div');
+    embedWrap.className = 'post-spotify-embed';
+    embedWrap.innerHTML = `<iframe src="https://open.spotify.com/embed/track/${post.trackId}?utm_source=generator&theme=0"
+      width="100%" height="80" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"></iframe>`;
+    body.appendChild(embedWrap);
+  }
 
   // Tracklist — Spotify embeds for additional tracks
   const tracklist = document.getElementById('post-tracklist');

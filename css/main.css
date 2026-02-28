@@ -28,6 +28,8 @@ body {
   color: var(--tx-2);
   line-height: 1.5;
   overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
 }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
@@ -243,6 +245,7 @@ ul { list-style: none; }
   background: rgba(0,0,0,.3);
   opacity: 0; transition: opacity .2s;
 }
+.music-card .card-art .play-overlay { opacity: 1; }
 .music-card:hover .card-art .play-overlay { opacity: 1; }
 /* Keep overlay visible + show pause when this card is actively playing */
 .music-card .card-art.is-playing .play-overlay { opacity: 1; }
@@ -477,6 +480,13 @@ ul { list-style: none; }
 }
 .post-body p { margin-bottom: 16px; }
 
+.post-spotify-embed {
+  margin-top: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.post-spotify-embed iframe { display: block; border-radius: 12px; }
+
 /* Spotify embed blocks inside post write-ups */
 .btd-tracks {
   margin-top: 24px;
@@ -589,7 +599,8 @@ ul { list-style: none; }
   }
   #sidebar nav a.active { border-left-color: transparent; border-top-color: var(--acc); }
   #sidebar nav a .nav-icon { font-size: 20px; }
-  #sidebar nav a[href='/search.html'] { display: none; }
+  #sidebar nav a[href='/search.html'],
+  #sidebar nav a[href='search.html'] { display: none !important; }
 
   #main {
     margin-left: 0;
