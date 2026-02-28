@@ -510,7 +510,7 @@ async function renderPost() {
       <section>
         <h4>Written By</h4>
         <div class="written-by">
-          <div class="author-avatar">${post.writtenBy.name.charAt(0)}</div>
+          <img class="author-avatar" src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772287609/btd/chad-profile.jpg" alt="${post.writtenBy.name}">
           <div>
             <div class="author-name">${post.writtenBy.name}</div>
             <div class="author-location">${post.writtenBy.location}</div>

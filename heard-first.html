@@ -241,6 +241,16 @@
         </div>
         <p class="hf-fine">Secure payment via Stripe. You'll receive a welcome email immediately after subscribing.</p>
         <p class="hf-already">Already a subscriber? <a href="index.html">Go back to the site.</a></p>
+
+        <hr class="hf-divider">
+
+        <div class="hf-price-block" style="background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+          <span style="font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;">For A&amp;R professionals</span>
+          <span class="hf-price">$49.99</span>
+          <span class="hf-price-sub">per month</span>
+          <p style="font-size:13px;opacity:0.7;margin-bottom:20px;line-height:1.6;">Real-time scouting database access. Every artist we're watching, with live Spotify streams, TikTok UGC, momentum scores, and song-level breakdowns.</p>
+          <a href="/api/create-checkout?plan=pro" class="hf-checkout-btn" style="text-decoration:none;display:inline-block;" onclick="startProCheckout(event)">Upgrade to Pro &rarr;</a>
+        </div>
       </div>
 
       <div id="hf-success">
@@ -266,6 +276,29 @@
     if (params.get('success') === '1') {
       document.getElementById('hf-form').style.display = 'none';
       document.getElementById('hf-success').style.display = 'block';
+    }
+
+    function startProCheckout(e) {
+      e.preventDefault();
+      var btn = e.target;
+      btn.textContent = 'Loading...';
+      btn.style.pointerEvents = 'none';
+      fetch('/api/create-checkout?plan=pro', { method: 'POST' })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            btn.textContent = 'Upgrade to Pro \u2192';
+            btn.style.pointerEvents = 'auto';
+            alert('Something went wrong. Please try again.');
+          }
+        })
+        .catch(function() {
+          btn.textContent = 'Upgrade to Pro \u2192';
+          btn.style.pointerEvents = 'auto';
+          alert('Something went wrong. Please try again.');
+        });
     }
 
     async function startCheckout() {
