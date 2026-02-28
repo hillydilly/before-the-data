@@ -63,13 +63,22 @@ const Player = (() => {
       playBtn.innerHTML = isPlaying ? '&#9646;&thinsp;&#9646;' : '&#9654;';
       playBtn.classList.toggle('is-paused', !isPlaying);
     }
-    // Update all page play buttons
+    // Reset all list play buttons to play icon
+    document.querySelectorAll('.list-play-btn').forEach(btn => {
+      btn.innerHTML = '&#9654;';
+    });
+    // Reset all data-playing-id elements
     document.querySelectorAll('[data-playing-id]').forEach(el => {
       el.classList.remove('is-playing');
     });
     if (isPlaying && queue[currentIndex]) {
-      document.querySelectorAll(`[data-playing-id="${queue[currentIndex].id}"]`).forEach(el => {
+      const id = queue[currentIndex].id;
+      document.querySelectorAll(`[data-playing-id="${id}"]`).forEach(el => {
         el.classList.add('is-playing');
+      });
+      // Update the specific list play button to show pause
+      document.querySelectorAll(`.list-play-btn[data-playing-id="${id}"]`).forEach(btn => {
+        btn.innerHTML = '&#9646;&thinsp;&#9646;';
       });
     }
   }

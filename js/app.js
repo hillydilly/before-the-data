@@ -174,10 +174,10 @@ function createListItem(post) {
   const writeupText = rawWriteup.replace(/<[^>]*>/g, '').trim();
 
   item.innerHTML = `
-    <div class="list-art" data-post-link="${post.slug || post.id}">
+    <div class="list-art" data-post-link="${post.slug || post.id}" data-playing-id="${post.id}">
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="list-play-overlay">
-        <button class="list-play-btn">&#9654;</button>
+        <button class="list-play-btn" data-playing-id="${post.id}">&#9654;</button>
       </div>
     </div>
     <div class="list-info">

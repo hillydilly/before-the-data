@@ -1112,3 +1112,12 @@ ul { list-style: none; }
     background: var(--bg-2);
   }
 }
+
+/* ── List item playing state ────────────────────────────────────── */
+.music-list-item .list-art.is-playing .list-play-overlay {
+  background: rgba(0,0,0,0.6);
+}
+.music-list-item .list-art.is-playing .list-play-btn {
+  background: var(--acc);
+  color: #fff;
+}
