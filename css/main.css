@@ -622,6 +622,34 @@ ul { list-style: none; }
 
   #player-bar .player-right .volume-slider { display: none; }
   #player-bar .player-info .player-source { display: none; }
+
+  /* Mobile player bar — clean, tight, uniform */
+  #player-bar {
+    padding: 0 12px;
+    gap: 10px;
+  }
+  #player-bar .player-art {
+    width: 36px; height: 36px;
+  }
+  #player-bar .player-controls {
+    gap: 8px;
+  }
+  #player-bar .player-controls button {
+    width: 28px; height: 28px;
+    font-size: 14px;
+    background: none;
+    border: none;
+  }
+  #player-bar .player-controls .play-btn {
+    width: 36px; height: 36px;
+    font-size: 13px;
+  }
+  #player-bar .player-controls svg {
+    width: 14px; height: 14px;
+  }
+  #player-bar .player-info .player-title {
+    font-size: 12px;
+  }
 }
 
 /* ============================================
