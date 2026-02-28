@@ -116,6 +116,10 @@ def main():
     frames_dir = os.path.join(os.path.dirname(__file__), '..', 'public', 'frames', 'intro')
     output_dir = os.path.join(os.path.dirname(__file__), '..', 'public', 'frames', 'composite')
     frames_parent = os.path.join(os.path.dirname(__file__), '..', 'public', 'frames')
+    # Wipe stale frames from previous run before writing new ones
+    import shutil
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
     os.makedirs(output_dir, exist_ok=True)
 
     total = 170

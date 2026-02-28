@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (mobileSearchInput) {
     mobileSearchInput.addEventListener('input', () => {
       const q = mobileSearchInput.value.toLowerCase().trim();
-      document.querySelectorAll('#new-music-scroll .music-list-item').forEach(item => {
+      document.querySelectorAll('#new-music-scroll .music-list-item, #music-grid .music-list-item, #music-grid .music-card').forEach(item => {
         const text = item.textContent.toLowerCase();
         item.style.display = (!q || text.includes(q)) ? '' : 'none';
       });
@@ -143,23 +143,41 @@ function createChartRowFromTrack(track) {
 
 /* --- Discover Page --- */
 async function renderDiscover() {
-  // Genre filter from URL
-  const genreFilter = new URLSearchParams(window.location.search).get('genre');
   const scrollContainer = document.getElementById('new-music-scroll');
   const chartList = document.getElementById('chart-list');
   if (!scrollContainer || !chartList) return;
 
-  // New Music: demo/Firebase posts
   const latest = await fetchPosts('publishedAt', 'desc', 10);
-  Player.setQueue(latest); // pre-load so next/prev works across all cards
-  latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
+  Player.setQueue(latest);
 
-  // Charts: real data from Firebase btd_charts
+  // View toggle support
+  let discoverView = localStorage.getItem('btd-view') || 'grid';
+
+  function renderDiscoverCards(view) {
+    discoverView = view;
+    localStorage.setItem('btd-view', view);
+    scrollContainer.innerHTML = '';
+    if (view === 'list') {
+      scrollContainer.className = 'music-scroll list-view';
+      latest.forEach(p => scrollContainer.appendChild(createListItem(p)));
+    } else {
+      scrollContainer.className = 'music-scroll';
+      latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
+    }
+    document.getElementById('view-list')?.classList.toggle('active', view === 'list');
+    document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
+  }
+
+  renderDiscoverCards(discoverView);
+
+  document.getElementById('view-list')?.addEventListener('click', () => renderDiscoverCards('list'));
+  document.getElementById('view-grid')?.addEventListener('click', () => renderDiscoverCards('grid'));
+
+  // Charts
   const charts = await fetchCharts();
   if (charts.length > 0) {
     charts.forEach(t => chartList.appendChild(createChartRowFromTrack(t)));
   } else {
-    // Fallback to demo posts
     const popular = await fetchPosts('views', 'desc', 25);
     popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
   }
@@ -410,7 +428,7 @@ async function renderPost() {
     <div class="post-hero-bg" style="background-image:url('${post.artUrl}')"></div>
     <div class="post-art-wrap" id="art-play-wrap">
       <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
-      ${post.previewUrl ? `<div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>` : ''}
+      <div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>
     </div>
     <div class="post-hero-meta">
       <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
