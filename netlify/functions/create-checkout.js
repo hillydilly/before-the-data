@@ -17,9 +17,6 @@ export default async (req) => {
   let productName, productDesc, unitAmount, successUrl, cancelUrl;
 
   if (plan === 'pro') {
-    productName = 'Heard First Pro';
-    productDesc = 'Real-time scouting database access.';
-    unitAmount = '4999';
     successUrl = `${origin}/pro?session_id={CHECKOUT_SESSION_ID}`;
     cancelUrl = `${origin}/pro`;
   } else {
@@ -37,7 +34,14 @@ export default async (req) => {
         'Authorization': `Bearer ${STRIPE_SECRET}`,
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: new URLSearchParams({
+      body: new URLSearchParams(plan === 'pro' ? {
+        'mode': 'subscription',
+        'line_items[0][price]': 'price_1T5x5hRev2oEsauycwzDuJiO',
+        'line_items[0][quantity]': '1',
+        'success_url': successUrl,
+        'cancel_url': cancelUrl,
+        'billing_address_collection': 'auto',
+      } : {
         'mode': 'subscription',
         'line_items[0][price_data][currency]': 'usd',
         'line_items[0][price_data][product_data][name]': productName,
