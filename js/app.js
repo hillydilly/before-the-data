@@ -147,31 +147,10 @@ async function renderDiscover() {
   const chartList = document.getElementById('chart-list');
   if (!scrollContainer || !chartList) return;
 
+  // Always grid on discover page
   const latest = await fetchPosts('publishedAt', 'desc', 10);
   Player.setQueue(latest);
-
-  // View toggle support
-  let discoverView = localStorage.getItem('btd-view') || 'grid';
-
-  function renderDiscoverCards(view) {
-    discoverView = view;
-    localStorage.setItem('btd-view', view);
-    scrollContainer.innerHTML = '';
-    if (view === 'list') {
-      scrollContainer.className = 'music-scroll list-view';
-      latest.forEach(p => scrollContainer.appendChild(createListItem(p)));
-    } else {
-      scrollContainer.className = 'music-scroll';
-      latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
-    }
-    document.getElementById('view-list')?.classList.toggle('active', view === 'list');
-    document.getElementById('view-grid')?.classList.toggle('active', view === 'grid');
-  }
-
-  renderDiscoverCards(discoverView);
-
-  document.getElementById('view-list')?.addEventListener('click', () => renderDiscoverCards('list'));
-  document.getElementById('view-grid')?.addEventListener('click', () => renderDiscoverCards('grid'));
+  latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
 
   // Charts
   const charts = await fetchCharts();
@@ -276,7 +255,7 @@ async function renderNewMusic() {
   Player.setQueue(allPosts);
 
   // Default: list view
-  let currentView = localStorage.getItem('btd-view') || 'grid';
+  let currentView = localStorage.getItem('btd-view') || 'list';
 
   function renderView(view) {
     currentView = view;
