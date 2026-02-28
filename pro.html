@@ -786,40 +786,11 @@
     }
 
     function calcSocialScore(a) {
-      if (!a.sm) return { score: 0, surging: false };
-      var songs = Object.values(a.sm);
-      var ytLast7 = 0, ytPrior7 = 0;
-      songs.forEach(function(s) {
-        var l = vel(s.h && s.h.yt, 7) || 0;
-        var p = (vel(s.h && s.h.yt, 14) || 0) - (vel(s.h && s.h.yt, 7) || 0);
-        ytLast7 += l; ytPrior7 += p;
-      });
-      var ugLast7 = 0, ugPrior7 = 0;
-      songs.forEach(function(s) {
-        var l = vel(s.h && s.h.ug, 7) || 0;
-        var p = (vel(s.h && s.h.ug, 14) || 0) - (vel(s.h && s.h.ug, 7) || 0);
-        ugLast7 += l; ugPrior7 += p;
-      });
-      function scoreVel(last, prior) {
-        if (last <= 0) return 0;
-        if (prior <= 0) return last > 0 ? 20 : 0;
-        var ratio = last / Math.abs(prior);
-        return Math.min(33, Math.round(ratio * 16));
-      }
-      var ytScore = scoreVel(ytLast7, ytPrior7);
-      var ugScore = scoreVel(ugLast7, ugPrior7);
-      var now = new Date();
-      var cutoff = new Date(now - 48 * 3600 * 1000).toISOString().split('T')[0];
-      var fresh = songs.some(function(s) {
-        return (s.h && s.h.yt || []).some(function(e) { return e.d >= cutoff; }) ||
-               (s.h && s.h.ug || []).some(function(e) { return e.d >= cutoff; });
-      });
-      var freshBonus = fresh ? 34 : 0;
-      var score = Math.min(100, ytScore + ugScore + freshBonus);
-      var surging = score >= 70 ||
-        (ytLast7 > 0 && ytPrior7 > 0 && ytLast7 / ytPrior7 >= 2) ||
-        (ugLast7 > 0 && ugPrior7 > 0 && ugLast7 / ugPrior7 >= 2);
-      return { score: score, surging: surging };
+      // Use the social score stored by the data agent in a.m.ss (0-10 scale, stored as integer)
+      var raw = (a.m && a.m.ss) ? parseInt(a.m.ss) : 0;
+      // Normalize to 0-100 for display (data agent stores 0-10)
+      var score = Math.min(100, raw * 10);
+      return { score: score, surging: score >= 70 };
     }
 
     function getLastUpdated(a) {
@@ -1003,8 +974,9 @@
       stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '');
 
       var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
+      var rawSS = (a.m && a.m.ss) ? a.m.ss : 0;
       var socialScore = '<div class="pro-dv-momentum">' +
-        '<div class="pro-dv-momentum-label"><span>Social Score</span>' + renderHeat(mom.score) + '</div>' +
+        '<div class="pro-dv-momentum-label"><span>Social Score</span><span style="font-size:13px;font-weight:700;color:' + momColor + ';margin-left:8px;">' + rawSS + ' / 10</span></div>' +
         '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
         '</div>';
 
