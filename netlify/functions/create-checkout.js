@@ -8,7 +8,7 @@ export default async (req) => {
     return new Response('Method not allowed', { status: 405 });
   }
 
-  const STRIPE_SECRET = 'STRIPE_SECRET_REMOVED';
+  const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY;
   const origin = req.headers.get('origin') || 'https://beforethedata.com';
 
   try {
