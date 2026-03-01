@@ -185,6 +185,7 @@ function createListItem(post) {
       <a class="list-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
       <div class="list-title">${post.title}</div>
       ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
+      <div class="list-genres">${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => '<a href="/new-music.html?genre=' + encodeURIComponent(g) + '" class="genre-pill" onclick="event.stopPropagation()">' + g + '</a>').join('')}</div>
       <div class="list-date">${timeAgo(post.publishedAt)}</div>
     </div>
   `;
