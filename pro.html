@@ -638,6 +638,43 @@
     .manage-modal-submit { flex:1;padding:11px;border-radius:8px;border:none;background:#000000;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer; }
     .manage-modal-cancel { flex:0 0 auto;padding:11px 18px;border-radius:8px;border:1px solid #dddddd;background:#ffffff;color:#333333;font-size:13px;cursor:pointer; }
     .manage-modal-error { font-size:13px;color:#cc0000;margin-bottom:8px;display:none; }
+
+    .pro-branding-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      margin-bottom: 16px;
+      background: #000000;
+      border-radius: 12px;
+    }
+    .pro-branding-bar.active { display: flex; }
+    .pro-branding-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .pro-branding-title span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.5);
+      display: block;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+    .pro-branding-manage {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body data-page="pro">
@@ -682,6 +719,13 @@
 
     <!-- ── PAYWALL ──────────────────────────────── -->
     <!-- Already a Pro member? Login banner -->
+  <div class="pro-branding-bar" id="pro-branding-bar">
+    <div class="pro-branding-title">
+      Heard First Pro
+      <span>Active membership</span>
+    </div>
+    <button class="pro-branding-manage" onclick="openManageModal()">Manage</button>
+  </div>
   <div class="pro-login-bar" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
     <button class="pro-login-btn" onclick="document.getElementById('pro-login-modal').classList.add('open')">Already a Pro member? Log in to access your dashboard &#x2192;</button>
     <button onclick="openManageModal()" style="background:none;border:none;font-size:13px;color:#999999;cursor:pointer;text-decoration:underline;">Manage or cancel subscription</button>
@@ -807,6 +851,11 @@
 
     paywallEl.style.display = 'none';
     dashEl.classList.add('active');
+    // Hide login prompt, show "Heard First Pro" branding bar
+    const loginBar = document.querySelector('.pro-login-bar');
+    const brandingBar = document.getElementById('pro-branding-bar');
+    if (loginBar) loginBar.style.display = 'none';
+    if (brandingBar) brandingBar.classList.add('active');
 
     // ── Firebase init (separate from BTD's firebase.js) ──
     const PRO_FB_CONFIG = {
