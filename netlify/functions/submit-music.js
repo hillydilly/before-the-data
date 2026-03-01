@@ -143,21 +143,17 @@ export default async (req) => {
     </td>
   </tr>
 
-  <!-- CTA FOOTER -->
-  <tr>
-    <td bgcolor="#000000" style="background:#000000;padding:32px 40px;text-align:center;">
-      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">START LISTENING &#x2192;</a>
-    </td>
-  </tr>
-
-  <!-- FOOTER -->
-  <tr>
-    <td bgcolor="#000000" style="background:#000000;padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
-      <p style="margin:0;font-size:11px;color:#555555;">
-        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
-      </p>
-    </td>
-  </tr>
+  <!-- CTA -->
+  <tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 40px 32px;text-align:center;">
+    <a href="https://beforethedata.com" style="display:inline-block;padding:14px 36px;background:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;">START LISTENING &#x2192;</a>
+  </td></tr>
+  <!-- Footer -->
+  <tr><td bgcolor="#ffffff" style="background-color:#ffffff;padding:0 40px 40px;">
+    <p style="margin:0;font-size:13px;color:#999999;line-height:1.8;border-top:1px solid #eeeeee;padding-top:24px;">You heard it here first.<br><strong style="color:#333333;">Before The Data</strong></p>
+  </td></tr>
+  <tr><td style="padding:24px 40px;text-align:center;background:#f2f2f2;">
+    <p style="margin:0;font-size:11px;color:#999999;"><a href="https://beforethedata.com" style="color:#999999;text-decoration:none;">beforethedata.com</a> &nbsp;|&nbsp; <a href="https://beforethedata.com/unsubscribe" style="color:#999999;text-decoration:none;">Unsubscribe</a></p>
+  </td></tr>
 
 </table>
 </td></tr>

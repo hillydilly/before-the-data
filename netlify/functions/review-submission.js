@@ -101,14 +101,14 @@ export default async (req) => {
   </tr>
   <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
   <tr>
-    <td bgcolor="#000000" style="padding:32px 40px;text-align:center;">
-      <a href="https://beforethedata.com" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">CHECK THE SITE &#x2192;</a>
+    <td bgcolor="#ffffff" style="background-color:#ffffff;padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com" style="display:inline-block;background:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">CHECK THE SITE &#x2192;</a>
     </td>
   </tr>
   <tr>
-    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
-      <p style="margin:0;font-size:11px;color:#555555;">
-        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#ffffff" style="background-color:#ffffff;padding:16px 40px 32px;text-align:center;border-top:1px solid #eee222;">
+      <p style="margin:0;font-size:11px;color:#999999;">
+        <a href="https://beforethedata.com" style="color:#999999;text-decoration:none;">beforethedata.com</a>
       </p>
     </td>
   </tr>
@@ -141,14 +141,14 @@ export default async (req) => {
   </tr>
   <tr><td bgcolor="#ffffff" style="padding:0 40px;"><div style="height:1px;background:#eeeeee;"></div></td></tr>
   <tr>
-    <td bgcolor="#000000" style="padding:32px 40px;text-align:center;">
-      <a href="https://beforethedata.com/submit.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">SUBMIT AGAIN &#x2192;</a>
+    <td bgcolor="#ffffff" style="background-color:#ffffff;padding:32px 40px;text-align:center;">
+      <a href="https://beforethedata.com/submit.html" style="display:inline-block;background:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">SUBMIT AGAIN &#x2192;</a>
     </td>
   </tr>
   <tr>
-    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
-      <p style="margin:0;font-size:11px;color:#555555;">
-        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#ffffff" style="background-color:#ffffff;padding:16px 40px 32px;text-align:center;border-top:1px solid #eee222;">
+      <p style="margin:0;font-size:11px;color:#999999;">
+        <a href="https://beforethedata.com" style="color:#999999;text-decoration:none;">beforethedata.com</a>
       </p>
     </td>
   </tr>

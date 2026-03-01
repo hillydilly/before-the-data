@@ -68,47 +68,47 @@ export default async (req) => {
 
   <!-- Heard First pitch — lead with this -->
   <tr>
-    <td bgcolor="#000000" style="padding:32px 40px 36px;">
-      <p style="margin:0 0 8px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#888888;font-weight:600;">WANT THE EDGE?</p>
+    <td bgcolor="#ffffff" style="padding:32px 40px 36px;">
+      <p style="margin:0 0 8px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">WANT THE EDGE?</p>
       <h2 style="margin:0 0 16px;font-size:24px;font-weight:800;color:#ffffff;text-transform:uppercase;letter-spacing:1px;line-height:1.1;">Heard First.</h2>
       <p style="margin:0 0 24px;font-size:14px;color:#aaaaaa;line-height:1.7;">We run a 24/7 AI agent trained to scroll TikTok and surface artists before they break. Chad curates every pick. Heard First members get the signal before it goes public.</p>
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr><td style="padding:10px 0;border-bottom:1px solid #222222;">
           <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; 48hr early access</p>
-          <p style="margin:4px 0 0;font-size:13px;color:#888888;line-height:1.5;">Every Artist Discovery pick in your inbox before it goes public.</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Every Artist Discovery pick in your inbox before it goes public.</p>
         </td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #222222;">
           <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; Full A&amp;R scouting report</p>
-          <p style="margin:4px 0 0;font-size:13px;color:#888888;line-height:1.5;">Spotify listeners, TikTok UGC, YouTube views. The data at the moment of discovery.</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Spotify listeners, TikTok UGC, YouTube views. The data at the moment of discovery.</p>
         </td></tr>
         <tr><td style="padding:10px 0;border-bottom:1px solid #222222;">
           <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; Weekly artist tracker</p>
-          <p style="margin:4px 0 0;font-size:13px;color:#888888;line-height:1.5;">Every artist we're watching, updated weekly. Who's breaking. Who stalled.</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Every artist we're watching, updated weekly. Who's breaking. Who stalled.</p>
         </td></tr>
         <tr><td style="padding:10px 0;">
           <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; Monthly ones to watch</p>
-          <p style="margin:4px 0 0;font-size:13px;color:#888888;line-height:1.5;">Top momentum artists of the month, ranked by data. Before the industry catches on.</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Top momentum artists of the month, ranked by data. Before the industry catches on.</p>
         </td></tr>
       </table>
       <div style="margin-top:28px;text-align:center;">
         <a href="https://beforethedata.com/heard-first.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">JOIN HEARD FIRST &#x2192;</a>
       </div>
-      <p style="margin:16px 0 0;text-align:center;font-size:11px;color:#555555;">$9/mo or $90/yr. Cancel anytime.</p>
+      <p style="margin:16px 0 0;text-align:center;font-size:11px;color:#999999;">$9/mo or $90/yr. Cancel anytime.</p>
     </td>
   </tr>
 
   <!-- Secondary CTA -->
   <tr>
     <td bgcolor="#ffffff" style="padding:28px 40px;text-align:center;">
-      <a href="https://beforethedata.com/new-music.html" style="display:inline-block;background:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">START LISTENING &#x2192;</a>
+      <a href="https://beforethedata.com/new-music.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">START LISTENING &#x2192;</a>
     </td>
   </tr>
 
   <!-- Footer -->
   <tr>
-    <td bgcolor="#000000" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #222222;">
-      <p style="margin:0;font-size:11px;color:#555555;">
-        <a href="https://beforethedata.com" style="color:#888888;text-decoration:none;">beforethedata.com</a>
+    <td bgcolor="#ffffff" style="padding:16px 40px 32px;text-align:center;border-top:1px solid #eee222;">
+      <p style="margin:0;font-size:11px;color:#999999;">
+        <a href="https://beforethedata.com" style="color:#999999;text-decoration:none;">beforethedata.com</a>
       </p>
     </td>
   </tr>
