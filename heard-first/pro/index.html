@@ -495,17 +495,17 @@ function openDetail(id) {
       '</div>' +
     '</div>' +
     '<div class="sg">' + cards + '</div>' +
-    (localStorage.getItem('btd_pro_tip_seen') ? '' :
-      '<div class="tip-banner" id="pro-tip">' +
-        '<span class="tip-banner-icon">💡</span>' +
-        '<span>Click on any stat card above to see detailed breakdowns, platform splits, and history charts.</span>' +
-        '<button class="tip-banner-dismiss" onclick="document.getElementById(\'pro-tip\').remove();localStorage.setItem(\'btd_pro_tip_seen\',\'1\');">&times;</button>' +
-      '</div>') +
     '<div class="ssb" onclick="openModal(\'social\')">' +
       '<span class="ssb-l">Social Score</span>' +
       '<div class="ssb-t"><div class="ssb-f" style="width:' + (ss * 10) + '%;background:' + ssColor + ';"></div></div>' +
       '<span class="ssb-v" style="color:' + ssColor + ';">' + ss + ' / 10</span>' +
     '</div>' +
+    (localStorage.getItem('btd_pro_tip_seen') ? '' :
+      '<div class="tip-banner" id="pro-tip">' +
+        '<span class="tip-banner-icon">💡</span>' +
+        '<span>Click on any stat card or the social score bar to see detailed breakdowns, platform splits, and history charts.</span>' +
+        '<button class="tip-banner-dismiss" onclick="document.getElementById(\'pro-tip\').remove();localStorage.setItem(\'btd_pro_tip_seen\',\'1\');">&times;</button>' +
+      '</div>') +
     '<div class="sgh"><span class="sgt">Songs</span><span class="sgc">' + (a.sg ? a.sg.length : 0) + ' tracks</span></div>' +
     '<table class="stbl"><thead><tr><th>Title</th><th>Streams</th><th>Daily</th><th>TikTok UGC</th><th>Instagram UGC</th><th>14d Trend</th></tr></thead>' +
     '<tbody>' + sngHtml + '</tbody></table>';
