@@ -88,6 +88,80 @@
     @media (max-width: 480px) {
       .hf-tier-tabs { flex-direction: column; }
     }
+    /* Pro login banner */
+    .hf-login-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .hf-login-btn {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--tx-1);
+      background: var(--bg-2);
+      border: 2px solid var(--bd);
+      border-radius: 10px;
+      padding: 14px 28px;
+      cursor: pointer;
+      width: 100%;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .hf-login-btn:hover { border-color: var(--tx-1); background: var(--bg-3); }
+    /* Login modal (same as pro.html) */
+    .hf-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .hf-modal-overlay.open { display: flex; }
+    .hf-modal {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 14px;
+      padding: 32px;
+      width: 100%;
+      max-width: 380px;
+      margin: 16px;
+    }
+    .hf-modal h2 { font-size: 20px; font-weight: 800; margin: 0 0 8px; }
+    .hf-modal p { font-size: 13px; color: var(--tx-3); margin: 0 0 20px; line-height: 1.6; }
+    .hf-modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--bg-3);
+      color: var(--tx-1);
+      font-size: 14px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .hf-modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .hf-modal-submit {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      background: var(--tx-1);
+      color: var(--bg-1);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .hf-modal-cancel {
+      padding: 11px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: none;
+      color: var(--tx-3);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .hf-modal-msg { font-size: 12px; margin-top: 10px; color: var(--tx-3); min-height: 18px; }
     .hf-desc {
       font-size: 15px;
       color: var(--tx-2);
@@ -235,6 +309,25 @@
     <div class="hf-page">
 
       <div id="hf-form" id="hf-standard">
+        <!-- Already a Pro member? Login banner -->
+        <div class="hf-login-bar">
+          <button class="hf-login-btn" onclick="document.getElementById('hf-login-modal').classList.add('open')">Already a Pro member? Log in to access your dashboard &#x2192;</button>
+        </div>
+
+        <!-- Login modal -->
+        <div class="hf-modal-overlay" id="hf-login-modal">
+          <div class="hf-modal">
+            <h2>Access Your Dashboard</h2>
+            <p>Enter the email address you subscribed with. We will verify your Pro membership and grant access.</p>
+            <input type="email" id="hf-login-email" placeholder="your@email.com" />
+            <div class="hf-modal-actions">
+              <button class="hf-modal-submit" onclick="sendHFAccessLink()">Verify &amp; Access</button>
+              <button class="hf-modal-cancel" onclick="document.getElementById('hf-login-modal').classList.remove('open')">Cancel</button>
+            </div>
+            <div class="hf-modal-msg" id="hf-login-msg"></div>
+          </div>
+        </div>
+
         <p class="hf-eyebrow">Before The Data</p>
         <h1 class="hf-headline">Heard First.</h1>
 
@@ -444,6 +537,35 @@
       document.getElementById('panel-hf').classList.toggle('hf-panel--active', tab === 'hf');
       document.getElementById('panel-pro').classList.toggle('hf-panel--active', tab === 'pro');
     }
+  </script>
+
+  <script>
+    async function sendHFAccessLink() {
+      const email = document.getElementById('hf-login-email').value.trim();
+      const msg = document.getElementById('hf-login-msg');
+      if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email.'; return; }
+      msg.textContent = 'Verifying...';
+      try {
+        const key = 'btd_sub_' + email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        const res = await fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/' + key + '?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec');
+        const data = await res.json();
+        const tier = data.fields?.tier?.stringValue || '';
+        if (tier === 'pro') {
+          localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
+          msg.textContent = 'Verified. Redirecting to your dashboard...';
+          setTimeout(() => window.location.href = '/pro', 800);
+        } else if (tier === 'heard-first') {
+          msg.textContent = 'Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';
+        } else {
+          msg.textContent = 'No Pro subscription found for this email. Check your email or subscribe below.';
+        }
+      } catch(e) {
+        msg.textContent = 'Error verifying. Try again.';
+      }
+    }
+    document.getElementById('hf-login-modal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
   </script>
 </body>
 </html>

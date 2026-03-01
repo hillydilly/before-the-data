@@ -555,20 +555,23 @@
     /* Pro login modal */
     .pro-login-bar {
       display: flex;
-      justify-content: flex-end;
-      margin-bottom: 16px;
+      justify-content: center;
+      margin-bottom: 28px;
     }
     .pro-login-btn {
-      font-size: 12px;
-      color: var(--tx-3);
-      background: none;
-      border: 1px solid var(--bd);
-      border-radius: 6px;
-      padding: 7px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--tx-1);
+      background: var(--bg-2);
+      border: 2px solid var(--bd);
+      border-radius: 10px;
+      padding: 14px 28px;
       cursor: pointer;
-      transition: color 0.15s, border-color 0.15s;
+      width: 100%;
+      max-width: 480px;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .pro-login-btn:hover { color: var(--tx-1); border-color: var(--tx-2); }
+    .pro-login-btn:hover { border-color: var(--tx-1); background: var(--bg-3); }
     .pro-modal-overlay {
       display: none;
       position: fixed;
@@ -666,9 +669,9 @@
   <main id="main">
 
     <!-- ── PAYWALL ──────────────────────────────── -->
-    <!-- Already a Pro member? Login bar -->
+    <!-- Already a Pro member? Login banner -->
   <div class="pro-login-bar">
-    <button class="pro-login-btn" onclick="document.getElementById('pro-login-modal').classList.add('open')">Already a Pro member? Access your dashboard</button>
+    <button class="pro-login-btn" onclick="document.getElementById('pro-login-modal').classList.add('open')">Already a Pro member? Log in to access your dashboard &#x2192;</button>
   </div>
 
   <!-- Login modal -->
