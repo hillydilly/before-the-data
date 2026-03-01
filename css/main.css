@@ -903,6 +903,12 @@ ul { list-style: none; }
   transition: opacity 0.15s;
 }
 .genre-pill:hover { opacity: 0.75; }
+/* Card + list genre pills */
+.card-genres{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;}
+.card-genres .genre-pill{font-size:9px;padding:2px 7px;}
+.list-genres{margin-top:4px;display:flex;flex-wrap:wrap;gap:4px;}
+.list-genres .genre-pill{font-size:9px;padding:2px 7px;}
+
 
 #genre-filter-bar {
   display: flex;
