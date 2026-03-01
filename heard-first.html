@@ -1565,9 +1565,7 @@
       }
       proDb = firebase.firestore();
     } catch(e) {
-      console.error('[Pro] Firebase init failed:', e);
-      document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
-      return;
+      console.error('[Pro] Firebase init:', e.message);
     }
 
     // ── Data helpers ───────────────────────────────
