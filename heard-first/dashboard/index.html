@@ -122,10 +122,25 @@ table.stbl{width:100%;border-collapse:collapse;}
 
 <div class="gate" id="gate">
   <h2>Heard First</h2>
-  <p>Enter the email you subscribed with to access your discovery archive.</p>
+  <p style="margin-bottom:24px;">Your discovery archive. Every artist we scout, with detailed write-ups, streaming data, and social metrics. Updated in real-time.</p>
+  <div style="text-align:left;margin-bottom:24px;padding:16px;background:#f8f8f8;border-radius:10px;">
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:10px;">What you get</div>
+    <div style="font-size:13px;color:#333;line-height:2;">
+      &#10003; Full artist discovery archive<br>
+      &#10003; Detailed scouting write-ups<br>
+      &#10003; Streaming and social data<br>
+      &#10003; 48-hour early access before public posts<br>
+      &#10003; New artists added regularly
+    </div>
+  </div>
+  <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Already a member? Log in below.</div>
   <input type="email" id="ge" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doVerify()">
   <button onclick="doVerify()">Access Dashboard</button>
   <div class="gate-msg" id="gm"></div>
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #eee;">
+    <p style="font-size:13px;color:#999;margin:0;">Not a member? <a href="/heard-first" style="color:#000;font-weight:600;text-decoration:underline;">Subscribe to Heard First ($9/mo)</a></p>
+    <p style="font-size:12px;color:#bbb;margin:8px 0 0;">Want more? <a href="/heard-first#tab-pro" style="color:#666;text-decoration:underline;">Upgrade to Pro ($49.99/mo)</a> for live dashboards and 7-day early access.</p>
+  </div>
 </div>
 
 <div class="dash" id="dash">

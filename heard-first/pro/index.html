@@ -187,10 +187,24 @@ table.stbl{width:100%;border-collapse:collapse;}
 
 <div class="gate" id="gate">
   <h2>Heard First Pro</h2>
-  <p>Enter the email you subscribed with to access your scouting dashboard.</p>
+  <p style="margin-bottom:24px;">Real-time scouting dashboard. Live metrics across Spotify, TikTok, and Instagram. Detailed artist reports. 7-day early access before anyone else.</p>
+  <div style="text-align:left;margin-bottom:24px;padding:16px;background:#f8f8f8;border-radius:10px;">
+    <div style="font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#999;margin-bottom:10px;">What you get</div>
+    <div style="font-size:13px;color:#333;line-height:2;">
+      &#10003; Live streaming, social, and UGC data<br>
+      &#10003; Social score and posting activity tracking<br>
+      &#10003; In-depth scouting reports on every artist<br>
+      &#10003; 7-day early access before Heard First members<br>
+      &#10003; Direct access to the same tools we use
+    </div>
+  </div>
+  <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Already a member? Log in below.</div>
   <input type="email" id="ge" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doVerify()">
   <button onclick="doVerify()">Access Dashboard</button>
   <div class="gate-msg" id="gm"></div>
+  <div style="margin-top:20px;padding-top:16px;border-top:1px solid #eee;">
+    <p style="font-size:13px;color:#999;margin:0;">Not a member yet? <a href="/heard-first#tab-pro" style="color:#000;font-weight:600;text-decoration:underline;">Subscribe to Pro ($49.99/mo)</a></p>
+  </div>
 </div>
 
 <div class="dash" id="dash">
