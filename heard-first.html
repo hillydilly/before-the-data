@@ -972,86 +972,128 @@
       position: relative;
     }
     .pro-dv-stat:hover { border-color: var(--tx-3); transform: translateY(-1px); }
-    .pro-dv-stat-expand-hint {
-      font-size: 9px;
-      color: var(--tx-3);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      opacity: 0;
-      transition: opacity 0.15s;
-    }
-    .pro-dv-stat:hover .pro-dv-stat-expand-hint { opacity: 1; }
 
-    /* Metric drill-down panel */
-    .pro-metric-panel {
+    /* Metric modal overlay */
+    .metric-modal-overlay {
       display: none;
-      margin: -10px 0 20px;
-      padding: 20px;
-      background: var(--bg-2);
-      border: 1px solid var(--bd);
-      border-radius: 0 0 12px 12px;
-      border-top: none;
-      animation: fadeSlideIn 0.15s ease;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 60px 20px 20px;
+      overflow-y: auto;
     }
-    .pro-metric-panel.open { display: block; }
-    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-    .pro-metric-panel-header {
+    .metric-modal-overlay.open { display: flex; }
+    .metric-modal {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      position: relative;
+      animation: modalIn 0.2s ease;
+    }
+    @keyframes modalIn { from { opacity:0;transform:translateY(-12px); } to { opacity:1;transform:translateY(0); } }
+    .metric-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #999;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .metric-modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #000;
+      margin: 0 0 4px;
+    }
+    .metric-modal-desc {
+      font-size: 13px;
+      color: #999;
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
+    .metric-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .metric-stat-box {
+      padding: 14px 16px;
+      background: #f5f5f5;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .metric-stat-box-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    .metric-stat-box-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #000;
+    }
+    .metric-stat-box-value.positive { color: #10b981; }
+    .metric-stat-box-value.negative { color: #ef4444; }
+    .metric-breakdown {
+      margin-bottom: 20px;
+    }
+    .metric-breakdown-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 10px;
+    }
+    .metric-breakdown-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      padding: 12px 14px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 6px;
     }
-    .pro-metric-panel-title {
-      font-size: 12px;
+    .metric-breakdown-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+    .metric-breakdown-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .metric-breakdown-value {
+      font-size: 15px;
       font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--tx-1);
+      color: #000;
     }
-    .pro-metric-panel-close {
-      background: none;
-      border: none;
-      font-size: 18px;
-      color: var(--tx-3);
-      cursor: pointer;
-      padding: 0;
-      line-height: 1;
+    .metric-history-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 10px;
     }
-    .pro-metric-panel-value {
-      font-size: 36px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .pro-metric-panel-sub {
-      font-size: 12px;
-      color: var(--tx-3);
-      margin-bottom: 16px;
-    }
-    .pro-metric-panel-chart {
-      width: 100%;
-      overflow: hidden;
-    }
-    .pro-metric-panel-history {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 16px;
-    }
-    .pro-metric-history-item {
-      text-align: center;
-    }
-    .pro-metric-history-date {
-      font-size: 9px;
-      color: var(--tx-3);
-      margin-bottom: 2px;
-    }
-    .pro-metric-history-val {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--tx-1);
+    .metric-chart-wrap {
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 10px;
+      margin-bottom: 8px;
     }
   
   </style>
@@ -1798,13 +1840,12 @@
       return html;
     }
 
-    function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
+    var _currentDetailArtist = null;
+
+    function buildStatCard(label, value, color, delta, spark, metricKey) {
       var key = metricKey || '';
-      var hist = histData ? JSON.stringify(histData) : '[]';
-      var safeKey = key.replace(/'/g, '');
-      var clickAttr = key ? ' onclick="toggleMetricPanel(this,&quot;' + safeKey + '&quot;,' + hist + ')"' : '';
-      return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
-        '<span class="pro-dv-stat-expand-hint">Details</span>' +
+      var clickAttr = key ? " onclick=\"openMetricModal('" + key + "')\"" : '';
+      return '<div class="pro-dv-stat"' + clickAttr + '>' +
         '<div class="pro-dv-stat-label">' + label + '</div>' +
         '<div class="pro-dv-stat-value" style="color:' + color + ';">' + value + '</div>' +
         '<div class="pro-dv-stat-foot">' + (delta || '<span></span>') + (spark || '') + '</div>' +
@@ -1812,6 +1853,7 @@
     }
 
     function renderDetailView(a) {
+      _currentDetailArtist = a;
       var ts = getSpotifyStreams(a);
       var daily = dayStr(a);
       var tk = (a.m && a.m.tk) || 0;
@@ -1836,15 +1878,15 @@
       var sfSparkData = (a.h && a.h.sf) ? a.h.sf.slice(-14) : [];
 
       var stats = '';
-      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20), 'streams', streamSparkData);
-      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20), 'listeners', sfSparkData);
-      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20), 'tiktok', tkSparkData);
-      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20), 'instagram', igSparkData);
-      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '', 'ugc', []);
+      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20), 'streams');
+      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20), 'listeners');
+      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20), 'tiktok');
+      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20), 'instagram');
+      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '', 'ugc');
 
       var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
       var rawSS = (a.m && a.m.ss) ? a.m.ss : 0;
-      var socialScore = '<div class="pro-dv-momentum">' +
+      var socialScore = '<div class="pro-dv-momentum" style="cursor:pointer;" onclick="openMetricModal(\'social\')">' +
         '<div class="pro-dv-momentum-label"><span>Social Score</span><span style="font-size:13px;font-weight:700;color:' + momColor + ';margin-left:8px;">' + rawSS + ' / 10</span></div>' +
         '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
         '</div>';
@@ -2140,85 +2182,177 @@
     } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
   }
   
-  function toggleMetricPanel(cardEl, metricKey, histData) {
-    // Close any open panel
-    var existing = document.querySelector('.pro-metric-panel.open');
-    var isSameCard = existing && existing.previousSibling === cardEl;
-    if (existing) {
-      existing.classList.remove('open');
-      existing.remove();
-      cardEl.style.borderRadius = '12px';
-      if (isSameCard) return; // toggle off
-    }
+  // Metric modal overlay (added once to DOM)
+  (function() {
+    var overlay = document.createElement('div');
+    overlay.className = 'metric-modal-overlay';
+    overlay.id = 'metric-modal-overlay';
+    overlay.innerHTML = '<div class="metric-modal" id="metric-modal-body"></div>';
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeMetricModal();
+    });
+    document.body.appendChild(overlay);
+  })();
 
-    var labels = {
-      streams: { title: 'Total Streams', color: '#10b981', unit: 'streams' },
-      listeners: { title: 'Monthly Listeners', color: '#1DB954', unit: 'listeners' },
-      tiktok: { title: 'TikTok Followers', color: '#000000', unit: 'followers' },
-      instagram: { title: 'Instagram Followers', color: '#E1306C', unit: 'followers' },
-      ugc: { title: 'Total UGC Videos', color: '#8b5cf6', unit: 'videos' }
-    };
-    var meta = labels[metricKey] || { title: metricKey, color: 'var(--tx-1)', unit: '' };
-
-    // Build full-width sparkline
-    var chartHtml = '';
-    if (histData && histData.length >= 2) {
-      chartHtml = buildSparkline(histData, 500, 60).replace('width="', 'style="width:100%;height:60px;" width="');
-    } else {
-      chartHtml = '<p style="font-size:12px;color:var(--tx-3);text-align:center;padding:16px 0;">Not enough history to show a chart yet.</p>';
-    }
-
-    // Build last 7 data points table
-    var histHtml = '';
-    if (histData && histData.length > 0) {
-      var slice = histData.slice(-7);
-      var today = new Date();
-      histHtml = '<div class="pro-metric-panel-history">';
-      slice.forEach(function(val, i) {
-        var d = new Date(today);
-        d.setDate(d.getDate() - (slice.length - 1 - i));
-        var label = (d.getMonth()+1) + '/' + d.getDate();
-        histHtml += '<div class="pro-metric-history-item">' +
-          '<div class="pro-metric-history-date">' + label + '</div>' +
-          '<div class="pro-metric-history-val">' + fmtShort(val) + '</div>' +
-          '</div>';
-      });
-      histHtml += '</div>';
-    }
-
-    // Delta from first to last
-    var deltaHtml = '';
-    if (histData && histData.length >= 2) {
-      var first = histData[0], last = histData[histData.length-1];
-      var diff = last - first;
-      var pct = first > 0 ? ((diff / first) * 100).toFixed(1) : 0;
-      var sign = diff >= 0 ? '+' : '';
-      var color = diff >= 0 ? '#10b981' : '#ef4444';
-      deltaHtml = '<span style="font-size:13px;font-weight:600;color:' + color + ';">' + sign + fmtShort(diff) + ' (' + sign + pct + '%) over ' + histData.length + ' days</span>';
-    }
-
-    var panel = document.createElement('div');
-    panel.className = 'pro-metric-panel';
-    panel.innerHTML =
-      '<div class="pro-metric-panel-header">' +
-        '<span class="pro-metric-panel-title">' + meta.title + '</span>' +
-        '<button class="pro-metric-panel-close" onclick="var p=this.closest(\'.pro-metric-panel\');if(p){var c=p.previousElementSibling;if(c)c.style.borderRadius=\'12px\';p.remove();}">&times;</button>' +
-      '</div>' +
-      '<div class="pro-metric-panel-sub">' + deltaHtml + '</div>' +
-      '<div class="pro-metric-panel-chart">' + chartHtml + '</div>' +
-      histHtml;
-
-    // Style the card to connect visually
-    cardEl.style.borderRadius = '12px 12px 0 0';
-    cardEl.insertAdjacentElement('afterend', panel);
-    requestAnimationFrame(function() { panel.classList.add('open'); });
+  function closeMetricModal() {
+    var ov = document.getElementById('metric-modal-overlay');
+    if (ov) ov.classList.remove('open');
   }
 
   function fmtShort(n) {
-    if (!n && n !== 0) return '-';
+    if (n === null || n === undefined) return '-';
     if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1) + 'M';
     if (Math.abs(n) >= 1000) return (n/1000).toFixed(1) + 'K';
-    return n.toString();
+    return n.toLocaleString ? n.toLocaleString() : n.toString();
+  }
+
+  function fmtDelta(n) {
+    if (!n) return '-';
+    var sign = n >= 0 ? '+' : '';
+    return sign + fmtShort(n);
+  }
+
+  function deltaClass(n) {
+    if (n > 0) return 'positive';
+    if (n < 0) return 'negative';
+    return '';
+  }
+
+  function computeDeltas(hist) {
+    if (!hist || hist.length < 2) return { today: 0, week: 0, month: 0 };
+    var last = hist[hist.length - 1];
+    var today = hist.length >= 2 ? last - hist[hist.length - 2] : 0;
+    var week = hist.length >= 7 ? last - hist[hist.length - 7] : last - hist[0];
+    var month = hist.length >= 30 ? last - hist[hist.length - 30] : last - hist[0];
+    return { today: today, week: week, month: month };
+  }
+
+  function buildHistoryChart(hist, days) {
+    if (!hist || hist.length < 2) return '<p style="font-size:12px;color:#999;text-align:center;padding:16px 0;">Not enough history yet.</p>';
+    var slice = hist.slice(-days);
+    var chart = buildSparkline(slice, 420, 50);
+    // Make SVG responsive
+    chart = chart.replace(/width="[^"]*"/, 'style="width:100%;height:50px;" width="420"');
+    var today = new Date();
+    var startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - slice.length + 1);
+    var startLabel = (startDate.getMonth()+1) + '/' + startDate.getDate();
+    var endLabel = (today.getMonth()+1) + '/' + today.getDate();
+    return '<div class="metric-chart-wrap">' + chart + '</div>' +
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:#999;padding:0 4px;">' +
+        '<span>' + startLabel + '</span><span>' + endLabel + '</span></div>';
+  }
+
+  function openMetricModal(metricKey) {
+    var a = _currentDetailArtist;
+    if (!a) return;
+
+    var body = document.getElementById('metric-modal-body');
+    var html = '';
+
+    if (metricKey === 'streams') {
+      var spotTotal = 0, ytTotal = 0;
+      if (a.sm) Object.values(a.sm).forEach(function(x) { spotTotal += (x.st || 0); ytTotal += (x.yt || 0); });
+      var total = spotTotal + ytTotal;
+      var hist = buildStreamSparkData(a.sm);
+      var d = computeDeltas(hist);
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">Total Streams</h3>' +
+        '<p class="metric-modal-desc">Combined from Spotify and YouTube.</p>' +
+        '<div class="metric-stat-grid">' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">ALL TIME</div><div class="metric-stat-box-value">' + fmtShort(total) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS MONTH</div><div class="metric-stat-box-value ' + deltaClass(d.month) + '">' + fmtDelta(d.month) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS WEEK</div><div class="metric-stat-box-value ' + deltaClass(d.week) + '">' + fmtDelta(d.week) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">TODAY</div><div class="metric-stat-box-value ' + deltaClass(d.today) + '">' + fmtDelta(d.today) + '</div></div>' +
+        '</div>' +
+        '<div class="metric-breakdown"><div class="metric-breakdown-title">Breakdown by Platform</div>' +
+          '<div class="metric-breakdown-row"><span class="metric-breakdown-label"><span class="metric-breakdown-dot" style="background:#1DB954;"></span> Spotify</span><span class="metric-breakdown-value">' + fmtShort(spotTotal) + '</span></div>' +
+          '<div class="metric-breakdown-row"><span class="metric-breakdown-label"><span class="metric-breakdown-dot" style="background:#FF0000;"></span> YouTube</span><span class="metric-breakdown-value">' + fmtShort(ytTotal) + '</span></div>' +
+        '</div>' +
+        '<div class="metric-history-title">History (Last ' + Math.min(hist.length, 14) + ' days)</div>' +
+        buildHistoryChart(hist, 14);
+
+    } else if (metricKey === 'listeners') {
+      var ml = (a.m && a.m.ml) || 0;
+      var hist = (a.h && a.h.sf) ? a.h.sf : [];
+      var d = computeDeltas(hist);
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">Monthly Listeners</h3>' +
+        '<p class="metric-modal-desc">Spotify monthly listeners.</p>' +
+        '<div class="metric-stat-grid">' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">ALL TIME</div><div class="metric-stat-box-value">' + fmtShort(ml) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS MONTH</div><div class="metric-stat-box-value ' + deltaClass(d.month) + '">' + fmtDelta(d.month) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS WEEK</div><div class="metric-stat-box-value ' + deltaClass(d.week) + '">' + fmtDelta(d.week) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">TODAY</div><div class="metric-stat-box-value ' + deltaClass(d.today) + '">' + fmtDelta(d.today) + '</div></div>' +
+        '</div>' +
+        '<div class="metric-history-title">History (Last ' + Math.min(hist.length, 14) + ' days)</div>' +
+        buildHistoryChart(hist, 14);
+
+    } else if (metricKey === 'tiktok') {
+      var tk = (a.m && a.m.tk) || 0;
+      var hist = (a.h && a.h.tk) ? a.h.tk : [];
+      var d = computeDeltas(hist);
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">TikTok Followers</h3>' +
+        '<p class="metric-modal-desc">Total TikTok followers.</p>' +
+        '<div class="metric-stat-grid">' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">ALL TIME</div><div class="metric-stat-box-value">' + fmtShort(tk) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS MONTH</div><div class="metric-stat-box-value ' + deltaClass(d.month) + '">' + fmtDelta(d.month) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS WEEK</div><div class="metric-stat-box-value ' + deltaClass(d.week) + '">' + fmtDelta(d.week) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">TODAY</div><div class="metric-stat-box-value ' + deltaClass(d.today) + '">' + fmtDelta(d.today) + '</div></div>' +
+        '</div>' +
+        '<div class="metric-history-title">History (Last ' + Math.min(hist.length, 14) + ' days)</div>' +
+        buildHistoryChart(hist, 14);
+
+    } else if (metricKey === 'instagram') {
+      var ig = (a.m && a.m.ig) || 0;
+      var hist = (a.h && a.h.ig) ? a.h.ig : [];
+      var d = computeDeltas(hist);
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">Instagram Followers</h3>' +
+        '<p class="metric-modal-desc">Total Instagram followers.</p>' +
+        '<div class="metric-stat-grid">' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">ALL TIME</div><div class="metric-stat-box-value">' + fmtShort(ig) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS MONTH</div><div class="metric-stat-box-value ' + deltaClass(d.month) + '">' + fmtDelta(d.month) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS WEEK</div><div class="metric-stat-box-value ' + deltaClass(d.week) + '">' + fmtDelta(d.week) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">TODAY</div><div class="metric-stat-box-value ' + deltaClass(d.today) + '">' + fmtDelta(d.today) + '</div></div>' +
+        '</div>' +
+        '<div class="metric-history-title">History (Last ' + Math.min(hist.length, 14) + ' days)</div>' +
+        buildHistoryChart(hist, 14);
+
+    } else if (metricKey === 'ugc') {
+      var tkUgc = 0, igUgc = 0;
+      if (a.sm) Object.values(a.sm).forEach(function(x) { tkUgc += (x.ug || 0); igUgc += (x.igu || 0); });
+      var total = tkUgc + igUgc;
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">TikTok & Instagram UGC</h3>' +
+        '<p class="metric-modal-desc">Total videos using artist sounds across TikTok and Instagram Reels.</p>' +
+        '<div class="metric-stat-grid">' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">ALL TIME</div><div class="metric-stat-box-value">' + fmtShort(total) + '</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS MONTH</div><div class="metric-stat-box-value">-</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">THIS WEEK</div><div class="metric-stat-box-value">-</div></div>' +
+          '<div class="metric-stat-box"><div class="metric-stat-box-label">TODAY</div><div class="metric-stat-box-value">-</div></div>' +
+        '</div>' +
+        '<div class="metric-breakdown"><div class="metric-breakdown-title">Breakdown by Platform</div>' +
+          '<div class="metric-breakdown-row"><span class="metric-breakdown-label"><span class="metric-breakdown-dot" style="background:#000;"></span> TikTok UGC</span><span class="metric-breakdown-value">' + fmtShort(tkUgc) + '</span></div>' +
+          '<div class="metric-breakdown-row"><span class="metric-breakdown-label"><span class="metric-breakdown-dot" style="background:#E1306C;"></span> Instagram Reels</span><span class="metric-breakdown-value">' + fmtShort(igUgc) + '</span></div>' +
+        '</div>';
+    }
+
+    // Also add Social Score modal
+    if (metricKey === 'social') {
+      var ss = (a.m && a.m.ss) ? a.m.ss : 0;
+      html = '<button class="metric-modal-close" onclick="closeMetricModal()">&times;</button>' +
+        '<h3 class="metric-modal-title">Social Score</h3>' +
+        '<p class="metric-modal-desc">Social Score based on TikTok and Instagram posting consistency (0-10 scale).</p>' +
+        '<div style="text-align:center;padding:20px 0 24px;">' +
+          '<div style="font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#6366f1;margin-bottom:4px;">SOCIAL SCORE</div>' +
+          '<div style="font-size:56px;font-weight:800;color:#000;">' + ss + '<span style="font-size:24px;color:#999;">/10</span></div>' +
+        '</div>';
+    }
+
+    body.innerHTML = html;
+    document.getElementById('metric-modal-overlay').classList.add('open');
   }
   </script>
 </body>
