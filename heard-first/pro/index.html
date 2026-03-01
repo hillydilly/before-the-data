@@ -10,14 +10,14 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;}
 /* Branding bar */
-.bb{display:none;flex-direction:column;gap:12px;padding:16px 20px;background:#000;border-radius:14px;margin:20px 20px 0;}
+.bb{display:none;flex-direction:column;gap:12px;padding:16px 20px;background:#000;border-radius:0;margin:0;}
 .bb.on{display:flex;}
 .bb-top{display:flex;align-items:center;justify-content:space-between;}
 .bb-t{font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;}
 .bb-s{font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
 .bb-right{display:flex;align-items:center;gap:8px;}
 .bb-btn{font-size:11px;color:rgba(255,255,255,0.5);background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;cursor:pointer;text-decoration:none;white-space:nowrap;}
-@media(min-width:600px){.bb{flex-direction:row;align-items:center;justify-content:space-between;padding:16px 28px;margin:20px 28px 0;}.bb-top{flex:1;}}
+@media(min-width:600px){.bb{flex-direction:row;align-items:center;justify-content:space-between;padding:16px 28px;margin:20px 28px 0;border-radius:14px;}.bb-top{flex:1;}}
 /* Login gate */
 .gate{max-width:420px;margin:80px auto;padding:32px;text-align:center;}
 .gate h2{font-size:24px;font-weight:800;margin-bottom:8px;}
@@ -142,6 +142,31 @@ table.stbl{width:100%;border-collapse:collapse;}
 .wu-block.closed .wu-preview{max-height:0;padding:0 18px;}
 @media(max-width:599px){.wu-preview{max-height:0;padding:0 18px;}.wu-block.open .wu-preview{max-height:600px;padding:0 18px 18px;}.wu-header-arrow{transform:rotate(0deg);}.wu-block.open .wu-header-arrow{transform:rotate(180deg);}}
 .wu-text{font-size:14px;line-height:1.8;color:var(--tx);white-space:pre-wrap;}
+
+/* Mobile card list */
+.card-list{display:none;}
+@media(max-width:599px){
+  .tbl{display:none !important;}
+  .card-list{display:block;}
+  .dash{padding:16px;}
+  .dash.on{display:block;}
+  .sr{flex-direction:column;align-items:stretch;gap:8px;}
+  .si{max-width:100%;}
+  .det{padding:16px;}
+  .sg{grid-template-columns:1fr 1fr;}
+}
+.acard{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background 0.1s;}
+.acard:hover{background:var(--bg2);}
+.acard:first-child{border-top:1px solid var(--bd);}
+.acard-img{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--bg2);}
+.acard-ini{width:48px;height:48px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--tx2);flex-shrink:0;}
+.acard-info{flex:1;min-width:0;}
+.acard-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.acard-sub{font-size:12px;color:var(--tx3);margin-top:2px;}
+.acard-stats{display:flex;gap:12px;margin-top:6px;}
+.acard-stat{font-size:11px;color:var(--tx2);}
+.acard-stat strong{font-weight:700;color:var(--tx);}
+.acard-chev{color:var(--tx3);font-size:18px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -437,6 +462,32 @@ function renderList() {
     '</tr>';
   });
   document.getElementById('tb').innerHTML = html;
+  // Mobile card view
+  var ch = '';
+  filtered.forEach(function(a) {
+    var t = totalStreams(a);
+    var tk = (a.m && a.m.tk) || 0;
+    var ss = (a.m && a.m.ss) || 0;
+    var sc = songCount(a);
+    var name = a.n || '?';
+    var ini = name.charAt(0).toUpperCase();
+    var imgHtml = a.pic ? '<img class="acard-img" src="' + a.pic + '">' : '<div class="acard-ini">' + ini + '</div>';
+    ch += '<div class="acard" onclick="openDetail(\'' + a._id + '\')">' +
+      imgHtml +
+      '<div class="acard-info">' +
+        '<div class="acard-name">' + name + '</div>' +
+        '<div class="acard-sub">' + sc + ' song' + (sc !== 1 ? 's' : '') + '</div>' +
+        '<div class="acard-stats">' +
+          '<div class="acard-stat"><strong>' + fmt(t) + '</strong> streams</div>' +
+          (tk ? '<div class="acard-stat"><strong>' + fmt(tk) + '</strong> TikTok</div>' : '') +
+          (ss ? '<div class="acard-stat"><strong>' + ss.toFixed(1) + '</strong> social</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<span class="acard-chev">&#8250;</span>' +
+    '</div>';
+  });
+  var cl = document.getElementById('cl');
+  if (cl) cl.innerHTML = ch;
 }
 
 // ── Detail view ──
