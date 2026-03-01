@@ -1535,21 +1535,34 @@
       if (playerBar) playerBar.style.display = 'none';
       if (sidebar) sidebar.style.display = 'none';
       if (mainEl) mainEl.style.display = 'none';
-      // Remove the margin-left that the main content area has from sidebar
-      document.body.style.marginLeft = '0';
-      // Show pro dashboard container
+
+      // Show pro dashboard container — full viewport, no margins
       var proSection = document.getElementById('hf-pro-dashboard');
-      if (proSection) proSection.style.display = 'block';
+      if (proSection) {
+        proSection.style.display = 'block';
+        proSection.style.position = 'fixed';
+        proSection.style.top = '0';
+        proSection.style.left = '0';
+        proSection.style.right = '0';
+        proSection.style.bottom = '0';
+        proSection.style.zIndex = '900';
+        proSection.style.overflow = 'auto';
+        proSection.style.background = 'var(--bg-1, #ffffff)';
+        proSection.style.padding = '24px 32px';
+      }
+
       // Show branding bar, hide login prompts inside dashboard
       var brandingBar = document.getElementById('pro-branding-bar');
       if (brandingBar) brandingBar.classList.add('active');
       var loginBar = document.querySelector('.pro-login-bar');
       if (loginBar) loginBar.style.display = 'none';
+
       // Show the inner dash, hide paywall
       var paywall = document.getElementById('pro-paywall');
       var dash = document.getElementById('pro-dash');
       if (paywall) paywall.style.display = 'none';
       if (dash) dash.classList.add('active');
+
       window.history.replaceState({}, '', '/heard-first');
     }
 
