@@ -18,7 +18,8 @@ export default async (req) => {
       return Response.json({ error: 'Missing Turnstile token' }, { status: 400 });
     }
 
-    const secret = Netlify.env.get('TURNSTILE_SECRET_KEY') || '1x0000000000000000000000000000000AA';
+    const secret = Netlify.env.get('TURNSTILE_SECRET_KEY');
+    if (!secret) return Response.json({ error: 'Turnstile not configured' }, { status: 500 });
     const resp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
