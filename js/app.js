@@ -249,7 +249,29 @@ async function renderNewMusic() {
   const urlGenre = new URLSearchParams(window.location.search).get('genre');
   let activeGenre = urlGenre || null;
 
-  // Genre filter bar removed
+  // Inject genre filter bar
+  const pageHeader = document.querySelector('.page-header') || grid.parentElement;
+  const existingBar = document.getElementById('genre-filter-bar');
+  if (!existingBar && pageHeader) {
+    const genres = [...new Set(allPosts.flatMap(p => p.genres && p.genres.length ? p.genres : (p.genre ? [p.genre] : [])))].sort();
+    const bar = document.createElement('div');
+    bar.id = 'genre-filter-bar';
+    bar.innerHTML = `
+      <button class="genre-btn ${!activeGenre ? 'active' : ''}" data-genre="">All</button>
+      ${genres.map(g => `<button class="genre-btn ${activeGenre === g ? 'active' : ''}" data-genre="${g}">${g}</button>`).join('')}
+    `;
+    pageHeader.insertBefore(bar, grid);
+    bar.addEventListener('click', e => {
+      if (!e.target.classList.contains('genre-btn')) return;
+      activeGenre = e.target.dataset.genre || null;
+      bar.querySelectorAll('.genre-btn').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
+      renderView(currentView);
+      const url = new URL(window.location.href);
+      if (activeGenre) url.searchParams.set('genre', activeGenre);
+      else url.searchParams.delete('genre');
+      history.replaceState({}, '', url);
+    });
+  }
 
   Player.setQueue(allPosts);
 
