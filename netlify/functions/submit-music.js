@@ -88,12 +88,11 @@ export default async (req) => {
 
   <!-- HEADER: logo on forced black -->
   <tr>
-    <td bgcolor="#000000" style="background:#000000 !important;padding:28px 32px 20px;text-align:center;">
+    <td style="padding:0;line-height:0;font-size:0;">
       <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
         <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
-             alt="BEFORE THE DATA" width="280"
-             style="display:block;width:280px;max-width:100%;border:0;margin:0 auto;" />
-
+             alt="BEFORE THE DATA" width="560"
+             style="display:block;width:100%;max-width:560px;border:0;" />
       </a>
     </td>
   </tr>
