@@ -2,12 +2,21 @@
  * Netlify Function: POST /api/submit-music
  * Saves submission to Firebase and sends confirmation email to artist
  */
+import { rateLimit } from './rate-limit.js';
+
 
 const FIREBASE_KEY = process.env.FIREBASE_API_KEY;
 const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
 const RESEND_KEY = process.env.RESEND_API_KEY;
 
 export default async (req) => {
+  // Rate limit
+  const ip = req.headers.get('x-forwarded-for') || req.headers.get('client-ip') || 'unknown';
+  const rl = rateLimit(ip, 5, 60000);
+  if (rl.limited) {
+    return Response.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
+  }
+
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }

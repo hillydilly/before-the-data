@@ -122,7 +122,9 @@
     .success-icon { font-size: 48px; margin-bottom: 16px; }
     .success-card h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 40px; font-weight: 700; text-transform: uppercase; margin: 0 0 12px; }
     .success-card p { font-size: 15px; color: #555; line-height: 1.7; margin: 0; }
-  </style>
+  .btd-hp{position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;overflow:hidden;}
+</style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body data-page="submit">
   <div id="player-bar">
@@ -178,7 +180,9 @@
             <div class="field-group">
               <label for="gate-email">Your Email <span class="req">*</span></label>
               <input type="email" id="gate-email" class="field-input" placeholder="artist@example.com" required autocomplete="email">
+              <div class="btd-hp"><input type="text" id="btd-hp-field" name="website_url" tabindex="-1" autocomplete="off"></div>
             </div>
+            <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light" data-size="compact" style="margin-bottom:12px;"></div>
             <button type="submit" class="btn-primary" id="email-submit-btn">Continue →</button>
           </form>
         </div>

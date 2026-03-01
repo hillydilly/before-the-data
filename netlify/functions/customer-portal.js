@@ -3,8 +3,17 @@
  * Creates a Stripe customer portal session so subscribers can manage/cancel
  * Body: { email: "..." }
  */
+import { rateLimit } from './rate-limit.js';
+
 
 export default async (req) => {
+  // Rate limit
+  const ip = req.headers.get('x-forwarded-for') || req.headers.get('client-ip') || 'unknown';
+  const rl = rateLimit(ip, 5, 60000);
+  if (rl.limited) {
+    return Response.json({ error: 'Too many requests. Please wait.' }, { status: 429 });
+  }
+
   if (req.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 });
   }
