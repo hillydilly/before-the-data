@@ -41,6 +41,7 @@ export default async (req) => {
         'success_url': successUrl,
         'cancel_url': cancelUrl,
         'billing_address_collection': 'auto',
+        'allow_promotion_codes': 'true',
       } : {
         'mode': 'subscription',
         'line_items[0][price_data][currency]': 'usd',
@@ -52,6 +53,7 @@ export default async (req) => {
         'success_url': successUrl,
         'cancel_url': cancelUrl,
         'billing_address_collection': 'auto',
+        'allow_promotion_codes': 'true',
       }).toString()
     });
 
