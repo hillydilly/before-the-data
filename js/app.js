@@ -245,41 +245,16 @@ async function renderNewMusic() {
 
   const allPosts = await fetchPosts('publishedAt', 'desc', 500);
 
-  // Genre filter from URL param
-  const urlGenre = new URLSearchParams(window.location.search).get('genre');
-  let activeGenre = urlGenre || null;
+  let activeGenre = null;
 
-  // Inject genre filter bar
-  const pageHeader = document.querySelector('.page-header') || grid.parentElement;
-  const existingBar = document.getElementById('genre-filter-bar');
-  if (!existingBar && pageHeader) {
-    const genres = [...new Set(allPosts.flatMap(p => p.genres && p.genres.length ? p.genres : (p.genre ? [p.genre] : [])))].sort();
-    const bar = document.createElement('div');
-    bar.id = 'genre-filter-bar';
-    bar.innerHTML = `
-      <button class="genre-btn ${!activeGenre ? 'active' : ''}" data-genre="">All</button>
-      ${genres.map(g => `<button class="genre-btn ${activeGenre === g ? 'active' : ''}" data-genre="${g}">${g}</button>`).join('')}
-    `;
-    pageHeader.insertBefore(bar, grid);
-    bar.addEventListener('click', e => {
-      if (!e.target.classList.contains('genre-btn')) return;
-      activeGenre = e.target.dataset.genre || null;
-      bar.querySelectorAll('.genre-btn').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
-      renderView(currentView);
-      // Update URL without reload
-      const url = new URL(window.location.href);
-      if (activeGenre) url.searchParams.set('genre', activeGenre);
-      else url.searchParams.delete('genre');
-      history.replaceState({}, '', url);
-    });
-  }
+  // Genre filter bar removed
 
   Player.setQueue(allPosts);
 
   function renderView(view) {
     currentView = view;
     _setView(view);
-    const posts = activeGenre ? allPosts.filter(p => (p.genres || [p.genre]).includes(activeGenre)) : allPosts;
+    const posts = allPosts;
     grid.innerHTML = '';
     if (view === 'list') {
       grid.className = 'music-grid list-view';
@@ -441,7 +416,7 @@ async function renderPost() {
         ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
-        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
+        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<span class="genre-pill">${g}</span>`).join('')}
         ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
       </div>
     </div>
