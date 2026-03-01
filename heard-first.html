@@ -1528,9 +1528,15 @@
     const proParam = params.get('pro');
 
     window.showDashboard = function() {
-      // Hide ALL marketing content
+      // Hide ALL site layout: player bar, sidebar, main content
+      var playerBar = document.getElementById('player-bar');
+      var sidebar = document.getElementById('sidebar');
       var mainEl = document.getElementById('main');
+      if (playerBar) playerBar.style.display = 'none';
+      if (sidebar) sidebar.style.display = 'none';
       if (mainEl) mainEl.style.display = 'none';
+      // Remove the margin-left that the main content area has from sidebar
+      document.body.style.marginLeft = '0';
       // Show pro dashboard container
       var proSection = document.getElementById('hf-pro-dashboard');
       if (proSection) proSection.style.display = 'block';
