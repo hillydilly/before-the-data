@@ -269,6 +269,18 @@
       margin: 0 0 12px;
     }
     #hf-success p { font-size: 15px; color: var(--tx-3); line-height: 1.7; }
+
+    /* Manage account modal */
+    .manage-modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center; }
+    .manage-modal-overlay.active { display:flex; }
+    .manage-modal { background:#ffffff;border-radius:14px;padding:32px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    .manage-modal h3 { margin:0 0 8px;font-size:18px;font-weight:700;color:#000000; }
+    .manage-modal p { margin:0 0 20px;font-size:14px;color:#666666;line-height:1.5; }
+    .manage-modal input { width:100%;padding:12px 14px;border:1px solid #dddddd;border-radius:8px;font-size:14px;color:#000000;box-sizing:border-box;margin-bottom:12px; }
+    .manage-modal-actions { display:flex;gap:10px;margin-top:4px; }
+    .manage-modal-submit { flex:1;padding:11px;border-radius:8px;border:none;background:#000000;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer; }
+    .manage-modal-cancel { flex:0 0 auto;padding:11px 18px;border-radius:8px;border:1px solid #dddddd;background:#ffffff;color:#333333;font-size:13px;cursor:pointer; }
+    .manage-modal-error { font-size:13px;color:#cc0000;margin-bottom:8px;display:none; }
   </style>
 </head>
 <body data-page="heard-first">
@@ -386,6 +398,7 @@
             <span class="hf-price">$9</span>
             <span class="hf-price-sub">per month &middot; cancel anytime</span>
             <button class="hf-checkout-btn" id="checkout-btn" onclick="startCheckout()">Subscribe Now &#x2192;</button>
+          <p style="margin:16px 0 0;text-align:center;font-size:13px;color:#999999;">Already subscribed? <a href="#" onclick="event.preventDefault();openManageModal()" style="color:#000000;font-weight:600;text-decoration:underline;">Manage account</a></p>
           </div>
           <p class="hf-fine">Secure payment via Stripe. You will receive a welcome email immediately after subscribing.</p>
           <p class="hf-already">Already a subscriber? <a href="index.html">Go back to the site.</a></p>
@@ -444,6 +457,7 @@
             <span class="hf-price">$49.99</span>
             <span class="hf-price-sub">per month</span>
             <a href="/api/create-checkout?plan=pro" class="hf-checkout-btn" style="text-decoration:none;display:inline-block;" onclick="startProCheckout(event)">Upgrade to Pro &#x2192;</a>
+          <p style="margin:16px 0 0;text-align:center;font-size:13px;color:#999999;">Already subscribed? <a href="#" onclick="event.preventDefault();openManageModal()" style="color:#000000;font-weight:600;text-decoration:underline;">Manage account</a></p>
           </div>
           <p class="hf-fine">Secure payment via Stripe. Access your dashboard immediately after subscribing.</p>
           <p class="hf-already">Already a Pro member? <a href="/pro">Access your dashboard &#x2192;</a></p>
@@ -556,6 +570,42 @@
     document.getElementById('hf-login-modal').addEventListener('click', function(e) {
       if (e.target === this) this.classList.remove('open');
     });
+  
+  function openManageModal() {
+    document.getElementById('manageModal').classList.add('active');
+    document.getElementById('manageEmailInput').focus();
+    document.getElementById('manageError').style.display = 'none';
+  }
+
+  async function openCustomerPortal() {
+    const email = document.getElementById('manageEmailInput').value.trim();
+    const errEl = document.getElementById('manageError');
+    errEl.style.display = 'none';
+    if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display = 'block'; return; }
+    const btn = document.querySelector('.manage-modal-submit');
+    btn.textContent = 'Loading...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/customer-portal', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else { errEl.textContent = data.error || 'Could not find a subscription for that email.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
+    } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
+  }
   </script>
+
+  <!-- Manage Account Modal -->
+  <div class="manage-modal-overlay" id="manageModal">
+    <div class="manage-modal">
+      <h3>Manage Subscription</h3>
+      <p>Enter the email address you subscribed with and we will send you to your account portal.</p>
+      <input type="email" id="manageEmailInput" placeholder="your@email.com" />
+      <div class="manage-modal-error" id="manageError"></div>
+      <div class="manage-modal-actions">
+        <button class="manage-modal-cancel" onclick="document.getElementById('manageModal').classList.remove('active')">Cancel</button>
+        <button class="manage-modal-submit" onclick="openCustomerPortal()">Go to Portal &rarr;</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
