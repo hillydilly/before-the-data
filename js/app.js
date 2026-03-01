@@ -245,7 +245,8 @@ async function renderNewMusic() {
 
   const allPosts = await fetchPosts('publishedAt', 'desc', 500);
 
-  let activeGenre = null;
+  const urlGenre = new URLSearchParams(window.location.search).get('genre');
+  let activeGenre = urlGenre || null;
 
   // Genre filter bar removed
 
@@ -254,7 +255,7 @@ async function renderNewMusic() {
   function renderView(view) {
     currentView = view;
     _setView(view);
-    const posts = allPosts;
+    const posts = activeGenre ? allPosts.filter(p => (p.genres || [p.genre]).includes(activeGenre)) : allPosts;
     grid.innerHTML = '';
     if (view === 'list') {
       grid.className = 'music-grid list-view';
@@ -416,7 +417,7 @@ async function renderPost() {
         ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
-        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<span class="genre-pill">${g}</span>`).join('')}
+        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
         ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
       </div>
     </div>
