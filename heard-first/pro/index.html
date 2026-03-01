@@ -161,6 +161,11 @@ table.stbl{width:100%;border-collapse:collapse;}
       <option value="social">Social Score</option>
     </select>
   </div>
+  <div class="tip-banner" id="list-tip" style="display:none;">
+    <span class="tip-banner-icon">💡</span>
+    <span>Click on any artist row to see their full stats, song breakdowns, and detailed metrics.</span>
+    <button class="tip-banner-dismiss" onclick="document.getElementById('list-tip').remove();localStorage.setItem('btd_pro_list_tip','1');">&times;</button>
+  </div>
   <table class="tbl">
     <thead>
       <tr>
@@ -352,6 +357,10 @@ function loadData() {
       document.getElementById('dcnt').textContent = '(' + AA.length + ')';
       document.getElementById('dup').textContent = 'Last scraped: ' + new Date().toISOString().split('T')[0];
       renderList();
+      if (!localStorage.getItem('btd_pro_list_tip')) {
+        var lt = document.getElementById('list-tip');
+        if (lt) lt.style.display = 'flex';
+      }
     },
     function(err) {
       console.error('Firestore error:', err);
