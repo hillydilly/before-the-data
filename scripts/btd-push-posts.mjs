@@ -70,6 +70,15 @@ async function main() {
     post.tags = post.tags || [];
     post.country = post.country || '';
 
+    // Ensure genres array exists (required for genre pills on site)
+    if (!post.genres || !post.genres.length) {
+      const skipTags = ['new-music','artist-discovery','featured','editorial','scouting','new-release'];
+      const genreTags = (post.tags || []).filter(t => !skipTags.includes(t.toLowerCase()))
+        .map(t => t.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+      post.genres = genreTags.length ? genreTags : ['Indie'];
+      post.genre = post.genres[0];
+    }
+
     const success = await writePost(post);
     success ? ok++ : fail++;
     await new Promise(r => setTimeout(r, 150));
