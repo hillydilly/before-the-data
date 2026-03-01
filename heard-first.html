@@ -88,7 +88,22 @@
     }
     .hf-tier-tab--pro .hf-tier-tab-desc { color: rgba(255,255,255,0.4); }
     .hf-panel { display: none; }
-    .hf-panel--active { display: block; }
+    .hf-panel--active {
+      display: block;
+      animation: panelIn 0.2s ease;
+    }
+    @keyframes panelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* HF panel — left border accent */
+    #panel-hf.hf-panel--active {
+      border-left: 3px solid var(--tx-1);
+      padding-left: 20px;
+    }
+    /* Pro panel — black left border + subtle bg */
+    #panel-pro.hf-panel--active {
+      border-left: 3px solid #000000;
+      padding-left: 20px;
+    }
     @media (max-width: 480px) {
       .hf-tier-tabs { flex-direction: column; }
     }
@@ -1152,6 +1167,23 @@
               </div>
             </li>
           </ul>
+          <!-- Upgrade nudge -->
+          <div style="margin:0 0 24px;padding:16px 18px;background:#f7f7f7;border-radius:10px;border:1px solid #eeeeee;">
+            <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999999;">NOT INCLUDED — PRO ONLY</p>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#999999;">
+                <span style="font-size:11px;">&#x2715;</span> 7-day exclusive access before Heard First
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#999999;">
+                <span style="font-size:11px;">&#x2715;</span> Live scouting dashboard with real-time data
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#999999;">
+                <span style="font-size:11px;">&#x2715;</span> Social score + song-level breakdowns
+              </div>
+            </div>
+            <a href="#" onclick="switchTab('pro');return false;" style="display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:#000000;text-decoration:none;letter-spacing:0.5px;">See what Pro includes &#x2192;</a>
+          </div>
+
           <div class="hf-price-block">
             <span class="hf-price">$9</span>
             <span class="hf-price-sub">per month &middot; cancel anytime</span>
@@ -1165,7 +1197,28 @@
 
         <!-- Panel: Heard First Pro -->
         <div class="hf-panel" id="panel-pro">
-          <p class="hf-desc">For A&amp;R professionals and serious music fans who want to be ahead of the curve. We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is curated by Chad. As a Pro member, you get access to every approved find the moment it happens. A full week before anyone else hears about them.</p>
+          <p class="hf-desc">For A&amp;R professionals and serious music fans. Every Heard First feature, plus 7-day exclusive access and a live real-time scouting database. You see the artist before the email even goes out.</p>
+          <!-- Comparison: Pro vs HF -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 24px;">
+            <div style="padding:14px 16px;border-radius:10px;border:1px solid #eeeeee;background:#f7f7f7;">
+              <p style="margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#999999;">HEARD FIRST — $9/mo</p>
+              <div style="font-size:12px;color:#666666;line-height:1.8;">
+                <div>&#x2713; 48hr early access</div>
+                <div>&#x2713; A&amp;R scouting report</div>
+                <div>&#x2713; Weekly tracker</div>
+                <div>&#x2713; Monthly roundup</div>
+              </div>
+            </div>
+            <div style="padding:14px 16px;border-radius:10px;border:2px solid #000000;background:#000000;">
+              <p style="margin:0 0 8px;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.4);">PRO — $49.99/mo</p>
+              <div style="font-size:12px;color:rgba(255,255,255,0.8);line-height:1.8;">
+                <div>&#x2713; Everything in HF</div>
+                <div>&#x2713; 7-day exclusive access</div>
+                <div>&#x2713; Live scouting dashboard</div>
+                <div>&#x2713; Social score + song data</div>
+              </div>
+            </div>
+          </div>
           <ul class="hf-benefits">
             <li>
               <span class="hf-arrow">&#x2192;</span>
@@ -1298,6 +1351,9 @@
       document.getElementById('tab-pro').classList.toggle('hf-tier-tab--selected', tab === 'pro');
       document.getElementById('panel-hf').classList.toggle('hf-panel--active', tab === 'hf');
       document.getElementById('panel-pro').classList.toggle('hf-panel--active', tab === 'pro');
+      // Scroll to panel smoothly
+      const panel = document.getElementById('panel-' + tab);
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   </script>
 
