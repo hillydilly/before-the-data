@@ -550,10 +550,22 @@ function openModal(key) {
     html += '<div class="mt">Monthly Listeners</div><div class="md">Spotify monthly listeners.</div>' + mgrid(ml, d) + chart(h);
   } else if (key === 'tiktok') {
     var tk = (a.m && a.m.tk) || 0, h = (a.h && a.h.tk) || [], d = deltas(h);
-    html += '<div class="mt">TikTok Followers</div><div class="md">Total TikTok followers.</div>' + mgrid(tk, d) + chart(h);
+    var tpt = (a.m && a.m.tpt) || 0;
+    var tp = (a.m && a.m.tp) || 0;
+    var dash = '<span style="color:#ccc;">&mdash;</span>';
+    html += '<div class="mt">TikTok Followers</div><div class="md">Total TikTok followers.</div>' + mgrid(tk, d) +
+      '<div class="mbk"><div class="mst">Posting Activity</div>' +
+        bkrow('Total Posts', '#000', tpt) +
+        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> Avg Posts/Week</span><span class="mbv" style="color:' + (tp > 3 ? '#10b981' : tp > 0 ? '#f59e0b' : '#999') + ';">' + (tp || dash) + '</span></div>' +
+      '</div>' + chart(h);
   } else if (key === 'instagram') {
     var ig = (a.m && a.m.ig) || 0, h = (a.h && a.h.ig) || [], d = deltas(h);
-    html += '<div class="mt">Instagram Followers</div><div class="md">Total Instagram followers.</div>' + mgrid(ig, d) + chart(h);
+    var ipt = (a.m && a.m.ip) || 0;
+    var dash = '<span style="color:#ccc;">&mdash;</span>';
+    html += '<div class="mt">Instagram Followers</div><div class="md">Total Instagram followers.</div>' + mgrid(ig, d) +
+      '<div class="mbk"><div class="mst">Posting Activity</div>' +
+        bkrow('Total Posts', '#E1306C', ipt) +
+      '</div>' + chart(h);
   } else if (key === 'ugc') {
     var tkU = 0, igU = 0;
     if (a.sm) Object.values(a.sm).forEach(function(x) { tkU += (x.ug || 0); igU += (x.igu || 0); });
