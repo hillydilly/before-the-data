@@ -419,7 +419,12 @@ async function renderPost() {
       </div>
       <div class="post-tags">
         ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href=this.href;return false;">${g}</a>`).join('')}
-        ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
+        ${(post.tags || []).filter(t => {
+          const skip = ['artist-discovery','new-music','new-release','featured','editorial','scouting'];
+          if (skip.includes(t.toLowerCase())) return false;
+          const gl = (post.genres || []).map(g => g.toLowerCase());
+          return !gl.includes(t.toLowerCase());
+        }).map(t => `<span>${t}</span>`).join('')}
       </div>
     </div>
   `;
