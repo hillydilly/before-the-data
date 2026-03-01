@@ -489,7 +489,7 @@ function openDetail(id) {
   det.innerHTML =
     '<button class="db" onclick="closeDetail()">&larr; Back to list</button>' +
     '<div class="dah">' +
-      '<div class="dav">' + ini + '</div>' +
+      (a.pic ? '<img class="dav" src="' + a.pic + '" style="object-fit:cover;">' : '<div class="dav">' + ini + '</div>') +
       '<div>' +
         '<div class="dan">' + name.toUpperCase() + '</div>' +
         '<div class="dal">' + links + '</div>' +

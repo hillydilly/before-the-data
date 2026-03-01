@@ -278,7 +278,7 @@ function renderGrid() {
     html += '<div class="card' + (coming ? ' card-coming' : '') + '" onclick="openArtist(\'' + a._id + '\')">';
 
     // Image placeholder (use initials for now)
-    html += '<div class="card-img-placeholder">' + ini + '</div>';
+    html += a.pic ? '<img class="card-img" src="' + a.pic + '">' : '<div class="card-img-placeholder">' + ini + '</div>';
 
     html += '<div class="card-body">';
     html += '<div class="card-name">' + name + '</div>';
@@ -350,7 +350,7 @@ function openArtist(id) {
   det.innerHTML =
     '<button class="det-back" onclick="closeArtist()">&larr; Back to all discoveries</button>' +
     '<div class="det-header">' +
-      '<div class="det-art-placeholder">' + ini + '</div>' +
+      (a.pic ? '<img class="det-art" src="' + a.pic + '">' : '<div class="det-art-placeholder">' + ini + '</div>') +
       '<div class="det-info">' +
         '<div class="det-name">' + name + '</div>' +
         '<div class="det-date">Added ' + (a.da || 'recently') + '</div>' +
