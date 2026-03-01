@@ -1480,7 +1480,7 @@
     const paywallEl = document.getElementById('pro-paywall');
     const dashEl = document.getElementById('pro-dash');
 
-    function showDashboard() {
+    window.showDashboard = function showDashboard() {
       if (paywallEl) paywallEl.style.display = 'none';
       if (dashEl) dashEl.classList.add('active');
       const proSection = document.getElementById('hf-pro-dashboard');
