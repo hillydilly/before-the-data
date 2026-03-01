@@ -133,9 +133,10 @@ table.stbl{width:100%;border-collapse:collapse;}
 .wu-header-icon{font-size:16px;}
 .wu-header-title{font-size:13px;font-weight:700;}
 .wu-header-arrow{margin-left:auto;font-size:14px;color:var(--tx3);transition:transform 0.2s;}
-.wu-block.open .wu-header-arrow{transform:rotate(180deg);}
-.wu-preview{padding:0 18px;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
-.wu-block.open .wu-preview{max-height:600px;padding:0 18px 18px;}
+.wu-header-arrow{transform:rotate(180deg);}
+.wu-block.closed .wu-header-arrow{transform:rotate(0deg);}
+.wu-preview{padding:0 18px 18px;max-height:600px;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
+.wu-block.closed .wu-preview{max-height:0;padding:0 18px;}
 .wu-text{font-size:14px;line-height:1.8;color:var(--tx);white-space:pre-wrap;}
 </style>
 </head>
@@ -370,6 +371,11 @@ function loadData() {
       document.getElementById('dcnt').textContent = '(' + AA.length + ')';
       document.getElementById('dup').textContent = 'Last scraped: ' + new Date().toISOString().split('T')[0];
       renderList();
+      // If detail view is open, refresh it with updated data
+      if (CA && document.getElementById('det').classList.contains('on')) {
+        var updated = AA.find(function(x) { return x._id === CA._id; });
+        if (updated) openDetail(updated._id);
+      }
       if (!localStorage.getItem('btd_pro_list_tip')) {
         var lt = document.getElementById('list-tip');
         if (lt) lt.style.display = 'flex';
@@ -509,7 +515,7 @@ function openDetail(id) {
       '</div>' +
     '</div>' +
     (a.heardFirstDraft ?
-      '<div class="wu-block" id="wu-block" onclick="var b=document.getElementById(\'wu-block\');b.classList.toggle(\'open\');">' +
+      '<div class="wu-block" id="wu-block" onclick="var b=document.getElementById(\'wu-block\');b.classList.toggle(\'closed\');">' +
         '<div class="wu-header">' +
           '<span class="wu-header-icon">📝</span>' +
           '<span class="wu-header-title">Scouting Report</span>' +
