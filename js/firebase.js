@@ -189,7 +189,7 @@ let firebaseReady = false;
 function initFirebase() {
   try {
     if (typeof firebase !== 'undefined' && firebase.firestore) {
-      firebase.initializeApp(FIREBASE_CONFIG);
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
       db = firebase.firestore();
       firebaseReady = true;
       console.log('[BTD] Firebase initialized');

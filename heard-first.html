@@ -1551,23 +1551,12 @@
 
     window.showDashboard();
 
-    // ── Firebase init (separate from BTD's firebase.js) ──
-    const PRO_FB_CONFIG = {
-      apiKey: "AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec",
-      authDomain: "ar-scouting-dashboard.firebaseapp.com",
-      projectId: "ar-scouting-dashboard"
-    };
-
+    // ── Firebase — reuse existing app from firebase.js ──
     let proDb = null;
     try {
-      // Use existing firebase app if already initialized, otherwise init
-      // Use existing Firebase app if already initialized by firebase.js
-      const app = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0)
-        ? firebase.apps[0]
-        : firebase.initializeApp(PRO_FB_CONFIG);
-      proDb = firebase.firestore(app);
+      proDb = firebase.firestore();
     } catch(e) {
-      console.error('[Pro] Firebase init failed:', e);
+      console.error('[Pro] Firebase firestore access failed:', e);
       document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
       return;
     }
