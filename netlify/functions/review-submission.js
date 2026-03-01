@@ -85,8 +85,8 @@ export default async (req) => {
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
   <tr>
-    <td align="center" bgcolor="#000000" style="padding:28px 32px 20px;">
-      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
+    <td align="center" style="padding:0;line-height:0;font-size:0;">
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
            alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
@@ -124,8 +124,8 @@ export default async (req) => {
 <tr><td align="center" style="padding:40px 16px;">
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
   <tr>
-    <td align="center" bgcolor="#000000" style="padding:28px 32px 20px;">
-      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
+    <td align="center" style="padding:0;line-height:0;font-size:0;">
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
            alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
