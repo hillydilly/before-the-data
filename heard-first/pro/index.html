@@ -196,7 +196,7 @@ function df(n){if(!n)return'-';return(n>=0?'+':'')+fs(n);}
 window.rl=function(){
 var q=document.getElementById('srch').value.trim().toLowerCase();
 var s=document.getElementById('srt').value;
-var fl=AA.filter(function(a){return!q||(a.name||'').toLowerCase().includes(q);});
+var fl=AA.filter(function(a){return!q||(a.n||a.name||'').toLowerCase().includes(q);});
 fl.sort(function(a,b){
 if(s==='daily')return dy(b)-dy(a);
 if(s==='tiktok')return((b.m&&b.m.tk)||0)-((a.m&&a.m.tk)||0);
@@ -205,7 +205,7 @@ return st(b)-st(a);
 });
 var h='';fl.forEach(function(a,i){
 var t=st(a),d=dy(a),tk=(a.m&&a.m.tk)||0,ig=(a.m&&a.m.ig)||0,u=ug(a),c=sc(a);
-h+='<tr onclick="od(\''+a._id+'\')"><td><div class="ac"><span class="ar">'+(i+1)+'</span><div><div class="an">'+(a.name||'?')+'</div><div class="as">'+c+' song'+(c!==1?'s':'')+' &bull; '+f(t)+' streams</div></div></div></td><td><strong>'+f(t)+'</strong></td><td>'+(d?'<span style="color:'+(d>0?'var(--grn)':'var(--red)')+';font-weight:600;">'+df(d)+'</span>':'<span style="color:var(--tx3);">0</span>')+'</td><td>'+f(tk)+'</td><td>'+f(ig)+'</td><td>'+(u>0?'<span class="ub'+(u>1000?' hot':'')+'">'+f(u)+'</span>':'<span style="color:var(--tx3);">&mdash;</span>')+'</td><td class="chev">&rsaquo;</td></tr>';
+h+='<tr onclick="od(\''+a._id+'\')"><td><div class="ac"><span class="ar">'+(i+1)+'</span><div><div class="an">'+(a.n||a.name||'?')+'</div><div class="as">'+c+' song'+(c!==1?'s':'')+' &bull; '+f(t)+' streams</div></div></div></td><td><strong>'+f(t)+'</strong></td><td>'+(d?'<span style="color:'+(d>0?'var(--grn)':'var(--red)')+';font-weight:600;">'+df(d)+'</span>':'<span style="color:var(--tx3);">0</span>')+'</td><td>'+f(tk)+'</td><td>'+f(ig)+'</td><td>'+(u>0?'<span class="ub'+(u>1000?' hot':'')+'">'+f(u)+'</span>':'<span style="color:var(--tx3);">&mdash;</span>')+'</td><td class="chev">&rsaquo;</td></tr>';
 });
 document.getElementById('tb').innerHTML=h;
 };
@@ -215,10 +215,12 @@ document.getElementById('dash').classList.remove('on');
 var d=document.getElementById('det');d.classList.add('on');
 var t=st(a),dy2=dy(a),tk=(a.m&&a.m.tk)||0,ig=(a.m&&a.m.ig)||0,ml=(a.m&&a.m.ml)||0,u=ug(a),ss=(a.m&&a.m.ss)||0;
 var ssC=ss>=7?'var(--grn)':ss>=4?'#f59e0b':'var(--red)';
-var ini=(a.name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+var ini=(a.n||a.name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
 var lk='';
-if(a.sp)lk+='<a class="dal" href="https://open.spotify.com/artist/'+a.sp+'" target="_blank">Spotify</a> ';
-if(a.m&&a.m.tkUrl)lk+='<a class="dal" href="'+a.m.tkUrl+'" target="_blank">TikTok</a> ';
+var al=a.l||{};
+if(al.sp)lk+='<a class="dal" href="'+al.sp+'" target="_blank">Spotify</a> ';
+if(al.tk)lk+='<a class="dal" href="'+al.tk+'" target="_blank">TikTok</a> ';
+if(al.ig)lk+='<a class="dal" href="'+al.ig+'" target="_blank">Instagram</a> ';
 var cards='';
 cards+=sCard('Total Streams',f(t),'#10b981',dy2,svg(sSp(a.sm),70,20),'streams');
 cards+=sCard('Monthly Listeners',f(ml),'#1DB954','',svg((a.h&&a.h.sf||[]).slice(-14),70,20),'listeners');
@@ -231,7 +233,7 @@ sorted.forEach(function(s){var m=a.sm&&a.sm[s.id]?a.sm[s.id]:{};var sSt=m.st||0,
 var sp2=m.h&&m.h.st&&m.h.st.length>=2?svg(m.h.st.slice(-14),80,20):'';
 sng+='<tr><td><div class="stc"><span class="sd" style="background:'+(sSt>0?'var(--spot)':'#ddd')+';"></span>'+(s.t||'Untitled')+'</div></td><td><strong>'+f(sSt)+'</strong></td><td>'+(sD?'<span style="color:'+(sD>0?'var(--grn)':'var(--red)')+';font-weight:600;">'+df(sD)+'</span>':'<span style="color:var(--tx3);">0</span>')+'</td><td>'+(tkU>0&&tkUrl?'<a class="ul tk" href="'+tkUrl+'" target="_blank">'+f(tkU)+' <span class="ula">&#x2197;</span></a>':(tkU>0?f(tkU):'<span style="color:var(--tx3);">0</span>'))+'</td><td>'+(igU>0&&igUrl?'<a class="ul ig" href="'+igUrl+'" target="_blank">'+f(igU)+' <span class="ula">&#x2197;</span></a>':(igU>0?f(igU):'<span style="color:var(--tx3);">0</span>'))+'</td><td>'+sp2+'</td></tr>';
 });}
-d.innerHTML='<button class="db" onclick="cd()">&larr; Back to list</button><div class="dah"><div class="dav">'+ini+'</div><div><div class="dan">'+(a.name||'?').toUpperCase()+'</div><div class="dal">'+lk+'</div></div></div><div class="sg">'+cards+'</div><div class="ssb" onclick="om(\'social\')"><span class="ssb-l">Social Score</span><div class="ssb-t"><div class="ssb-f" style="width:'+(ss*10)+'%;background:'+ssC+';"></div></div><span class="ssb-v" style="color:'+ssC+';">'+ss+' / 10</span></div><div class="sgh"><span class="sgt">Songs</span><span class="sgc">'+(a.sg?a.sg.length:0)+' tracks</span></div><table class="stbl"><thead><tr><th>Title</th><th>Streams</th><th>Daily</th><th>TikTok UGC</th><th>Instagram UGC</th><th>14d Trend</th></tr></thead><tbody>'+sng+'</tbody></table>';
+d.innerHTML='<button class="db" onclick="cd()">&larr; Back to list</button><div class="dah"><div class="dav">'+ini+'</div><div><div class="dan">'+(a.n||a.name||'?').toUpperCase()+'</div><div class="dal">'+lk+'</div></div></div><div class="sg">'+cards+'</div><div class="ssb" onclick="om(\'social\')"><span class="ssb-l">Social Score</span><div class="ssb-t"><div class="ssb-f" style="width:'+(ss*10)+'%;background:'+ssC+';"></div></div><span class="ssb-v" style="color:'+ssC+';">'+ss+' / 10</span></div><div class="sgh"><span class="sgt">Songs</span><span class="sgc">'+(a.sg?a.sg.length:0)+' tracks</span></div><table class="stbl"><thead><tr><th>Title</th><th>Streams</th><th>Daily</th><th>TikTok UGC</th><th>Instagram UGC</th><th>14d Trend</th></tr></thead><tbody>'+sng+'</tbody></table>';
 };
 function sCard(l,v,c,d,sp,k){var dH='';if(typeof d==='number'&&d!==0)dH='<span class="sc-d '+(d>0?'up':'down')+'">'+df(d)+'</span>';return'<div class="sc" onclick="om(\''+k+'\')"><div class="sc-l">'+l+'</div><div class="sc-v" style="color:'+c+';">'+v+'</div><div class="sc-f">'+dH+sp+'</div></div>';}
 window.cd=function(){document.getElementById('det').classList.remove('on');document.getElementById('det').innerHTML='';document.getElementById('dash').classList.add('on');CA=null;};
