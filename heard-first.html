@@ -1576,6 +1576,22 @@
     } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
   }
   
-  </script>
+  
+    // Auto-redirect logged-in users
+    (function() {
+      var proTok = localStorage.getItem('btd_pro_token');
+      var proEmail = localStorage.getItem('btd_pro_email');
+      var hfTok = localStorage.getItem('btd_hf_token');
+      var hfEmail = localStorage.getItem('btd_hf_email');
+      if (proTok && proEmail) {
+        window.location.href = '/heard-first/pro';
+        return;
+      }
+      if (hfTok && hfEmail) {
+        window.location.href = '/heard-first/dashboard';
+        return;
+      }
+    })();
+</script>
 </body>
 </html>
