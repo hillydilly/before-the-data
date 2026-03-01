@@ -1351,9 +1351,7 @@
       document.getElementById('tab-pro').classList.toggle('hf-tier-tab--selected', tab === 'pro');
       document.getElementById('panel-hf').classList.toggle('hf-panel--active', tab === 'hf');
       document.getElementById('panel-pro').classList.toggle('hf-panel--active', tab === 'pro');
-      // Scroll to panel smoothly
-      const panel = document.getElementById('panel-' + tab);
-      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
     }
   </script>
 
