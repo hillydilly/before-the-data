@@ -281,6 +281,764 @@
     .manage-modal-submit { flex:1;padding:11px;border-radius:8px;border:none;background:#000000;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer; }
     .manage-modal-cancel { flex:0 0 auto;padding:11px 18px;border-radius:8px;border:1px solid #dddddd;background:#ffffff;color:#333333;font-size:13px;cursor:pointer; }
     .manage-modal-error { font-size:13px;color:#cc0000;margin-bottom:8px;display:none; }
+
+    /* ── Paywall ─────────────────────────────────── */
+    .pro-paywall {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .pro-eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--tx-3);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+    .pro-headline {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--tx-1);
+      line-height: 1;
+      margin: 0 0 12px;
+    }
+    .pro-subhead {
+      font-size: 15px;
+      color: var(--tx-3);
+      line-height: 1.6;
+      margin: 0 0 40px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pro-price-block {
+      background: var(--tx-1);
+      color: #fff;
+      padding: 36px;
+      margin: 0 0 16px;
+    }
+    .pro-price {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .pro-price-sub {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.6;
+      display: block;
+      margin-bottom: 24px;
+    }
+    .pro-cta-btn {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 40px;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: opacity 0.15s;
+      text-decoration: none;
+      width: 100%;
+      max-width: 280px;
+    }
+    .pro-cta-btn:hover { opacity: 0.85; }
+    .pro-fine {
+      font-size: 11px;
+      color: var(--tx-3);
+      text-align: center;
+      margin: 12px 0 0;
+    }
+    .pro-features {
+      text-align: left;
+      margin: 0 0 40px;
+      padding: 0;
+      list-style: none;
+    }
+    .pro-features li {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--bd);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .pro-features li:last-child { border-bottom: none; }
+    .pro-feat-arrow {
+      font-size: 13px;
+      color: var(--tx-1);
+      font-weight: 700;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .pro-feat-title {
+      font-weight: 700;
+      color: var(--tx-1);
+      display: block;
+      margin-bottom: 2px;
+    }
+    .pro-feat-desc {
+      color: #333333;
+      background: #ffffff;
+    }
+
+    /* ── Dashboard ───────────────────────────────── */
+    .pro-dash {
+      display: none;
+    }
+    .pro-dash.active {
+      display: block;
+    }
+    .pro-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .pro-toolbar h1 {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .pro-search {
+      flex: 1;
+      min-width: 160px;
+      padding: 10px 14px;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-1);
+      font-size: 13px;
+      font-family: var(--font-body);
+      outline: none;
+    }
+    .pro-search:focus { border-color: var(--acc); }
+    .pro-search::placeholder { color: var(--tx-3); }
+    .pro-sort {
+      padding: 10px 14px;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-1);
+      font-size: 13px;
+      font-family: var(--font-body);
+      cursor: pointer;
+    }
+    .pro-meta {
+      font-size: 11px;
+      color: var(--tx-3);
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Table ────────────────────────────────────── */
+    .pro-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pro-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--bd);
+      white-space: nowrap;
+    }
+    .pro-table td {
+      padding: 12px 10px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--bd);
+      vertical-align: middle;
+    }
+    .pro-table tbody tr {
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+    .pro-table tbody tr:hover {
+      background: var(--bg-2);
+    }
+    .pro-artist-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pro-artist-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg-2);
+      flex-shrink: 0;
+    }
+    .pro-artist-name {
+      font-weight: 600;
+      color: var(--tx-1);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pro-num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+    .pro-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .pro-delta.up { background: rgba(16,185,129,0.12); color: #10b981; }
+    .pro-delta.down { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .pro-delta.flat { background: var(--bg-2); color: var(--tx-3); }
+    .pro-heat {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .pro-heat.hot { background: rgba(239,68,68,0.12); color: #ef4444; }
+    .pro-heat.warm { background: rgba(251,191,36,0.12); color: #f59e0b; }
+    .pro-heat.cool { background: var(--bg-2); color: var(--tx-3); }
+    .pro-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: var(--bg-2);
+      color: var(--tx-3);
+      transition: background 0.12s, color 0.12s;
+      text-decoration: none;
+    }
+    .pro-links a:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-links { display: flex; gap: 4px; }
+
+    /* ── Expanded Detail ─────────────────────────── */
+    .pro-detail {
+      display: none;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      margin: -1px 0 12px;
+      padding: 20px;
+    }
+    .pro-detail.open { display: block; }
+    .pro-detail h3 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 12px;
+    }
+    .pro-songs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    .pro-songs-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-songs-table td {
+      padding: 8px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-song-links a {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: var(--tx-2);
+      transition: background 0.12s;
+      margin-right: 4px;
+    }
+    .pro-song-links a:hover { background: var(--bd); }
+
+    /* ── Sparkline ────────────────────────────────── */
+    .pro-spark { display: inline-block; vertical-align: middle; }
+
+    /* ── Loading ──────────────────────────────────── */
+    .pro-loading {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--tx-3);
+      font-size: 14px;
+    }
+
+    /* ── Responsive ───────────────────────────────── */
+    .pro-table .col-tk,
+    .pro-table .col-ig,
+    .pro-table .col-ugc,
+    .pro-table .col-links {
+      white-space: nowrap;
+    }
+    @media (max-width: 900px) {
+      .pro-table .col-ig,
+      .pro-table .col-ugc,
+      .pro-table .col-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .pro-table .col-tk,
+      .pro-table .col-heat { display: none; }
+      .pro-toolbar { gap: 10px; }
+      .pro-toolbar h1 { font-size: 18px; }
+    }
+
+    /* -- Artist Detail View ---------------------- */
+    .pro-dv { display: none; }
+    .pro-dv.active { display: block; }
+    .pro-dv-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--bg-2);
+      color: var(--tx-2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.12s;
+      margin-bottom: 20px;
+    }
+    .pro-dv-back:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-dv-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .pro-dv-pic {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid var(--bd);
+      flex-shrink: 0;
+    }
+    .pro-dv-pic-fallback {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pro-dv-name {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .pro-dv-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pro-dv-badges a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      background: var(--bg-2);
+      color: var(--tx-2);
+      font-size: 11px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background 0.15s;
+      border: 1px solid var(--bd);
+    }
+    .pro-dv-badges a:hover { background: var(--bd); color: var(--tx-1); }
+    .pro-dv-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .pro-dv-stat {
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+    }
+    .pro-dv-stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--tx-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .pro-dv-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 6px;
+    }
+    .pro-dv-stat-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pro-dv-momentum {
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+    }
+    .pro-dv-momentum-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--tx-2);
+    }
+    .pro-dv-momentum-track {
+      height: 8px;
+      background: var(--bg-3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pro-dv-momentum-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+    .pro-dv-songs {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .pro-dv-songs-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .pro-dv-songs-header h2 {
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+    .pro-dv-songs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .pro-dv-songs-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--tx-3);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--bd);
+      white-space: nowrap;
+    }
+    .pro-dv-songs-table td {
+      padding: 10px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--bd);
+      vertical-align: middle;
+    }
+    .pro-dv-songs-table tbody tr:hover { background: var(--bg-3); }
+    .pro-dv-song-link {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--bg-3);
+      border: 1px solid var(--bd);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      color: var(--tx-2);
+      transition: background 0.12s;
+      margin-right: 4px;
+    }
+    .pro-dv-song-link:hover { background: var(--bd); }
+    @media (max-width: 900px) {
+      .pro-dv-songs-table .col-igu,
+      .pro-dv-songs-table .col-ig-link,
+      .pro-dv-songs-table .col-spark { display: none; }
+    }
+    @media (max-width: 600px) {
+      .pro-dv-songs-table .col-tku,
+      .pro-dv-songs-table .col-tk-link { display: none; }
+      .pro-dv-header { gap: 12px; }
+      .pro-dv-name { font-size: 18px; }
+      .pro-dv-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    /* Pro login modal */
+    .pro-login-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .pro-login-btn {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--tx-1);
+      background: var(--bg-2);
+      border: 2px solid var(--bd);
+      border-radius: 10px;
+      padding: 14px 28px;
+      cursor: pointer;
+      width: 100%;
+      max-width: 480px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .pro-login-btn:hover { border-color: var(--tx-1); background: var(--bg-3); }
+    .pro-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .pro-modal-overlay.open { display: flex; }
+    .pro-modal {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 14px;
+      padding: 32px;
+      width: 100%;
+      max-width: 380px;
+      margin: 16px;
+    }
+    .pro-modal h2 { font-size: 20px; font-weight: 800; margin: 0 0 8px; }
+    .pro-modal p { font-size: 13px; color: var(--tx-3); margin: 0 0 20px; line-height: 1.6; }
+    .pro-modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--bg-3);
+      color: var(--tx-1);
+      font-size: 14px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .pro-modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .pro-modal-submit {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      background: #000000;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pro-modal-cancel {
+      padding: 11px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: none;
+      color: var(--tx-3);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .pro-modal-msg { font-size: 12px; margin-top: 10px; color: var(--tx-3); min-height: 18px; }
+
+    .manage-modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999;align-items:center;justify-content:center; }
+    .manage-modal-overlay.active { display:flex; }
+    .manage-modal { background:#ffffff;border-radius:14px;padding:32px;width:90%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.2); }
+    .manage-modal h3 { margin:0 0 8px;font-size:18px;font-weight:700;color:#000000; }
+    .manage-modal p { margin:0 0 20px;font-size:14px;color:#666666;line-height:1.5; }
+    .manage-modal input { width:100%;padding:12px 14px;border:1px solid #dddddd;border-radius:8px;font-size:14px;color:#000000;box-sizing:border-box;margin-bottom:12px; }
+    .manage-modal-actions { display:flex;gap:10px;margin-top:4px; }
+    .manage-modal-submit { flex:1;padding:11px;border-radius:8px;border:none;background:#000000;color:#ffffff;font-size:13px;font-weight:700;cursor:pointer; }
+    .manage-modal-cancel { flex:0 0 auto;padding:11px 18px;border-radius:8px;border:1px solid #dddddd;background:#ffffff;color:#333333;font-size:13px;cursor:pointer; }
+    .manage-modal-error { font-size:13px;color:#cc0000;margin-bottom:8px;display:none; }
+
+    .pro-branding-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      margin-bottom: 16px;
+      background: #000000;
+      border-radius: 12px;
+    }
+    .pro-branding-bar.active { display: flex; }
+    .pro-branding-title {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .pro-branding-title span {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.5);
+      display: block;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+    .pro-branding-manage {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Clickable stat cards */
+    .pro-dv-stat {
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.1s;
+      position: relative;
+    }
+    .pro-dv-stat:hover { border-color: var(--tx-3); transform: translateY(-1px); }
+    .pro-dv-stat-expand-hint {
+      font-size: 9px;
+      color: var(--tx-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .pro-dv-stat:hover .pro-dv-stat-expand-hint { opacity: 1; }
+
+    /* Metric drill-down panel */
+    .pro-metric-panel {
+      display: none;
+      margin: -10px 0 20px;
+      padding: 20px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 0 0 12px 12px;
+      border-top: none;
+      animation: fadeSlideIn 0.15s ease;
+    }
+    .pro-metric-panel.open { display: block; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .pro-metric-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .pro-metric-panel-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--tx-1);
+    }
+    .pro-metric-panel-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: var(--tx-3);
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+    .pro-metric-panel-value {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .pro-metric-panel-sub {
+      font-size: 12px;
+      color: var(--tx-3);
+      margin-bottom: 16px;
+    }
+    .pro-metric-panel-chart {
+      width: 100%;
+      overflow: hidden;
+    }
+    .pro-metric-panel-history {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .pro-metric-history-item {
+      text-align: center;
+    }
+    .pro-metric-history-date {
+      font-size: 9px;
+      color: var(--tx-3);
+      margin-bottom: 2px;
+    }
+    .pro-metric-history-val {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--tx-1);
+    }
+  
   </style>
 </head>
 <body data-page="heard-first">
@@ -556,8 +1314,8 @@
         const tier = data.fields?.tier?.stringValue || '';
         if (tier === 'pro') {
           localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
-          msg.textContent = 'Verified. Redirecting to your dashboard...';
-          setTimeout(() => window.location.href = '/pro', 800);
+          msg.textContent = 'Verified. Loading your dashboard...';
+          setTimeout(() => { window.location.href = '/heard-first?pro=1'; }, 300);
         } else if (tier === 'heard-first') {
           msg.textContent = 'Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';
         } else {
@@ -594,6 +1352,652 @@
   }
   </script>
 
+
+  <!-- Pro Dashboard (shown when authenticated) -->
+  <div id="hf-pro-dashboard" style="display:none;">
+<div class="pro-branding-bar" id="pro-branding-bar">
+    <div class="pro-branding-title">
+      Heard First Pro
+      <span>Active membership</span>
+    </div>
+    <button class="pro-branding-manage" onclick="openManageModal()">Manage</button>
+  </div>
+  <div class="pro-login-bar" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <button class="pro-login-btn" onclick="document.getElementById('pro-login-modal').classList.add('open')">Already a Pro member? Log in to access your dashboard &#x2192;</button>
+    <button onclick="openManageModal()" style="background:none;border:none;font-size:13px;color:#999999;cursor:pointer;text-decoration:underline;">Manage or cancel subscription</button>
+  </div>
+
+  <!-- Login modal -->
+  <div class="pro-modal-overlay" id="pro-login-modal">
+    <div class="pro-modal">
+      <h2>Access Your Dashboard</h2>
+      <p>Enter the email address you subscribed with. We will send you a one-click access link.</p>
+      <input type="email" id="pro-login-email" placeholder="your@email.com" />
+      <div class="pro-modal-actions">
+        <button class="pro-modal-submit" onclick="sendProAccessLink()">Send Access Link</button>
+        <button class="pro-modal-cancel" onclick="document.getElementById('pro-login-modal').classList.remove('open')">Cancel</button>
+      </div>
+      <div class="pro-modal-msg" id="pro-login-msg"></div>
+    </div>
+  </div>
+
+  <div class="pro-paywall" id="pro-paywall">
+      <p class="pro-eyebrow">Before The Data</p>
+      <h1 class="pro-headline">Heard First Pro</h1>
+      <p class="pro-subhead">We run a 24/7 autonomous AI agent trained to find artists before they break. Every pick is curated by Chad. As a Pro member, you get real-time access to the full scouting database the moment an artist is approved.</p>
+
+      <ul class="pro-features">
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Live scouting dashboard</span>
+            <span class="pro-feat-desc">Every artist in our pipeline. Spotify streams, TikTok UGC, Instagram followers, updated in real time.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Song-level breakdowns</span>
+            <span class="pro-feat-desc">Individual stream counts, TikTok sound pages, Instagram audio links for every track.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Sort, search, filter</span>
+            <span class="pro-feat-desc">Sort by streams, daily velocity, TikTok followers, or momentum. Search by artist name.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Social consistency tracking</span>
+            <span class="pro-feat-desc">We track TikTok and Instagram posting consistency daily and monthly. See who is building, who is stalling, and who is about to pop.</span>
+          </div>
+        </li>
+        <li>
+          <span class="pro-feat-arrow">&rarr;</span>
+          <div>
+            <span class="pro-feat-title">Social score</span>
+            <span class="pro-feat-desc">A proprietary score based on follower count, posting frequency, stream velocity, and UGC growth. Updated daily. The higher the score, the more momentum behind the artist right now.</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="pro-price-block">
+        <span class="pro-price">$49.99</span>
+        <span class="pro-price-sub">per month</span>
+        <a href="/api/create-checkout?plan=pro" class="pro-cta-btn" id="pro-checkout-btn" onclick="startProCheckout(event)">Upgrade to Pro &rarr;</a>
+      </div>
+      <p class="pro-fine">Secure payment via Stripe. Cancel anytime.</p>
+    </div>
+
+    <!-- ── DASHBOARD ────────────────────────────── -->
+    <div class="pro-dash" id="pro-dash">
+      <div class="pro-toolbar">
+        <h1>Scouting Dashboard</h1>
+        <input type="text" class="pro-search" id="pro-search" placeholder="Search artists...">
+        <select class="pro-sort" id="pro-sort">
+          <option value="streams">Sort: Streams</option>
+          <option value="daily">Sort: Daily Change</option>
+          <option value="tiktok">Sort: TikTok</option>
+          <option value="social">Sort: Social Score</option>
+        </select>
+      </div>
+      <div class="pro-meta" id="pro-meta"></div>
+
+      <div id="pro-table-wrap">
+        <p class="pro-loading" id="pro-loading">Loading scouting data...</p>
+      </div>
+      <div class="pro-dv" id="pro-detail-view"></div>
+    </div>
+
+  </main>
+
+  <!-- Firebase v8 compat (same as AR dashboard) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script src="/js/firebase.js"></script>
+  <script src="/js/gate.js"></script>
+  <script src="/js/player.js"></script>
+  <script src="/js/app.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // ── Auth gate ──────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      localStorage.setItem('btd_pro_token', sessionId);
+      window.history.replaceState({}, '', '/pro');
+    }
+
+    const token = localStorage.getItem('btd_pro_token');
+    const paywallEl = document.getElementById('pro-paywall');
+    const dashEl = document.getElementById('pro-dash');
+
+    if (!token) {
+      paywallEl.style.display = 'block';
+      dashEl.classList.remove('active');
+      return;
+    }
+
+    paywallEl.style.display = 'none';
+    dashEl.classList.add('active');
+    // Show pro dashboard section, hide marketing content
+    const proSection = document.getElementById('hf-pro-dashboard');
+    if (proSection) proSection.style.display = 'block';
+    const mktSection = document.querySelector('.hf-content');
+    if (mktSection) mktSection.style.display = 'none';
+    const loginBar = document.querySelector('.pro-login-bar');
+    const brandingBar = document.getElementById('pro-branding-bar');
+    if (loginBar) loginBar.style.display = 'none';
+    if (brandingBar) brandingBar.classList.add('active');
+
+    // ── Firebase init (separate from BTD's firebase.js) ──
+    const PRO_FB_CONFIG = {
+      apiKey: "AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec",
+      authDomain: "ar-scouting-dashboard.firebaseapp.com",
+      projectId: "ar-scouting-dashboard"
+    };
+
+    let proDb = null;
+    try {
+      // Use existing firebase app if already initialized, otherwise init
+      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(PRO_FB_CONFIG);
+      proDb = firebase.firestore(app);
+    } catch(e) {
+      console.error('[Pro] Firebase init failed:', e);
+      document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
+      return;
+    }
+
+    // ── Data helpers ───────────────────────────────
+    function fmt(n) {
+      if (!n || n === 0) return '0';
+      if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+      return n.toLocaleString();
+    }
+
+    function fmtD(n) {
+      if (!n || n === 0) return '0';
+      var a = Math.abs(n), p = n >= 0 ? '+' : '-';
+      if (a >= 1e6) return p + (a / 1e6).toFixed(1) + 'M';
+      if (a >= 1e3) return p + (a / 1e3).toFixed(1) + 'K';
+      return p + a.toLocaleString();
+    }
+
+    function vel(h, days) {
+      if (!h || h.length < 2) return null;
+      var sorted = h.slice().sort(function(a, b) { return a.d.localeCompare(b.d); });
+      var latest = sorted[sorted.length - 1];
+      if (days === 1) {
+        var prev = sorted[sorted.length - 2];
+        if (!prev) return null;
+        return (latest.v || 0) - (prev.v || 0);
+      }
+      var targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - days);
+      var targetStr = targetDate.toISOString().split('T')[0];
+      var oldEntry = null;
+      for (var i = sorted.length - 1; i >= 0; i--) {
+        if (sorted[i].d <= targetStr) { oldEntry = sorted[i]; break; }
+      }
+      if (!oldEntry) oldEntry = sorted[0];
+      return (latest.v || 0) - (oldEntry.v || 0);
+    }
+
+    function getSpotifyStreams(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.st || 0); });
+      return s;
+    }
+
+    function totUGC(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.ug || 0) + (x.igu || 0); });
+      return s;
+    }
+
+    function dayStr(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (vel(x.h && x.h.st, 1) || 0); });
+      return s;
+    }
+
+    function calcSocialScore(a) {
+      // Use the social score stored by the data agent in a.m.ss (0-10 scale, stored as integer)
+      var raw = (a.m && a.m.ss) ? parseInt(a.m.ss) : 0;
+      // Normalize to 0-100 for display (data agent stores 0-10)
+      var score = Math.min(100, raw * 10);
+      return { score: score, surging: score >= 70 };
+    }
+
+    function getLastUpdated(a) {
+      var latest = null;
+      if (a.sm) {
+        Object.values(a.sm).forEach(function(m) {
+          ['st', 'yt', 'ug'].forEach(function(k) {
+            var h = m.h && m.h[k];
+            if (h && h.length > 0) {
+              var last = h[h.length - 1] && h[h.length - 1].d;
+              if (last && (!latest || last > latest)) latest = last;
+            }
+          });
+        });
+      }
+      if (a.h) {
+        ['tk', 'ig', 'sf', 'yt'].forEach(function(k) {
+          var h = a.h[k];
+          if (h && h.length > 0) {
+            var last = h[h.length - 1] && h[h.length - 1].d;
+            if (last && (!latest || last > latest)) latest = last;
+          }
+        });
+      }
+      return latest;
+    }
+
+    function buildSparkline(data, w, h) {
+      if (!data || data.length < 2) return '';
+      var vs = data.map(function(d) { return d.v || 0; });
+      var mn = Math.min.apply(null, vs);
+      var mx = Math.max.apply(null, vs);
+      var rg = mx - mn || 1;
+      var pts = vs.map(function(v, i) {
+        return (i / (vs.length - 1)) * w + ',' + (h - ((v - mn) / rg) * (h - 4) - 2);
+      }).join(' ');
+      var up = vs[vs.length - 1] >= vs[0];
+      var c = up ? '#10b981' : '#ef4444';
+      return '<svg class="pro-spark" width="' + w + '" height="' + h + '">' +
+        '<polygon points="0,' + h + ' ' + pts + ' ' + w + ',' + h + '" fill="' + c + '" fill-opacity="0.12"/>' +
+        '<polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="1.5" stroke-linecap="round"/>' +
+        '</svg>';
+    }
+
+    function buildStreamSparkData(sm) {
+      if (!sm) return [];
+      var map = {};
+      Object.values(sm).forEach(function(s) {
+        (s.h && s.h.st || []).forEach(function(e) {
+          map[e.d] = (map[e.d] || 0) + (e.v || 0);
+        });
+      });
+      return Object.entries(map).sort(function(a, b) { return a[0].localeCompare(b[0]); })
+        .slice(-14).map(function(e) { return { d: e[0], v: e[1] }; });
+    }
+
+    function escHtml(s) {
+      var d = document.createElement('div');
+      d.textContent = s || '';
+      return d.innerHTML;
+    }
+
+    // ── Render ─────────────────────────────────────
+    var allArtists = [];
+    var expandedId = null;
+    var selectedArtist = null;
+    var currentSort = 'streams';
+    var currentSearch = '';
+
+    function sortArtists(arr) {
+      return arr.slice().sort(function(a, b) {
+        switch(currentSort) {
+          case 'daily': return dayStr(b) - dayStr(a);
+          case 'tiktok': return ((b.m && b.m.tk) || 0) - ((a.m && a.m.tk) || 0);
+          case 'social': return calcSocialScore(b).score - calcSocialScore(a).score;
+          default: return getSpotifyStreams(b) - getSpotifyStreams(a);
+        }
+      });
+    }
+
+    function filterArtists(arr) {
+      if (!currentSearch) return arr;
+      var q = currentSearch.toLowerCase();
+      return arr.filter(function(a) {
+        return (a.n || '').toLowerCase().indexOf(q) !== -1;
+      });
+    }
+
+    function renderDelta(v) {
+      if (v === null || v === undefined || v === 0) return '<span class="pro-delta flat">0</span>';
+      var cls = v > 0 ? 'up' : 'down';
+      var arrow = v > 0 ? '&#9650; ' : '&#9660; ';
+      return '<span class="pro-delta ' + cls + '">' + arrow + fmtD(v) + '</span>';
+    }
+
+    function renderHeat(score) {
+      var cls = score >= 70 ? 'hot' : score >= 35 ? 'warm' : 'cool';
+      var icon = score >= 70 ? '&#128293; ' : '';
+      return '<span class="pro-heat ' + cls + '">' + icon + score + '</span>';
+    }
+
+    function renderSongRow(song, songId, sm) {
+      var metrics = sm && sm[songId];
+      var streams = metrics ? (metrics.st || 0) : 0;
+      var ugc = metrics ? ((metrics.ug || 0) + (metrics.igu || 0)) : 0;
+      var links = '';
+      if (song.tkUrl) links += '<a href="' + escHtml(song.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>';
+      if (song.igUrl) links += '<a href="' + escHtml(song.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>';
+      return '<tr>' +
+        '<td>' + escHtml(song.t || '') + '</td>' +
+        '<td class="pro-num">' + fmt(streams) + '</td>' +
+        '<td class="pro-num">' + fmt(ugc) + '</td>' +
+        '<td class="pro-song-links">' + (links || '<span style="color:var(--tx-3)">-</span>') + '</td>' +
+        '</tr>';
+    }
+
+    function renderDetail(a) {
+      var songs = a.sg || [];
+      var html = '<h3>Songs</h3>';
+      if (songs.length === 0) {
+        html += '<p style="font-size:12px;color:var(--tx-3);">No songs tracked yet.</p>';
+      } else {
+        html += '<table class="pro-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>UGC</th><th>Links</th>' +
+          '</tr></thead><tbody>';
+        songs.forEach(function(song) {
+          html += renderSongRow(song, song.id, a.sm);
+        });
+        html += '</tbody></table>';
+      }
+
+      // Stream sparkline
+      var sparkData = buildStreamSparkData(a.sm);
+      if (sparkData.length >= 2) {
+        html += '<div style="margin-top:8px;">' +
+          '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx-3);font-weight:600;">Stream History (14d)</span>' +
+          '<div style="margin-top:6px;">' + buildSparkline(sparkData, 200, 32) + '</div>' +
+          '</div>';
+      }
+
+      return html;
+    }
+
+    function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
+      var key = metricKey || '';
+      var hist = histData ? JSON.stringify(histData) : '[]';
+      var clickAttr = key ? ' onclick="toggleMetricPanel(this, '' + key + '', ' + hist.replace(/"/g,"'") + ')"' : '';
+      return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
+        '<span class="pro-dv-stat-expand-hint">Details</span>' +
+        '<div class="pro-dv-stat-label">' + label + '</div>' +
+        '<div class="pro-dv-stat-value" style="color:' + color + ';">' + value + '</div>' +
+        '<div class="pro-dv-stat-foot">' + (delta || '<span></span>') + (spark || '') + '</div>' +
+        '</div>';
+    }
+
+    function renderDetailView(a) {
+      var ts = getSpotifyStreams(a);
+      var daily = dayStr(a);
+      var tk = (a.m && a.m.tk) || 0;
+      var ig = (a.m && a.m.ig) || 0;
+      var ml = (a.m && a.m.ml) || 0;
+      var ugc = totUGC(a);
+      var mom = calcSocialScore(a);
+
+      var initials = (a.n || '?').split(' ').map(function(w) { return w[0]; }).join('').substring(0, 2).toUpperCase();
+      var pic = a.pic
+        ? '<img class="pro-dv-pic" src="' + escHtml(a.pic) + '" alt="">'
+        : '<div class="pro-dv-pic-fallback">' + escHtml(initials) + '</div>';
+
+      var badges = '';
+      if (a.l && a.l.sp) badges += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg> Spotify</a>';
+      if (a.l && a.l.tk) badges += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg> TikTok</a>';
+      if (a.l && a.l.ig) badges += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg> Instagram</a>';
+
+      var streamSparkData = buildStreamSparkData(a.sm);
+      var tkSparkData = (a.h && a.h.tk) ? a.h.tk.slice(-14) : [];
+      var igSparkData = (a.h && a.h.ig) ? a.h.ig.slice(-14) : [];
+      var sfSparkData = (a.h && a.h.sf) ? a.h.sf.slice(-14) : [];
+
+      var stats = '';
+      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20), 'streams', streamSparkData);
+      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20), 'listeners', sfSparkData);
+      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20), 'tiktok', tkSparkData);
+      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20), 'instagram', igSparkData);
+      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '', 'ugc', []);
+
+      var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
+      var rawSS = (a.m && a.m.ss) ? a.m.ss : 0;
+      var socialScore = '<div class="pro-dv-momentum">' +
+        '<div class="pro-dv-momentum-label"><span>Social Score</span><span style="font-size:13px;font-weight:700;color:' + momColor + ';margin-left:8px;">' + rawSS + ' / 10</span></div>' +
+        '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
+        '</div>';
+
+      var songs = (a.sg || []).slice();
+      songs.sort(function(x, y) {
+        var xSt = (a.sm && a.sm[x.id]) ? (a.sm[x.id].st || 0) : 0;
+        var ySt = (a.sm && a.sm[y.id]) ? (a.sm[y.id].st || 0) : 0;
+        return ySt - xSt;
+      });
+
+      var songsHtml = '<div class="pro-dv-songs"><div class="pro-dv-songs-header"><h2>Songs</h2></div>';
+      if (songs.length === 0) {
+        songsHtml += '<p style="padding:24px;text-align:center;color:var(--tx-3);font-size:13px;">No songs tracked yet.</p>';
+      } else {
+        songsHtml += '<div style="overflow-x:auto;"><table class="pro-dv-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>Daily</th>' +
+          '<th class="col-tku">TikTok UGC</th><th class="col-igu">IG UGC</th>' +
+          '<th class="col-tk-link">TikTok Sound</th><th class="col-ig-link">IG Audio</th>' +
+          '<th class="col-spark">14d Trend</th></tr></thead><tbody>';
+        songs.forEach(function(s) {
+          var m = (a.sm && a.sm[s.id]) || {};
+          var streams = m.st || 0;
+          var dailyChange = vel(m.h && m.h.st, 1);
+          var tkUgc = m.ug || 0;
+          var igUgc = m.igu || 0;
+          var songSparkData = (m.h && m.h.st) ? m.h.st.slice(-14) : [];
+          var tkLink = s.tkUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          var igLink = s.igUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          songsHtml += '<tr>' +
+            '<td style="font-weight:500;">' + escHtml(s.t || '') + '</td>' +
+            '<td class="pro-num">' + fmt(streams) + '</td>' +
+            '<td>' + renderDelta(dailyChange) + '</td>' +
+            '<td class="col-tku pro-num">' + fmt(tkUgc) + '</td>' +
+            '<td class="col-igu pro-num">' + fmt(igUgc) + '</td>' +
+            '<td class="col-tk-link">' + tkLink + '</td>' +
+            '<td class="col-ig-link">' + igLink + '</td>' +
+            '<td class="col-spark">' + buildSparkline(songSparkData, 80, 24) + '</td>' +
+            '</tr>';
+        });
+        songsHtml += '</tbody></table></div>';
+      }
+      songsHtml += '</div>';
+
+      return '<button class="pro-dv-back" id="pro-dv-back-btn">&larr; Back to list</button>' +
+        '<div class="pro-dv-header">' + pic + '<div>' +
+        '<h1 class="pro-dv-name">' + escHtml(a.n || '') + '</h1>' +
+        '<div class="pro-dv-badges">' + (badges || '') + '</div></div></div>' +
+        '<div class="pro-dv-stats">' + stats + '</div>' +
+        socialScore + songsHtml;
+    }
+
+    function renderTable(artists) {
+      if (artists.length === 0) {
+        document.getElementById('pro-table-wrap').innerHTML =
+          '<p class="pro-loading">No scouting artists found.</p>';
+        return;
+      }
+
+      var html = '<div style="overflow-x:auto;"><table class="pro-table"><thead><tr>' +
+        '<th>Artist</th>' +
+        '<th>Streams</th>' +
+        '<th>Daily</th>' +
+        '<th class="col-tk">TikTok</th>' +
+        '<th class="col-ig">Instagram</th>' +
+        '<th class="col-ugc">UGC</th>' +
+        '<th class="col-heat">Momentum</th>' +
+        '<th class="col-links">Links</th>' +
+        '</tr></thead><tbody>';
+
+      artists.forEach(function(a) {
+        var streams = getSpotifyStreams(a);
+        var daily = dayStr(a);
+        var tk = (a.m && a.m.tk) || 0;
+        var ig = (a.m && a.m.ig) || 0;
+        var ugc = totUGC(a);
+        var mom = calcSocialScore(a);
+        var pic = a.pic ? '<img class="pro-artist-pic" src="' + escHtml(a.pic) + '" alt="">' :
+          '<div class="pro-artist-pic" style="display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tx-3);">' +
+          escHtml((a.n || '?')[0].toUpperCase()) + '</div>';
+
+        var links = '';
+        if (a.l && a.l.sp) links += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener" title="Spotify"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg></a>';
+        if (a.l && a.l.tk) links += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener" title="TikTok"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg></a>';
+        if (a.l && a.l.ig) links += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg></a>';
+
+        html += '<tr data-id="' + escHtml(a.id) + '">' +
+          '<td><div class="pro-artist-cell">' + pic + '<span class="pro-artist-name">' + escHtml(a.n || '') + '</span></div></td>' +
+          '<td class="pro-num">' + fmt(streams) + '</td>' +
+          '<td>' + renderDelta(daily) + '</td>' +
+          '<td class="col-tk pro-num">' + fmt(tk) + '</td>' +
+          '<td class="col-ig pro-num">' + fmt(ig) + '</td>' +
+          '<td class="col-ugc pro-num">' + fmt(ugc) + '</td>' +
+          '<td class="col-heat">' + renderHeat(mom.score) + '</td>' +
+          '<td class="col-links"><div class="pro-links">' + (links || '<span style="color:var(--tx-3);">-</span>') + '</div></td>' +
+          '</tr>';
+
+        // Detail row (hidden by default)
+        var isOpen = expandedId === a.id;
+        html += '<tr class="pro-detail-row" data-detail="' + escHtml(a.id) + '" style="' + (isOpen ? '' : 'display:none;') + '">' +
+          '<td colspan="8"><div class="pro-detail ' + (isOpen ? 'open' : '') + '">' + renderDetail(a) + '</div></td></tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('pro-table-wrap').innerHTML = html;
+
+      // Attach row click handlers
+      document.querySelectorAll('.pro-table tbody tr[data-id]').forEach(function(row) {
+        row.addEventListener('click', function(e) {
+          // Don't toggle if clicking a link
+          if (e.target.closest('a')) return;
+          var id = row.getAttribute('data-id');
+          selectedArtist = id;
+          render();
+        });
+      });
+    }
+
+    function render() {
+      var dvEl = document.getElementById('pro-detail-view');
+      if (selectedArtist) {
+        var a = allArtists.find(function(x) { return x.id === selectedArtist; });
+        if (a) {
+          document.querySelector('.pro-toolbar').style.display = 'none';
+          document.getElementById('pro-meta').style.display = 'none';
+          document.getElementById('pro-table-wrap').style.display = 'none';
+          dvEl.classList.add('active');
+          dvEl.innerHTML = renderDetailView(a);
+          document.getElementById('pro-dv-back-btn').addEventListener('click', function() {
+            selectedArtist = null;
+            render();
+          });
+          return;
+        }
+      }
+      document.querySelector('.pro-toolbar').style.display = '';
+      document.getElementById('pro-meta').style.display = '';
+      document.getElementById('pro-table-wrap').style.display = '';
+      dvEl.classList.remove('active');
+      var filtered = filterArtists(allArtists);
+      var sorted = sortArtists(filtered);
+      renderTable(sorted);
+    }
+
+    function updateMeta() {
+      var latest = null;
+      allArtists.forEach(function(a) {
+        var lu = getLastUpdated(a);
+        if (lu && (!latest || lu > latest)) latest = lu;
+      });
+      var metaHtml = '<span>' + allArtists.length + ' scouting artists</span>';
+      if (latest) {
+        metaHtml += '<span>Last scraped: ' + latest + '</span>';
+      }
+      document.getElementById('pro-meta').innerHTML = metaHtml;
+    }
+
+    // ── Events ─────────────────────────────────────
+    document.getElementById('pro-search').addEventListener('input', function(e) {
+      currentSearch = e.target.value;
+      render();
+    });
+
+    document.getElementById('pro-sort').addEventListener('change', function(e) {
+      currentSort = e.target.value;
+      render();
+    });
+
+    // ── Firebase listener ──────────────────────────
+    proDb.collection('artists').onSnapshot(function(snapshot) {
+      allArtists = [];
+      snapshot.forEach(function(doc) {
+        var data = doc.data();
+        if (data.division === 'scouting') {
+          allArtists.push(Object.assign({ id: doc.id }, data));
+        }
+      });
+      updateMeta();
+      render();
+    }, function(err) {
+      console.error('[Pro] Firestore error:', err);
+      document.getElementById('pro-loading').textContent = 'Error loading data. Please refresh.';
+    });
+
+  })();
+
+  function startProCheckout(e) {
+    e.preventDefault();
+    var btn = document.getElementById('pro-checkout-btn');
+    btn.textContent = 'Loading...';
+    btn.style.pointerEvents = 'none';
+    fetch('/api/create-checkout?plan=pro', { method: 'POST' })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          btn.textContent = 'Upgrade to Pro \u2192';
+          btn.style.pointerEvents = 'auto';
+          alert('Something went wrong. Please try again.');
+        }
+      })
+      .catch(function() {
+        btn.textContent = 'Upgrade to Pro \u2192';
+        btn.style.pointerEvents = 'auto';
+        alert('Something went wrong. Please try again.');
+      });
+  }
+  </script>
+
+  
+
+  <div class="manage-modal-overlay" id="manageModal">
+    <div class="manage-modal">
+      <h3>Manage Subscription</h3>
+      <p>Enter the email address you subscribed with and we will send you to your account portal.</p>
+      <input type="email" id="manageEmailInput" placeholder="your@email.com" />
+      <div class="manage-modal-error" id="manageError"></div>
+      <div class="manage-modal-actions">
+        <button class="manage-modal-cancel" onclick="document.getElementById('manageModal').classList.remove('active')">Cancel</button>
+        <button class="manage-modal-submit" onclick="openCustomerPortal()">Go to Portal &rarr;</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
   <!-- Manage Account Modal -->
   <div class="manage-modal-overlay" id="manageModal">
     <div class="manage-modal">
@@ -607,5 +2011,655 @@
       </div>
     </div>
   </div>
+<script>
+  (function() {
+    'use strict';
+
+    // ── Auth gate ──────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      localStorage.setItem('btd_pro_token', sessionId);
+      window.history.replaceState({}, '', '/pro');
+    }
+
+    const token = localStorage.getItem('btd_pro_token');
+    const paywallEl = document.getElementById('pro-paywall');
+    const dashEl = document.getElementById('pro-dash');
+
+    if (!token) {
+      paywallEl.style.display = 'block';
+      dashEl.classList.remove('active');
+      return;
+    }
+
+    paywallEl.style.display = 'none';
+    dashEl.classList.add('active');
+    // Show pro dashboard section, hide marketing content
+    const proSection = document.getElementById('hf-pro-dashboard');
+    if (proSection) proSection.style.display = 'block';
+    const mktSection = document.querySelector('.hf-content');
+    if (mktSection) mktSection.style.display = 'none';
+    const loginBar = document.querySelector('.pro-login-bar');
+    const brandingBar = document.getElementById('pro-branding-bar');
+    if (loginBar) loginBar.style.display = 'none';
+    if (brandingBar) brandingBar.classList.add('active');
+
+    // ── Firebase init (separate from BTD's firebase.js) ──
+    const PRO_FB_CONFIG = {
+      apiKey: "AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec",
+      authDomain: "ar-scouting-dashboard.firebaseapp.com",
+      projectId: "ar-scouting-dashboard"
+    };
+
+    let proDb = null;
+    try {
+      // Use existing firebase app if already initialized, otherwise init
+      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(PRO_FB_CONFIG);
+      proDb = firebase.firestore(app);
+    } catch(e) {
+      console.error('[Pro] Firebase init failed:', e);
+      document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
+      return;
+    }
+
+    // ── Data helpers ───────────────────────────────
+    function fmt(n) {
+      if (!n || n === 0) return '0';
+      if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+      if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+      return n.toLocaleString();
+    }
+
+    function fmtD(n) {
+      if (!n || n === 0) return '0';
+      var a = Math.abs(n), p = n >= 0 ? '+' : '-';
+      if (a >= 1e6) return p + (a / 1e6).toFixed(1) + 'M';
+      if (a >= 1e3) return p + (a / 1e3).toFixed(1) + 'K';
+      return p + a.toLocaleString();
+    }
+
+    function vel(h, days) {
+      if (!h || h.length < 2) return null;
+      var sorted = h.slice().sort(function(a, b) { return a.d.localeCompare(b.d); });
+      var latest = sorted[sorted.length - 1];
+      if (days === 1) {
+        var prev = sorted[sorted.length - 2];
+        if (!prev) return null;
+        return (latest.v || 0) - (prev.v || 0);
+      }
+      var targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - days);
+      var targetStr = targetDate.toISOString().split('T')[0];
+      var oldEntry = null;
+      for (var i = sorted.length - 1; i >= 0; i--) {
+        if (sorted[i].d <= targetStr) { oldEntry = sorted[i]; break; }
+      }
+      if (!oldEntry) oldEntry = sorted[0];
+      return (latest.v || 0) - (oldEntry.v || 0);
+    }
+
+    function getSpotifyStreams(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.st || 0); });
+      return s;
+    }
+
+    function totUGC(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (x.ug || 0) + (x.igu || 0); });
+      return s;
+    }
+
+    function dayStr(a) {
+      if (!a.sm) return 0;
+      var s = 0;
+      Object.values(a.sm).forEach(function(x) { s += (vel(x.h && x.h.st, 1) || 0); });
+      return s;
+    }
+
+    function calcSocialScore(a) {
+      // Use the social score stored by the data agent in a.m.ss (0-10 scale, stored as integer)
+      var raw = (a.m && a.m.ss) ? parseInt(a.m.ss) : 0;
+      // Normalize to 0-100 for display (data agent stores 0-10)
+      var score = Math.min(100, raw * 10);
+      return { score: score, surging: score >= 70 };
+    }
+
+    function getLastUpdated(a) {
+      var latest = null;
+      if (a.sm) {
+        Object.values(a.sm).forEach(function(m) {
+          ['st', 'yt', 'ug'].forEach(function(k) {
+            var h = m.h && m.h[k];
+            if (h && h.length > 0) {
+              var last = h[h.length - 1] && h[h.length - 1].d;
+              if (last && (!latest || last > latest)) latest = last;
+            }
+          });
+        });
+      }
+      if (a.h) {
+        ['tk', 'ig', 'sf', 'yt'].forEach(function(k) {
+          var h = a.h[k];
+          if (h && h.length > 0) {
+            var last = h[h.length - 1] && h[h.length - 1].d;
+            if (last && (!latest || last > latest)) latest = last;
+          }
+        });
+      }
+      return latest;
+    }
+
+    function buildSparkline(data, w, h) {
+      if (!data || data.length < 2) return '';
+      var vs = data.map(function(d) { return d.v || 0; });
+      var mn = Math.min.apply(null, vs);
+      var mx = Math.max.apply(null, vs);
+      var rg = mx - mn || 1;
+      var pts = vs.map(function(v, i) {
+        return (i / (vs.length - 1)) * w + ',' + (h - ((v - mn) / rg) * (h - 4) - 2);
+      }).join(' ');
+      var up = vs[vs.length - 1] >= vs[0];
+      var c = up ? '#10b981' : '#ef4444';
+      return '<svg class="pro-spark" width="' + w + '" height="' + h + '">' +
+        '<polygon points="0,' + h + ' ' + pts + ' ' + w + ',' + h + '" fill="' + c + '" fill-opacity="0.12"/>' +
+        '<polyline points="' + pts + '" fill="none" stroke="' + c + '" stroke-width="1.5" stroke-linecap="round"/>' +
+        '</svg>';
+    }
+
+    function buildStreamSparkData(sm) {
+      if (!sm) return [];
+      var map = {};
+      Object.values(sm).forEach(function(s) {
+        (s.h && s.h.st || []).forEach(function(e) {
+          map[e.d] = (map[e.d] || 0) + (e.v || 0);
+        });
+      });
+      return Object.entries(map).sort(function(a, b) { return a[0].localeCompare(b[0]); })
+        .slice(-14).map(function(e) { return { d: e[0], v: e[1] }; });
+    }
+
+    function escHtml(s) {
+      var d = document.createElement('div');
+      d.textContent = s || '';
+      return d.innerHTML;
+    }
+
+    // ── Render ─────────────────────────────────────
+    var allArtists = [];
+    var expandedId = null;
+    var selectedArtist = null;
+    var currentSort = 'streams';
+    var currentSearch = '';
+
+    function sortArtists(arr) {
+      return arr.slice().sort(function(a, b) {
+        switch(currentSort) {
+          case 'daily': return dayStr(b) - dayStr(a);
+          case 'tiktok': return ((b.m && b.m.tk) || 0) - ((a.m && a.m.tk) || 0);
+          case 'social': return calcSocialScore(b).score - calcSocialScore(a).score;
+          default: return getSpotifyStreams(b) - getSpotifyStreams(a);
+        }
+      });
+    }
+
+    function filterArtists(arr) {
+      if (!currentSearch) return arr;
+      var q = currentSearch.toLowerCase();
+      return arr.filter(function(a) {
+        return (a.n || '').toLowerCase().indexOf(q) !== -1;
+      });
+    }
+
+    function renderDelta(v) {
+      if (v === null || v === undefined || v === 0) return '<span class="pro-delta flat">0</span>';
+      var cls = v > 0 ? 'up' : 'down';
+      var arrow = v > 0 ? '&#9650; ' : '&#9660; ';
+      return '<span class="pro-delta ' + cls + '">' + arrow + fmtD(v) + '</span>';
+    }
+
+    function renderHeat(score) {
+      var cls = score >= 70 ? 'hot' : score >= 35 ? 'warm' : 'cool';
+      var icon = score >= 70 ? '&#128293; ' : '';
+      return '<span class="pro-heat ' + cls + '">' + icon + score + '</span>';
+    }
+
+    function renderSongRow(song, songId, sm) {
+      var metrics = sm && sm[songId];
+      var streams = metrics ? (metrics.st || 0) : 0;
+      var ugc = metrics ? ((metrics.ug || 0) + (metrics.igu || 0)) : 0;
+      var links = '';
+      if (song.tkUrl) links += '<a href="' + escHtml(song.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>';
+      if (song.igUrl) links += '<a href="' + escHtml(song.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>';
+      return '<tr>' +
+        '<td>' + escHtml(song.t || '') + '</td>' +
+        '<td class="pro-num">' + fmt(streams) + '</td>' +
+        '<td class="pro-num">' + fmt(ugc) + '</td>' +
+        '<td class="pro-song-links">' + (links || '<span style="color:var(--tx-3)">-</span>') + '</td>' +
+        '</tr>';
+    }
+
+    function renderDetail(a) {
+      var songs = a.sg || [];
+      var html = '<h3>Songs</h3>';
+      if (songs.length === 0) {
+        html += '<p style="font-size:12px;color:var(--tx-3);">No songs tracked yet.</p>';
+      } else {
+        html += '<table class="pro-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>UGC</th><th>Links</th>' +
+          '</tr></thead><tbody>';
+        songs.forEach(function(song) {
+          html += renderSongRow(song, song.id, a.sm);
+        });
+        html += '</tbody></table>';
+      }
+
+      // Stream sparkline
+      var sparkData = buildStreamSparkData(a.sm);
+      if (sparkData.length >= 2) {
+        html += '<div style="margin-top:8px;">' +
+          '<span style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--tx-3);font-weight:600;">Stream History (14d)</span>' +
+          '<div style="margin-top:6px;">' + buildSparkline(sparkData, 200, 32) + '</div>' +
+          '</div>';
+      }
+
+      return html;
+    }
+
+    function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
+      var key = metricKey || '';
+      var hist = histData ? JSON.stringify(histData) : '[]';
+      var clickAttr = key ? ' onclick="toggleMetricPanel(this, '' + key + '', ' + hist.replace(/"/g,"'") + ')"' : '';
+      return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
+        '<span class="pro-dv-stat-expand-hint">Details</span>' +
+        '<div class="pro-dv-stat-label">' + label + '</div>' +
+        '<div class="pro-dv-stat-value" style="color:' + color + ';">' + value + '</div>' +
+        '<div class="pro-dv-stat-foot">' + (delta || '<span></span>') + (spark || '') + '</div>' +
+        '</div>';
+    }
+
+    function renderDetailView(a) {
+      var ts = getSpotifyStreams(a);
+      var daily = dayStr(a);
+      var tk = (a.m && a.m.tk) || 0;
+      var ig = (a.m && a.m.ig) || 0;
+      var ml = (a.m && a.m.ml) || 0;
+      var ugc = totUGC(a);
+      var mom = calcSocialScore(a);
+
+      var initials = (a.n || '?').split(' ').map(function(w) { return w[0]; }).join('').substring(0, 2).toUpperCase();
+      var pic = a.pic
+        ? '<img class="pro-dv-pic" src="' + escHtml(a.pic) + '" alt="">'
+        : '<div class="pro-dv-pic-fallback">' + escHtml(initials) + '</div>';
+
+      var badges = '';
+      if (a.l && a.l.sp) badges += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg> Spotify</a>';
+      if (a.l && a.l.tk) badges += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg> TikTok</a>';
+      if (a.l && a.l.ig) badges += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg> Instagram</a>';
+
+      var streamSparkData = buildStreamSparkData(a.sm);
+      var tkSparkData = (a.h && a.h.tk) ? a.h.tk.slice(-14) : [];
+      var igSparkData = (a.h && a.h.ig) ? a.h.ig.slice(-14) : [];
+      var sfSparkData = (a.h && a.h.sf) ? a.h.sf.slice(-14) : [];
+
+      var stats = '';
+      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20), 'streams', streamSparkData);
+      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20), 'listeners', sfSparkData);
+      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20), 'tiktok', tkSparkData);
+      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20), 'instagram', igSparkData);
+      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '', 'ugc', []);
+
+      var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
+      var rawSS = (a.m && a.m.ss) ? a.m.ss : 0;
+      var socialScore = '<div class="pro-dv-momentum">' +
+        '<div class="pro-dv-momentum-label"><span>Social Score</span><span style="font-size:13px;font-weight:700;color:' + momColor + ';margin-left:8px;">' + rawSS + ' / 10</span></div>' +
+        '<div class="pro-dv-momentum-track"><div class="pro-dv-momentum-fill" style="width:' + mom.score + '%;background:' + momColor + ';"></div></div>' +
+        '</div>';
+
+      var songs = (a.sg || []).slice();
+      songs.sort(function(x, y) {
+        var xSt = (a.sm && a.sm[x.id]) ? (a.sm[x.id].st || 0) : 0;
+        var ySt = (a.sm && a.sm[y.id]) ? (a.sm[y.id].st || 0) : 0;
+        return ySt - xSt;
+      });
+
+      var songsHtml = '<div class="pro-dv-songs"><div class="pro-dv-songs-header"><h2>Songs</h2></div>';
+      if (songs.length === 0) {
+        songsHtml += '<p style="padding:24px;text-align:center;color:var(--tx-3);font-size:13px;">No songs tracked yet.</p>';
+      } else {
+        songsHtml += '<div style="overflow-x:auto;"><table class="pro-dv-songs-table"><thead><tr>' +
+          '<th>Title</th><th>Streams</th><th>Daily</th>' +
+          '<th class="col-tku">TikTok UGC</th><th class="col-igu">IG UGC</th>' +
+          '<th class="col-tk-link">TikTok Sound</th><th class="col-ig-link">IG Audio</th>' +
+          '<th class="col-spark">14d Trend</th></tr></thead><tbody>';
+        songs.forEach(function(s) {
+          var m = (a.sm && a.sm[s.id]) || {};
+          var streams = m.st || 0;
+          var dailyChange = vel(m.h && m.h.st, 1);
+          var tkUgc = m.ug || 0;
+          var igUgc = m.igu || 0;
+          var songSparkData = (m.h && m.h.st) ? m.h.st.slice(-14) : [];
+          var tkLink = s.tkUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.tkUrl) + '" target="_blank" rel="noopener">TikTok</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          var igLink = s.igUrl
+            ? '<a class="pro-dv-song-link" href="' + escHtml(s.igUrl) + '" target="_blank" rel="noopener">IG Audio</a>'
+            : '<span style="color:var(--tx-3);">-</span>';
+          songsHtml += '<tr>' +
+            '<td style="font-weight:500;">' + escHtml(s.t || '') + '</td>' +
+            '<td class="pro-num">' + fmt(streams) + '</td>' +
+            '<td>' + renderDelta(dailyChange) + '</td>' +
+            '<td class="col-tku pro-num">' + fmt(tkUgc) + '</td>' +
+            '<td class="col-igu pro-num">' + fmt(igUgc) + '</td>' +
+            '<td class="col-tk-link">' + tkLink + '</td>' +
+            '<td class="col-ig-link">' + igLink + '</td>' +
+            '<td class="col-spark">' + buildSparkline(songSparkData, 80, 24) + '</td>' +
+            '</tr>';
+        });
+        songsHtml += '</tbody></table></div>';
+      }
+      songsHtml += '</div>';
+
+      return '<button class="pro-dv-back" id="pro-dv-back-btn">&larr; Back to list</button>' +
+        '<div class="pro-dv-header">' + pic + '<div>' +
+        '<h1 class="pro-dv-name">' + escHtml(a.n || '') + '</h1>' +
+        '<div class="pro-dv-badges">' + (badges || '') + '</div></div></div>' +
+        '<div class="pro-dv-stats">' + stats + '</div>' +
+        socialScore + songsHtml;
+    }
+
+    function renderTable(artists) {
+      if (artists.length === 0) {
+        document.getElementById('pro-table-wrap').innerHTML =
+          '<p class="pro-loading">No scouting artists found.</p>';
+        return;
+      }
+
+      var html = '<div style="overflow-x:auto;"><table class="pro-table"><thead><tr>' +
+        '<th>Artist</th>' +
+        '<th>Streams</th>' +
+        '<th>Daily</th>' +
+        '<th class="col-tk">TikTok</th>' +
+        '<th class="col-ig">Instagram</th>' +
+        '<th class="col-ugc">UGC</th>' +
+        '<th class="col-heat">Momentum</th>' +
+        '<th class="col-links">Links</th>' +
+        '</tr></thead><tbody>';
+
+      artists.forEach(function(a) {
+        var streams = getSpotifyStreams(a);
+        var daily = dayStr(a);
+        var tk = (a.m && a.m.tk) || 0;
+        var ig = (a.m && a.m.ig) || 0;
+        var ugc = totUGC(a);
+        var mom = calcSocialScore(a);
+        var pic = a.pic ? '<img class="pro-artist-pic" src="' + escHtml(a.pic) + '" alt="">' :
+          '<div class="pro-artist-pic" style="display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--tx-3);">' +
+          escHtml((a.n || '?')[0].toUpperCase()) + '</div>';
+
+        var links = '';
+        if (a.l && a.l.sp) links += '<a href="' + escHtml(a.l.sp) + '" target="_blank" rel="noopener" title="Spotify"><svg width="14" height="14" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02z"/></svg></a>';
+        if (a.l && a.l.tk) links += '<a href="' + escHtml(a.l.tk) + '" target="_blank" rel="noopener" title="TikTok"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64V9.4A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4z"/></svg></a>';
+        if (a.l && a.l.ig) links += '<a href="' + escHtml(a.l.ig) + '" target="_blank" rel="noopener" title="Instagram"><svg width="14" height="14" viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z"/></svg></a>';
+
+        html += '<tr data-id="' + escHtml(a.id) + '">' +
+          '<td><div class="pro-artist-cell">' + pic + '<span class="pro-artist-name">' + escHtml(a.n || '') + '</span></div></td>' +
+          '<td class="pro-num">' + fmt(streams) + '</td>' +
+          '<td>' + renderDelta(daily) + '</td>' +
+          '<td class="col-tk pro-num">' + fmt(tk) + '</td>' +
+          '<td class="col-ig pro-num">' + fmt(ig) + '</td>' +
+          '<td class="col-ugc pro-num">' + fmt(ugc) + '</td>' +
+          '<td class="col-heat">' + renderHeat(mom.score) + '</td>' +
+          '<td class="col-links"><div class="pro-links">' + (links || '<span style="color:var(--tx-3);">-</span>') + '</div></td>' +
+          '</tr>';
+
+        // Detail row (hidden by default)
+        var isOpen = expandedId === a.id;
+        html += '<tr class="pro-detail-row" data-detail="' + escHtml(a.id) + '" style="' + (isOpen ? '' : 'display:none;') + '">' +
+          '<td colspan="8"><div class="pro-detail ' + (isOpen ? 'open' : '') + '">' + renderDetail(a) + '</div></td></tr>';
+      });
+
+      html += '</tbody></table></div>';
+      document.getElementById('pro-table-wrap').innerHTML = html;
+
+      // Attach row click handlers
+      document.querySelectorAll('.pro-table tbody tr[data-id]').forEach(function(row) {
+        row.addEventListener('click', function(e) {
+          // Don't toggle if clicking a link
+          if (e.target.closest('a')) return;
+          var id = row.getAttribute('data-id');
+          selectedArtist = id;
+          render();
+        });
+      });
+    }
+
+    function render() {
+      var dvEl = document.getElementById('pro-detail-view');
+      if (selectedArtist) {
+        var a = allArtists.find(function(x) { return x.id === selectedArtist; });
+        if (a) {
+          document.querySelector('.pro-toolbar').style.display = 'none';
+          document.getElementById('pro-meta').style.display = 'none';
+          document.getElementById('pro-table-wrap').style.display = 'none';
+          dvEl.classList.add('active');
+          dvEl.innerHTML = renderDetailView(a);
+          document.getElementById('pro-dv-back-btn').addEventListener('click', function() {
+            selectedArtist = null;
+            render();
+          });
+          return;
+        }
+      }
+      document.querySelector('.pro-toolbar').style.display = '';
+      document.getElementById('pro-meta').style.display = '';
+      document.getElementById('pro-table-wrap').style.display = '';
+      dvEl.classList.remove('active');
+      var filtered = filterArtists(allArtists);
+      var sorted = sortArtists(filtered);
+      renderTable(sorted);
+    }
+
+    function updateMeta() {
+      var latest = null;
+      allArtists.forEach(function(a) {
+        var lu = getLastUpdated(a);
+        if (lu && (!latest || lu > latest)) latest = lu;
+      });
+      var metaHtml = '<span>' + allArtists.length + ' scouting artists</span>';
+      if (latest) {
+        metaHtml += '<span>Last scraped: ' + latest + '</span>';
+      }
+      document.getElementById('pro-meta').innerHTML = metaHtml;
+    }
+
+    // ── Events ─────────────────────────────────────
+    document.getElementById('pro-search').addEventListener('input', function(e) {
+      currentSearch = e.target.value;
+      render();
+    });
+
+    document.getElementById('pro-sort').addEventListener('change', function(e) {
+      currentSort = e.target.value;
+      render();
+    });
+
+    // ── Firebase listener ──────────────────────────
+    proDb.collection('artists').onSnapshot(function(snapshot) {
+      allArtists = [];
+      snapshot.forEach(function(doc) {
+        var data = doc.data();
+        if (data.division === 'scouting') {
+          allArtists.push(Object.assign({ id: doc.id }, data));
+        }
+      });
+      updateMeta();
+      render();
+    }, function(err) {
+      console.error('[Pro] Firestore error:', err);
+      document.getElementById('pro-loading').textContent = 'Error loading data. Please refresh.';
+    });
+
+  })();
+
+  function startProCheckout(e) {
+    e.preventDefault();
+    var btn = document.getElementById('pro-checkout-btn');
+    btn.textContent = 'Loading...';
+    btn.style.pointerEvents = 'none';
+    fetch('/api/create-checkout?plan=pro', { method: 'POST' })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          btn.textContent = 'Upgrade to Pro \u2192';
+          btn.style.pointerEvents = 'auto';
+          alert('Something went wrong. Please try again.');
+        }
+      })
+      .catch(function() {
+        btn.textContent = 'Upgrade to Pro \u2192';
+        btn.style.pointerEvents = 'auto';
+        alert('Something went wrong. Please try again.');
+      });
+  }
+  </script>
+<script>
+    async function sendProAccessLink() {
+      const email = document.getElementById('pro-login-email').value.trim();
+      const msg = document.getElementById('pro-login-msg');
+      if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email.'; return; }
+      msg.textContent = 'Sending...';
+      // For now: check Firebase if subscriber exists with pro tier, then set localStorage token
+      try {
+        const res = await fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_sub_' + email.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec');
+        const data = await res.json();
+        const tier = data.fields?.tier?.stringValue || '';
+        if (tier === 'pro') {
+          localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
+          msg.textContent = 'Verified. Loading your dashboard...';
+          setTimeout(() => location.reload(), 800);
+        } else if (tier === 'heard-first' || tier === 'paid') {
+          msg.textContent = 'Your account is Heard First ($9/mo), not Pro. Upgrade to access the dashboard.';
+        } else {
+          msg.textContent = 'No Pro subscription found for this email. Check your email or upgrade below.';
+        }
+      } catch(e) {
+        msg.textContent = 'Error checking subscription. Try again.';
+      }
+    }
+    // Close modal on overlay click
+    document.getElementById('pro-login-modal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
+  
+  function openManageModal() {
+    document.getElementById('manageModal').classList.add('active');
+    document.getElementById('manageEmailInput').focus();
+    document.getElementById('manageError').style.display = 'none';
+  }
+
+  async function openCustomerPortal() {
+    const email = document.getElementById('manageEmailInput').value.trim();
+    const errEl = document.getElementById('manageError');
+    errEl.style.display = 'none';
+    if (!email) { errEl.textContent = 'Please enter your email.'; errEl.style.display = 'block'; return; }
+    const btn = document.querySelector('.manage-modal-submit');
+    btn.textContent = 'Loading...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/customer-portal', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
+      const data = await res.json();
+      if (data.url) { window.location.href = data.url; }
+      else { errEl.textContent = data.error || 'Could not find a subscription for that email.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
+    } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
+  }
+  
+  function toggleMetricPanel(cardEl, metricKey, histData) {
+    // Close any open panel
+    var existing = document.querySelector('.pro-metric-panel.open');
+    var isSameCard = existing && existing.previousSibling === cardEl;
+    if (existing) {
+      existing.classList.remove('open');
+      existing.remove();
+      cardEl.style.borderRadius = '12px';
+      if (isSameCard) return; // toggle off
+    }
+
+    var labels = {
+      streams: { title: 'Total Streams', color: '#10b981', unit: 'streams' },
+      listeners: { title: 'Monthly Listeners', color: '#1DB954', unit: 'listeners' },
+      tiktok: { title: 'TikTok Followers', color: '#000000', unit: 'followers' },
+      instagram: { title: 'Instagram Followers', color: '#E1306C', unit: 'followers' },
+      ugc: { title: 'Total UGC Videos', color: '#8b5cf6', unit: 'videos' }
+    };
+    var meta = labels[metricKey] || { title: metricKey, color: 'var(--tx-1)', unit: '' };
+
+    // Build full-width sparkline
+    var chartHtml = '';
+    if (histData && histData.length >= 2) {
+      chartHtml = buildSparkline(histData, 500, 60).replace('width="', 'style="width:100%;height:60px;" width="');
+    } else {
+      chartHtml = '<p style="font-size:12px;color:var(--tx-3);text-align:center;padding:16px 0;">Not enough history to show a chart yet.</p>';
+    }
+
+    // Build last 7 data points table
+    var histHtml = '';
+    if (histData && histData.length > 0) {
+      var slice = histData.slice(-7);
+      var today = new Date();
+      histHtml = '<div class="pro-metric-panel-history">';
+      slice.forEach(function(val, i) {
+        var d = new Date(today);
+        d.setDate(d.getDate() - (slice.length - 1 - i));
+        var label = (d.getMonth()+1) + '/' + d.getDate();
+        histHtml += '<div class="pro-metric-history-item">' +
+          '<div class="pro-metric-history-date">' + label + '</div>' +
+          '<div class="pro-metric-history-val">' + fmtShort(val) + '</div>' +
+          '</div>';
+      });
+      histHtml += '</div>';
+    }
+
+    // Delta from first to last
+    var deltaHtml = '';
+    if (histData && histData.length >= 2) {
+      var first = histData[0], last = histData[histData.length-1];
+      var diff = last - first;
+      var pct = first > 0 ? ((diff / first) * 100).toFixed(1) : 0;
+      var sign = diff >= 0 ? '+' : '';
+      var color = diff >= 0 ? '#10b981' : '#ef4444';
+      deltaHtml = '<span style="font-size:13px;font-weight:600;color:' + color + ';">' + sign + fmtShort(diff) + ' (' + sign + pct + '%) over ' + histData.length + ' days</span>';
+    }
+
+    var panel = document.createElement('div');
+    panel.className = 'pro-metric-panel';
+    panel.innerHTML =
+      '<div class="pro-metric-panel-header">' +
+        '<span class="pro-metric-panel-title">' + meta.title + '</span>' +
+        '<button class="pro-metric-panel-close" onclick="this.closest('.pro-metric-panel').remove();document.querySelector('[data-metric='+metricKey+']').style.borderRadius='12px';">&times;</button>' +
+      '</div>' +
+      '<div class="pro-metric-panel-sub">' + deltaHtml + '</div>' +
+      '<div class="pro-metric-panel-chart">' + chartHtml + '</div>' +
+      histHtml;
+
+    // Style the card to connect visually
+    cardEl.style.borderRadius = '12px 12px 0 0';
+    cardEl.insertAdjacentElement('afterend', panel);
+    requestAnimationFrame(function() { panel.classList.add('open'); });
+  }
+
+  function fmtShort(n) {
+    if (!n && n !== 0) return '-';
+    if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1000) return (n/1000).toFixed(1) + 'K';
+    return n.toString();
+  }
+  </script>
 </body>
 </html>
