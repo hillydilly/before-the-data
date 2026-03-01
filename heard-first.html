@@ -1528,20 +1528,22 @@
     const proParam = params.get('pro');
 
     window.showDashboard = function() {
-      // Hide marketing page, show pro dashboard
-      const _mkt = document.querySelector('.hf-page');
-      const _proSection = document.getElementById('hf-pro-dashboard');
-      const _loginBar = document.querySelector('.hf-login-bar');
-      const _brandingBar = document.getElementById('pro-branding-bar');
-      if (_mkt) _mkt.style.display = 'none';
-      if (_proSection) _proSection.style.display = 'block';
-      if (_loginBar) _loginBar.style.display = 'none';
-      if (_brandingBar) _brandingBar.classList.add('active');
+      // Hide ALL marketing content
+      var mainEl = document.getElementById('main');
+      if (mainEl) mainEl.style.display = 'none';
+      // Show pro dashboard container
+      var proSection = document.getElementById('hf-pro-dashboard');
+      if (proSection) proSection.style.display = 'block';
+      // Show branding bar, hide login prompts inside dashboard
+      var brandingBar = document.getElementById('pro-branding-bar');
+      if (brandingBar) brandingBar.classList.add('active');
+      var loginBar = document.querySelector('.pro-login-bar');
+      if (loginBar) loginBar.style.display = 'none';
       // Show the inner dash, hide paywall
-      const _paywall = document.getElementById('pro-paywall');
-      const _dash = document.getElementById('pro-dash');
-      if (_paywall) _paywall.style.display = 'none';
-      if (_dash) _dash.classList.add('active');
+      var paywall = document.getElementById('pro-paywall');
+      var dash = document.getElementById('pro-dash');
+      if (paywall) paywall.style.display = 'none';
+      if (dash) dash.classList.add('active');
       window.history.replaceState({}, '', '/heard-first');
     }
 
