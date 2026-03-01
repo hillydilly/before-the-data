@@ -11,13 +11,15 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;}
 
 /* Branding bar */
-.bb{display:none;align-items:center;justify-content:space-between;padding:16px 28px;background:#000;border-radius:14px;margin:20px 28px 0;}
+.bb{display:none;flex-direction:column;gap:12px;padding:16px 20px;background:#000;border-radius:14px;margin:20px 20px 0;}
 .bb.on{display:flex;}
+.bb-top{display:flex;align-items:center;justify-content:space-between;}
 .bb-t{font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;}
 .bb-s{font-size:10px;color:rgba(255,255,255,0.4);display:block;margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
-.bb-right{display:flex;align-items:center;gap:12px;}
-.bb-btn{font-size:12px;color:rgba(255,255,255,0.5);background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 14px;cursor:pointer;text-decoration:none;}
-.bb-upgrade{font-size:11px;color:#000;background:#fff;border:none;border-radius:6px;padding:6px 14px;font-weight:700;cursor:pointer;text-decoration:none;}
+.bb-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.bb-btn{font-size:11px;color:rgba(255,255,255,0.5);background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;cursor:pointer;text-decoration:none;white-space:nowrap;}
+.bb-upgrade{font-size:11px;color:#000;background:#fff;border:none;border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;}
+@media(min-width:600px){.bb{flex-direction:row;align-items:center;justify-content:space-between;padding:16px 28px;margin:20px 28px 0;}.bb-top{flex:1;}}
 
 /* Login gate */
 .gate{max-width:420px;margin:80px auto;padding:32px;text-align:center;}
@@ -104,9 +106,11 @@ table.stbl{width:100%;border-collapse:collapse;}
 <body>
 
 <div class="bb" id="bb">
-  <div>
-    <span class="bb-t">Heard First</span>
-    <span class="bb-s">Member dashboard</span>
+  <div class="bb-top">
+    <div>
+      <span class="bb-t">Heard First</span>
+      <span class="bb-s">Member dashboard</span>
+    </div>
   </div>
   <div class="bb-right">
     <a class="bb-btn" href="https://beforethedata.com">Back to site</a>
