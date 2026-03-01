@@ -418,7 +418,7 @@ async function renderPost() {
         ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
-        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
+        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href=this.href;return false;">${g}</a>`).join('')}
         ${(post.tags || []).map(t => `<span>${t}</span>`).join('')}
       </div>
     </div>
