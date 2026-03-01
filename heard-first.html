@@ -1525,28 +1525,27 @@
 
     const token = localStorage.getItem('btd_pro_token');
     const proParam = params.get('pro');
-    const paywallEl = document.getElementById('pro-paywall');
-    const dashEl = document.getElementById('pro-dash');
 
     window.showDashboard = function() {
-      const _paywall = document.getElementById('pro-paywall');
-      const _dash = document.getElementById('pro-dash');
-      const _proSection = document.getElementById('hf-pro-dashboard');
+      // Hide marketing page, show pro dashboard
       const _mkt = document.querySelector('.hf-page');
-      const _loginBar = document.querySelector('.pro-login-bar');
+      const _proSection = document.getElementById('hf-pro-dashboard');
+      const _loginBar = document.querySelector('.hf-login-bar');
       const _brandingBar = document.getElementById('pro-branding-bar');
-      if (_paywall) _paywall.style.display = 'none';
-      if (_dash) _dash.classList.add('active');
-      if (_proSection) _proSection.style.display = 'block';
       if (_mkt) _mkt.style.display = 'none';
+      if (_proSection) _proSection.style.display = 'block';
       if (_loginBar) _loginBar.style.display = 'none';
       if (_brandingBar) _brandingBar.classList.add('active');
+      // Show the inner dash, hide paywall
+      const _paywall = document.getElementById('pro-paywall');
+      const _dash = document.getElementById('pro-dash');
+      if (_paywall) _paywall.style.display = 'none';
+      if (_dash) _dash.classList.add('active');
       window.history.replaceState({}, '', '/heard-first');
     }
 
+    // Not logged in — show marketing page as normal, return
     if (!token && !proParam) {
-      if (paywallEl) paywallEl.style.display = 'none';
-      if (dashEl) dashEl.classList.remove('active');
       return;
     }
 
