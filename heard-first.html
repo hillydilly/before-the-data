@@ -1561,7 +1561,10 @@
     let proDb = null;
     try {
       // Use existing firebase app if already initialized, otherwise init
-      const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(PRO_FB_CONFIG);
+      // Use existing Firebase app if already initialized by firebase.js
+      const app = (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0)
+        ? firebase.apps[0]
+        : firebase.initializeApp(PRO_FB_CONFIG);
       proDb = firebase.firestore(app);
     } catch(e) {
       console.error('[Pro] Firebase init failed:', e);
@@ -1779,7 +1782,8 @@
     function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
       var key = metricKey || '';
       var hist = histData ? JSON.stringify(histData) : '[]';
-      var clickAttr = key ? ' onclick="toggleMetricPanel(this, \'' + key + '\', ' + hist.replace(/"/g,"'") + ')"' : '';
+      var safeKey = key.replace(/'/g, '');
+      var clickAttr = key ? ' onclick="toggleMetricPanel(this,&quot;' + safeKey + '&quot;,' + hist + ')"' : '';
       return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
         '<span class="pro-dv-stat-expand-hint">Details</span>' +
         '<div class="pro-dv-stat-label">' + label + '</div>' +
@@ -2179,7 +2183,7 @@
     panel.innerHTML =
       '<div class="pro-metric-panel-header">' +
         '<span class="pro-metric-panel-title">' + meta.title + '</span>' +
-        '<button class="pro-metric-panel-close" onclick="this.closest('.pro-metric-panel').remove();document.querySelector('[data-metric='+metricKey+']').style.borderRadius='12px';">&times;</button>' +
+        '<button class="pro-metric-panel-close" onclick="var p=this.closest(\'.pro-metric-panel\');if(p){var c=p.previousElementSibling;if(c)c.style.borderRadius=\'12px\';p.remove();}">&times;</button>' +
       '</div>' +
       '<div class="pro-metric-panel-sub">' + deltaHtml + '</div>' +
       '<div class="pro-metric-panel-chart">' + chartHtml + '</div>' +
