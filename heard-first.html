@@ -41,49 +41,52 @@
       border-top: 1px solid var(--bd);
       margin: 32px 0;
     }
-    .hf-tiers-teaser {
+    .hf-tier-tabs {
       display: flex;
       gap: 12px;
-      margin: 24px 0 8px;
+      margin: 24px 0 32px;
     }
-    .hf-tier-pill {
+    .hf-tier-tab {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 3px;
-      padding: 14px 16px;
+      padding: 16px;
       border-radius: 10px;
       border: 1px solid var(--bd);
       background: var(--bg-2);
-      text-decoration: none;
+      cursor: pointer;
+      text-align: left;
       transition: border-color 0.15s, background 0.15s;
     }
-    .hf-tier-pill:hover { border-color: var(--acc); background: var(--bg-3); }
-    .hf-tier-pill--pro { border-color: rgba(255,255,255,0.2); background: #111; }
-    .hf-tier-pill--pro:hover { border-color: #fff; }
-    .hf-tier-pill-label {
-      font-size: 12px;
+    .hf-tier-tab:hover { border-color: var(--tx-2); }
+    .hf-tier-tab--selected { border-color: var(--tx-1); background: var(--bg-3); }
+    .hf-tier-tab--pro { background: #111; border-color: rgba(255,255,255,0.15); }
+    .hf-tier-tab--pro.hf-tier-tab--selected { border-color: #fff; }
+    .hf-tier-tab-label {
+      font-size: 11px;
       font-weight: 700;
-      color: var(--tx-1);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      color: var(--tx-1);
     }
-    .hf-tier-pill--pro .hf-tier-pill-label { color: #fff; }
-    .hf-tier-pill-price {
-      font-size: 18px;
+    .hf-tier-tab--pro .hf-tier-tab-label { color: #fff; }
+    .hf-tier-tab-price {
+      font-size: 20px;
       font-weight: 800;
       color: var(--tx-1);
       line-height: 1.2;
     }
-    .hf-tier-pill--pro .hf-tier-pill-price { color: #fff; }
-    .hf-tier-pill-desc {
+    .hf-tier-tab--pro .hf-tier-tab-price { color: #fff; }
+    .hf-tier-tab-desc {
       font-size: 11px;
       color: var(--tx-3);
-      line-height: 1.4;
     }
-    .hf-tier-pill--pro .hf-tier-pill-desc { color: rgba(255,255,255,0.5); }
+    .hf-tier-tab--pro .hf-tier-tab-desc { color: rgba(255,255,255,0.4); }
+    .hf-panel { display: none; }
+    .hf-panel--active { display: block; }
     @media (max-width: 480px) {
-      .hf-tiers-teaser { flex-direction: column; }
+      .hf-tier-tabs { flex-direction: column; }
     }
     .hf-desc {
       font-size: 15px;
@@ -234,79 +237,133 @@
       <div id="hf-form" id="hf-standard">
         <p class="hf-eyebrow">Before The Data</p>
         <h1 class="hf-headline">Heard First.</h1>
-        <p class="hf-tagline">A&R intel. 48 hours early. $9/mo.</p>
 
-        <div class="hf-tiers-teaser">
-          <a href="#hf-standard" class="hf-tier-pill hf-tier-pill--active">
-            <span class="hf-tier-pill-label">Heard First</span>
-            <span class="hf-tier-pill-price">$9/mo</span>
-            <span class="hf-tier-pill-desc">48hr early access to every pick</span>
-          </a>
-          <a href="#hf-pro" class="hf-tier-pill hf-tier-pill--pro">
-            <span class="hf-tier-pill-label">Heard First Pro ★</span>
-            <span class="hf-tier-pill-price">$49.99/mo</span>
-            <span class="hf-tier-pill-desc">7-day exclusive + live scouting database</span>
-          </a>
+        <!-- Tier tabs -->
+        <div class="hf-tier-tabs">
+          <button class="hf-tier-tab hf-tier-tab--selected" id="tab-hf" onclick="switchTab('hf')">
+            <span class="hf-tier-tab-label">Heard First</span>
+            <span class="hf-tier-tab-price">$9/mo</span>
+            <span class="hf-tier-tab-desc">48hr early access to every pick</span>
+          </button>
+          <button class="hf-tier-tab hf-tier-tab--pro" id="tab-pro" onclick="switchTab('pro')">
+            <span class="hf-tier-tab-label">Heard First Pro ★</span>
+            <span class="hf-tier-tab-price">$49.99/mo</span>
+            <span class="hf-tier-tab-desc">7-day exclusive + live scouting database</span>
+          </button>
         </div>
 
-        <hr class="hf-divider">
-
-        <p class="hf-desc">We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is then curated by Chad. You get the signal before anyone else does. Plus the full A&R data behind every pick, weekly tracking updates, and a monthly roundup of who is breaking out.</p>
-
-        <ul class="hf-benefits">
-          <li>
-            <span class="hf-arrow">→</span>
-            <div>
-              <span class="hf-benefit-title">24/7 AI-powered scouting, curated by Chad</span>
-              <span class="hf-benefit-desc">An autonomous agent runs around the clock scanning TikTok for artists worth watching. Chad curates every pick personally.</span>
-            </div>
-          </li>
-          <li>
-            <span class="hf-arrow">→</span>
-            <div>
-              <span class="hf-benefit-title">48hr early access</span>
-              <span class="hf-benefit-desc">Every Artist Discovery pick in your inbox before it goes public.</span>
-            </div>
-          </li>
-          <li>
-            <span class="hf-arrow">→</span>
-            <div>
-              <span class="hf-benefit-title">Full A&R scouting report</span>
-              <span class="hf-benefit-desc">Spotify listeners, TikTok UGC count, YouTube views, Instagram following. The data behind the pick.</span>
-            </div>
-          </li>
-          <li>
-            <span class="hf-arrow">→</span>
-            <div>
-              <span class="hf-benefit-title">Weekly artist tracker</span>
-              <span class="hf-benefit-desc">Every artist we're watching, updated weekly. Who's breaking out. Who stalled.</span>
-            </div>
-          </li>
-          <li>
-            <span class="hf-arrow">→</span>
-            <div>
-              <span class="hf-benefit-title">Monthly ones to watch</span>
-              <span class="hf-benefit-desc">Top momentum artists of the month, ranked by data.</span>
-            </div>
-          </li>
-        </ul>
-
-        <div class="hf-price-block">
-          <span class="hf-price">$9</span>
-          <span class="hf-price-sub">per month · cancel anytime</span>
-          <button class="hf-checkout-btn" id="checkout-btn" onclick="startCheckout()">Subscribe Now →</button>
+        <!-- Panel: Heard First -->
+        <div class="hf-panel hf-panel--active" id="panel-hf">
+          <p class="hf-desc">We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is then curated by Chad. You get the signal before anyone else does. Plus the full A&R data behind every pick, weekly tracking updates, and a monthly roundup of who is breaking out.</p>
+          <ul class="hf-benefits">
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">24/7 AI-powered scouting, curated by Chad</span>
+                <span class="hf-benefit-desc">An autonomous agent runs around the clock scanning TikTok for artists worth watching. Chad curates every pick personally.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">48hr early access</span>
+                <span class="hf-benefit-desc">Every Artist Discovery pick in your inbox before it goes public.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Full A&amp;R scouting report</span>
+                <span class="hf-benefit-desc">Spotify listeners, TikTok UGC count, YouTube views, Instagram following. The data behind the pick.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Weekly artist tracker</span>
+                <span class="hf-benefit-desc">Every artist we are watching, updated weekly. Who is breaking out. Who stalled.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Monthly ones to watch</span>
+                <span class="hf-benefit-desc">Top momentum artists of the month, ranked by data.</span>
+              </div>
+            </li>
+          </ul>
+          <div class="hf-price-block">
+            <span class="hf-price">$9</span>
+            <span class="hf-price-sub">per month &middot; cancel anytime</span>
+            <button class="hf-checkout-btn" id="checkout-btn" onclick="startCheckout()">Subscribe Now &#x2192;</button>
+          </div>
+          <p class="hf-fine">Secure payment via Stripe. You will receive a welcome email immediately after subscribing.</p>
+          <p class="hf-already">Already a subscriber? <a href="index.html">Go back to the site.</a></p>
+          <p class="hf-already" style="margin-top:8px;">Want the full week? <a href="#" onclick="switchTab('pro');return false;">See Heard First Pro &#x2192;</a></p>
         </div>
-        <p class="hf-fine">Secure payment via Stripe. You'll receive a welcome email immediately after subscribing.</p>
-        <p class="hf-already">Already a subscriber? <a href="index.html">Go back to the site.</a></p>
 
-        <hr class="hf-divider">
-
-        <div id="hf-pro" class="hf-price-block" style="background:linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
-          <span style="font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;">For A&amp;R professionals</span>
-          <span class="hf-price">$49.99</span>
-          <span class="hf-price-sub">per month</span>
-          <p style="font-size:13px;opacity:0.7;margin-bottom:20px;line-height:1.6;">Real-time scouting database access. Every artist we're watching, with live Spotify streams, TikTok UGC, momentum scores, and song-level breakdowns.</p>
-          <a href="/api/create-checkout?plan=pro" class="hf-checkout-btn" style="text-decoration:none;display:inline-block;" onclick="startProCheckout(event)">Upgrade to Pro &rarr;</a>
+        <!-- Panel: Heard First Pro -->
+        <div class="hf-panel" id="panel-pro">
+          <p class="hf-desc">For A&amp;R professionals and serious music fans who want to be ahead of the curve. Get real-time access to our full scouting database the moment an artist is approved. A full week before anyone else hears about them.</p>
+          <ul class="hf-benefits">
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">7-day exclusive access</span>
+                <span class="hf-benefit-desc">Every artist we approve goes into your dashboard immediately. A full week before Heard First subscribers are notified.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Live scouting dashboard</span>
+                <span class="hf-benefit-desc">Every artist in our pipeline. Spotify streams, TikTok UGC, Instagram followers, updated in real time.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Social score</span>
+                <span class="hf-benefit-desc">A single score combining stream growth, UGC velocity, follower momentum, and posting consistency. Know who is worth watching before the numbers blow up.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Social consistency tracking</span>
+                <span class="hf-benefit-desc">We track TikTok and Instagram posting consistency daily and monthly. See who is building, who is stalling, and who is about to pop.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Song-level breakdowns</span>
+                <span class="hf-benefit-desc">Individual stream counts, TikTok sound pages, and Instagram audio links for every track.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Full A&amp;R data</span>
+                <span class="hf-benefit-desc">The same data Chad uses to make decisions. Spotify monthly listeners, total streams, TikTok followers, UGC count.</span>
+              </div>
+            </li>
+            <li>
+              <span class="hf-arrow">&#x2192;</span>
+              <div>
+                <span class="hf-benefit-title">Email alerts on every new find</span>
+                <span class="hf-benefit-desc">When Chad approves a new artist, you get an email immediately. Full write-up, live data, and a link to your dashboard.</span>
+              </div>
+            </li>
+          </ul>
+          <div class="hf-price-block" style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);">
+            <span style="font-size:11px;letter-spacing:3px;text-transform:uppercase;opacity:0.5;display:block;margin-bottom:12px;">For A&amp;R professionals</span>
+            <span class="hf-price">$49.99</span>
+            <span class="hf-price-sub">per month</span>
+            <a href="/api/create-checkout?plan=pro" class="hf-checkout-btn" style="text-decoration:none;display:inline-block;" onclick="startProCheckout(event)">Upgrade to Pro &#x2192;</a>
+          </div>
+          <p class="hf-fine">Secure payment via Stripe. Access your dashboard immediately after subscribing.</p>
+          <p class="hf-already">Already a Pro member? <a href="/pro">Access your dashboard &#x2192;</a></p>
         </div>
       </div>
 
@@ -377,6 +434,15 @@
         btn.disabled = false;
         alert('Something went wrong. Please try again.');
       }
+    }
+  </script>
+
+  <script>
+    function switchTab(tab) {
+      document.getElementById('tab-hf').classList.toggle('hf-tier-tab--selected', tab === 'hf');
+      document.getElementById('tab-pro').classList.toggle('hf-tier-tab--selected', tab === 'pro');
+      document.getElementById('panel-hf').classList.toggle('hf-panel--active', tab === 'hf');
+      document.getElementById('panel-pro').classList.toggle('hf-panel--active', tab === 'pro');
     }
   </script>
 </body>
