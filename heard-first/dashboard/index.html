@@ -116,6 +116,7 @@ table.stbl{width:100%;border-collapse:collapse;}
     <a class="bb-btn" href="https://beforethedata.com">Back to site</a>
     <a class="bb-upgrade" href="/heard-first#tab-pro" onclick="event.stopPropagation()">Upgrade to Pro</a>
     <button class="bb-btn" onclick="openMng()">Manage Account</button>
+    <button class="bb-btn" onclick="doLogout()">Log out</button>
   </div>
 </div>
 
@@ -383,6 +384,13 @@ window.addEventListener('popstate', function(e) {
 });
 
 // ── Manage ──
+function doLogout() {
+  localStorage.removeItem('btd_hf_token');
+  localStorage.removeItem('btd_hf_email');
+  localStorage.removeItem('btd_hf_tier');
+  window.location.href = '/heard-first';
+}
+
 function openMng() {
   document.getElementById('mngo').classList.add('on');
   document.getElementById('mnge').focus();

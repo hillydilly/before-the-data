@@ -181,6 +181,7 @@ table.stbl{width:100%;border-collapse:collapse;}
   <div class="bb-right">
     <a class="bb-btn" href="https://beforethedata.com">Back to site</a>
     <button class="bb-btn" onclick="openMng()">Manage</button>
+    <button class="bb-btn" onclick="doLogout()">Log out</button>
   </div>
 </div>
 
@@ -750,6 +751,12 @@ function openModal(key) {
 function closeMo() { document.getElementById('mov').classList.remove('open'); }
 
 // ── Manage ──
+function doLogout() {
+  localStorage.removeItem('btd_pro_token');
+  localStorage.removeItem('btd_pro_email');
+  window.location.href = '/heard-first';
+}
+
 function openMng() {
   document.getElementById('mngo').classList.add('on');
   document.getElementById('mnge').focus();
