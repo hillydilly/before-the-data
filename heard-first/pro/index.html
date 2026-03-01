@@ -119,6 +119,12 @@ table.stbl{width:100%;border-collapse:collapse;}
 .mng-c{padding:11px 18px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#333;font-size:13px;cursor:pointer;}
 .mng-e{font-size:13px;color:#c00;margin-bottom:8px;display:none;}
 #load{text-align:center;padding:40px;font-size:14px;color:var(--tx3);}
+
+/* Onboarding tip */
+.tip-banner{display:flex;align-items:center;gap:12px;padding:14px 18px;background:#f0f7ff;border:1px solid #bfdbfe;border-radius:10px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.5;}
+.tip-banner-icon{font-size:18px;flex-shrink:0;}
+.tip-banner-dismiss{margin-left:auto;background:none;border:none;color:#93c5fd;cursor:pointer;font-size:18px;flex-shrink:0;padding:0 4px;}
+.tip-banner-dismiss:hover{color:#1e40af;}
 </style>
 </head>
 <body>
@@ -480,6 +486,12 @@ function openDetail(id) {
       '</div>' +
     '</div>' +
     '<div class="sg">' + cards + '</div>' +
+    (localStorage.getItem('btd_pro_tip_seen') ? '' :
+      '<div class="tip-banner" id="pro-tip">' +
+        '<span class="tip-banner-icon">💡</span>' +
+        '<span>Click on any stat card above to see detailed breakdowns, platform splits, and history charts.</span>' +
+        '<button class="tip-banner-dismiss" onclick="document.getElementById(\'pro-tip\').remove();localStorage.setItem(\'btd_pro_tip_seen\',\'1\');">&times;</button>' +
+      '</div>') +
     '<div class="ssb" onclick="openModal(\'social\')">' +
       '<span class="ssb-l">Social Score</span>' +
       '<div class="ssb-t"><div class="ssb-f" style="width:' + (ss * 10) + '%;background:' + ssColor + ';"></div></div>' +
