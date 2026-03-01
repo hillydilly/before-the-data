@@ -133,7 +133,13 @@ var K='AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec',FC={apiKey:K,authDomain:'ar-scou
 if(!firebase.apps.length)firebase.initializeApp(FC);
 var db=firebase.firestore(),AA=[],CA=null;
 var tok=localStorage.getItem('btd_pro_token');
-if(tok){sd();ld();}
+var tokEmail=localStorage.getItem('btd_pro_email');
+if(tok&&tokEmail){sd();ld();}
+else if(tok&&!tokEmail){
+  // old token format without email stored - clear and show gate
+  localStorage.removeItem('btd_pro_token');
+  tok=null;
+}
 window.verify=function(){
 var e=document.getElementById('ge').value.trim(),m=document.getElementById('gm');
 if(!e){m.textContent='Enter your email.';return;}
@@ -142,7 +148,7 @@ var k='btd_sub_'+e.replace(/[^a-z0-9]/gi,'_').toLowerCase();
 fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/'+k+'?key='+K)
 .then(function(r){return r.json();}).then(function(d){
 var t=(d.fields&&d.fields.tier)?d.fields.tier.stringValue:'';
-if(t==='pro'){localStorage.setItem('btd_pro_token','v_'+btoa(e));m.textContent='Verified.';setTimeout(function(){sd();ld();},300);}
+if(t==='pro'){localStorage.setItem('btd_pro_token','v_'+btoa(e));localStorage.setItem('btd_pro_email',e);m.textContent='Verified.';setTimeout(function(){sd();ld();},300);}
 else if(t==='heard-first'){m.textContent='Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';}
 else{m.textContent='No Pro subscription found.';}
 }).catch(function(){m.textContent='Error. Try again.';});
