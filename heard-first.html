@@ -1634,7 +1634,7 @@
     }
 
     // ── Data helpers ───────────────────────────────
-    function fmt(n) {
+    window.fmt = function fmt(n) {
       if (!n || n === 0) return '0';
       if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
       if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
@@ -1650,7 +1650,7 @@
       return p + a.toLocaleString();
     }
 
-    function vel(h, days) {
+    window.vel = function vel(h, days) {
       if (!h || h.length < 2) return null;
       var sorted = h.slice().sort(function(a, b) { return a.d.localeCompare(b.d); });
       var latest = sorted[sorted.length - 1];
@@ -1724,7 +1724,7 @@
       return latest;
     }
 
-    function buildSparkline(data, w, h) {
+    window.buildSparkline = function buildSparkline(data, w, h) {
       if (!data || data.length < 2) return '';
       var vs = data.map(function(d) { return d.v || 0; });
       var mn = Math.min.apply(null, vs);
@@ -1741,7 +1741,7 @@
         '</svg>';
     }
 
-    function buildStreamSparkData(sm) {
+    window.buildStreamSparkData = function buildStreamSparkData(sm) {
       if (!sm) return [];
       var map = {};
       Object.values(sm).forEach(function(s) {
@@ -1840,7 +1840,7 @@
       return html;
     }
 
-    var _currentDetailArtist = null;
+    window._currentDetailArtist = null;
 
     function buildStatCard(label, value, color, delta, spark, metricKey) {
       var key = metricKey || '';
@@ -1853,7 +1853,7 @@
     }
 
     function renderDetailView(a) {
-      _currentDetailArtist = a;
+      window._currentDetailArtist = a;
       var ts = getSpotifyStreams(a);
       var daily = dayStr(a);
       var tk = (a.m && a.m.tk) || 0;
@@ -2244,7 +2244,7 @@
   }
 
   function openMetricModal(metricKey) {
-    var a = _currentDetailArtist;
+    var a = window._currentDetailArtist;
     if (!a) return;
 
     var body = document.getElementById('metric-modal-body');
