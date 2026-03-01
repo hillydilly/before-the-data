@@ -1454,7 +1454,7 @@
         if (tier === 'pro') {
           localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
           msg.textContent = 'Verified. Loading your dashboard...';
-          setTimeout(() => { window.location.href = '/heard-first/pro'; }, 300);
+          setTimeout(() => { window.location.href = '/heard-first/pro?e=' + encodeURIComponent(email); }, 300);
         } else if (tier === 'heard-first') {
           msg.textContent = 'Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';
         } else {

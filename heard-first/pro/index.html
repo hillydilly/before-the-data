@@ -134,9 +134,26 @@ if(!firebase.apps.length)firebase.initializeApp(FC);
 var db=firebase.firestore(),AA=[],CA=null;
 var tok=localStorage.getItem('btd_pro_token');
 var tokEmail=localStorage.getItem('btd_pro_email');
-if(tok&&tokEmail){sd();ld();}
+// Check for email passed via URL param (coming from /heard-first login)
+var urlE=new URLSearchParams(window.location.search).get('e');
+if(urlE){
+  // Auto-verify using passed email — skip gate entirely
+  document.getElementById('gm').textContent='Verifying...';
+  var k='btd_sub_'+urlE.replace(/[^a-z0-9]/gi,'_').toLowerCase();
+  fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/'+k+'?key='+K)
+    .then(function(r){return r.json();}).then(function(d){
+      var t=(d.fields&&d.fields.tier)?d.fields.tier.stringValue:'';
+      if(t==='pro'){
+        localStorage.setItem('btd_pro_token','v_'+btoa(urlE));
+        localStorage.setItem('btd_pro_email',urlE);
+        history.replaceState({},'','/heard-first/pro');
+        sd();ld();
+      } else {
+        document.getElementById('gm').textContent='No Pro subscription found for that email.';
+      }
+    }).catch(function(){document.getElementById('gm').textContent='Error verifying. Please enter your email below.';});
+} else if(tok&&tokEmail){sd();ld();}
 else if(tok&&!tokEmail){
-  // old token format without email stored - clear and show gate
   localStorage.removeItem('btd_pro_token');
   tok=null;
 }
