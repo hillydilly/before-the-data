@@ -125,6 +125,18 @@ table.stbl{width:100%;border-collapse:collapse;}
 .tip-banner-icon{font-size:18px;flex-shrink:0;}
 .tip-banner-dismiss{margin-left:auto;background:none;border:none;color:#93c5fd;cursor:pointer;font-size:18px;flex-shrink:0;padding:0 4px;}
 .tip-banner-dismiss:hover{color:#1e40af;}
+
+/* Writeup block */
+.wu-block{margin-bottom:24px;border:1px solid var(--bd);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.15s;}
+.wu-block:hover{border-color:#ccc;}
+.wu-header{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--bg2);}
+.wu-header-icon{font-size:16px;}
+.wu-header-title{font-size:13px;font-weight:700;}
+.wu-header-arrow{margin-left:auto;font-size:14px;color:var(--tx3);transition:transform 0.2s;}
+.wu-block.open .wu-header-arrow{transform:rotate(180deg);}
+.wu-preview{padding:0 18px;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
+.wu-block.open .wu-preview{max-height:600px;padding:0 18px 18px;}
+.wu-text{font-size:14px;line-height:1.8;color:var(--tx);white-space:pre-wrap;}
 </style>
 </head>
 <body>
@@ -418,6 +430,7 @@ function openDetail(id) {
   var a = AA.find(function(x) { return x._id === id; });
   if (!a) return;
   CA = a;
+  history.pushState({view:'detail',id:id}, '', '/heard-first/pro?artist=' + encodeURIComponent(a.n || a._id));
   document.getElementById('dash').classList.remove('on');
   var det = document.getElementById('det');
   det.classList.add('on');
@@ -495,6 +508,15 @@ function openDetail(id) {
         '<div class="dal">' + links + '</div>' +
       '</div>' +
     '</div>' +
+    (a.heardFirstDraft ?
+      '<div class="wu-block" id="wu-block" onclick="var b=document.getElementById(\'wu-block\');b.classList.toggle(\'open\');">' +
+        '<div class="wu-header">' +
+          '<span class="wu-header-icon">📝</span>' +
+          '<span class="wu-header-title">Scouting Report</span>' +
+          '<span class="wu-header-arrow">&#9662;</span>' +
+        '</div>' +
+        '<div class="wu-preview"><div class="wu-text">' + a.heardFirstDraft + '</div></div>' +
+      '</div>' : '') +
     '<div class="sg">' + cards + '</div>' +
     '<div class="ssb" onclick="openModal(\'social\')">' +
       '<span class="ssb-l">Social Score</span>' +
@@ -514,10 +536,21 @@ function openDetail(id) {
 
 function closeDetail() {
   CA = null;
+  history.pushState({view:'list'}, '', '/heard-first/pro');
   document.getElementById('det').classList.remove('on');
   document.getElementById('det').innerHTML = '';
   document.getElementById('dash').classList.add('on');
 }
+
+// Handle browser back button
+window.addEventListener('popstate', function(e) {
+  if (document.getElementById('det').classList.contains('on')) {
+    CA = null;
+    document.getElementById('det').classList.remove('on');
+    document.getElementById('det').innerHTML = '';
+    document.getElementById('dash').classList.add('on');
+  }
+});
 
 // ── Metric modal ──
 function openModal(key) {

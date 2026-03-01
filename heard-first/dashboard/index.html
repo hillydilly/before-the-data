@@ -300,6 +300,7 @@ function openArtist(id) {
   var a = AA.find(function(x) { return x._id === id; });
   if (!a) return;
 
+  history.pushState({view:'detail',id:id}, '', '/heard-first/dashboard?artist=' + encodeURIComponent(a.n || a._id));
   document.getElementById('dash').classList.remove('on');
   var det = document.getElementById('det');
   det.classList.add('on');
@@ -363,10 +364,19 @@ function openArtist(id) {
 }
 
 function closeArtist() {
+  history.pushState({view:'list'}, '', '/heard-first/dashboard');
   document.getElementById('det').classList.remove('on');
   document.getElementById('det').innerHTML = '';
   document.getElementById('dash').classList.add('on');
 }
+
+window.addEventListener('popstate', function(e) {
+  if (document.getElementById('det').classList.contains('on')) {
+    document.getElementById('det').classList.remove('on');
+    document.getElementById('det').innerHTML = '';
+    document.getElementById('dash').classList.add('on');
+  }
+});
 
 // ── Manage ──
 function openMng() {
