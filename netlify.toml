@@ -36,3 +36,13 @@
 [[edge_functions]]
   path = "/post/*"
   function = "og"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/pro"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
