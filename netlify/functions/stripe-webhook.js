@@ -28,6 +28,7 @@ function proWelcomeEmail(email) {
       <p style="margin:0 0 12px;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#999999;font-weight:600;">HEARD FIRST PRO</p>
       <h2 style="margin:0 0 20px;font-size:36px;font-weight:700;color:#000000;text-transform:uppercase;letter-spacing:-0.5px;line-height:1.1;">YOU ARE IN.</h2>
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Welcome to Heard First Pro. You now have real-time access to our scouting database. Every artist Chad approves goes into your dashboard the moment it happens. A full week before anyone else hears about them.</p>
+      <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">We run a 24/7 autonomous AI agent trained to scroll TikTok and surface artists before they break. Every pick is then curated by Chad. As a Pro member, you get access the moment Chad approves a find. Not 48 hours later. Not a week later. Right now.</p>
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">This is the same data we use internally. Spotify streams, TikTok UGC, Instagram followers, social score, song-level breakdowns. Updated daily by our automated pipeline.</p>
     </td>
   </tr>
