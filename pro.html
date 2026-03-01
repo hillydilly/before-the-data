@@ -675,6 +675,95 @@
       cursor: pointer;
       text-decoration: none;
     }
+
+    /* Clickable stat cards */
+    .pro-dv-stat {
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.1s;
+      position: relative;
+    }
+    .pro-dv-stat:hover { border-color: var(--tx-3); transform: translateY(-1px); }
+    .pro-dv-stat-expand-hint {
+      font-size: 9px;
+      color: var(--tx-3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+    .pro-dv-stat:hover .pro-dv-stat-expand-hint { opacity: 1; }
+
+    /* Metric drill-down panel */
+    .pro-metric-panel {
+      display: none;
+      margin: -10px 0 20px;
+      padding: 20px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 0 0 12px 12px;
+      border-top: none;
+      animation: fadeSlideIn 0.15s ease;
+    }
+    .pro-metric-panel.open { display: block; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .pro-metric-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .pro-metric-panel-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--tx-1);
+    }
+    .pro-metric-panel-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: var(--tx-3);
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+    .pro-metric-panel-value {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .pro-metric-panel-sub {
+      font-size: 12px;
+      color: var(--tx-3);
+      margin-bottom: 16px;
+    }
+    .pro-metric-panel-chart {
+      width: 100%;
+      overflow: hidden;
+    }
+    .pro-metric-panel-history {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 16px;
+    }
+    .pro-metric-history-item {
+      text-align: center;
+    }
+    .pro-metric-history-date {
+      font-size: 9px;
+      color: var(--tx-3);
+      margin-bottom: 2px;
+    }
+    .pro-metric-history-val {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--tx-1);
+    }
   </style>
 </head>
 <body data-page="pro">
@@ -1082,8 +1171,12 @@
       return html;
     }
 
-    function buildStatCard(label, value, color, delta, spark) {
-      return '<div class="pro-dv-stat">' +
+    function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
+      var key = metricKey || '';
+      var hist = histData ? JSON.stringify(histData) : '[]';
+      var clickAttr = key ? ' onclick="toggleMetricPanel(this, '' + key + '', ' + hist.replace(/"/g,"'") + ')"' : '';
+      return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
+        '<span class="pro-dv-stat-expand-hint">Details</span>' +
         '<div class="pro-dv-stat-label">' + label + '</div>' +
         '<div class="pro-dv-stat-value" style="color:' + color + ';">' + value + '</div>' +
         '<div class="pro-dv-stat-foot">' + (delta || '<span></span>') + (spark || '') + '</div>' +
@@ -1115,11 +1208,11 @@
       var sfSparkData = (a.h && a.h.sf) ? a.h.sf.slice(-14) : [];
 
       var stats = '';
-      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20));
-      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20));
-      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20));
-      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20));
-      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '');
+      stats += buildStatCard('Total Streams', fmt(ts), '#10b981', renderDelta(daily), buildSparkline(streamSparkData, 70, 20), 'streams', streamSparkData);
+      stats += buildStatCard('Monthly Listeners', fmt(ml), '#1DB954', '', buildSparkline(sfSparkData, 70, 20), 'listeners', sfSparkData);
+      stats += buildStatCard('TikTok Followers', fmt(tk), 'var(--tx-1)', '', buildSparkline(tkSparkData, 70, 20), 'tiktok', tkSparkData);
+      stats += buildStatCard('IG Followers', fmt(ig), '#E1306C', '', buildSparkline(igSparkData, 70, 20), 'instagram', igSparkData);
+      stats += buildStatCard('Total UGC', fmt(ugc), '#8b5cf6', '', '', 'ugc', []);
 
       var momColor = mom.score >= 70 ? '#ef4444' : mom.score >= 35 ? '#f59e0b' : 'var(--tx-3)';
       var rawSS = (a.m && a.m.ss) ? a.m.ss : 0;
@@ -1387,6 +1480,87 @@
       if (data.url) { window.location.href = data.url; }
       else { errEl.textContent = data.error || 'Could not find a subscription for that email.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
     } catch { errEl.textContent = 'Something went wrong. Try again.'; errEl.style.display = 'block'; btn.textContent = 'Go to Portal →'; btn.disabled = false; }
+  }
+  
+  function toggleMetricPanel(cardEl, metricKey, histData) {
+    // Close any open panel
+    var existing = document.querySelector('.pro-metric-panel.open');
+    var isSameCard = existing && existing.previousSibling === cardEl;
+    if (existing) {
+      existing.classList.remove('open');
+      existing.remove();
+      cardEl.style.borderRadius = '12px';
+      if (isSameCard) return; // toggle off
+    }
+
+    var labels = {
+      streams: { title: 'Total Streams', color: '#10b981', unit: 'streams' },
+      listeners: { title: 'Monthly Listeners', color: '#1DB954', unit: 'listeners' },
+      tiktok: { title: 'TikTok Followers', color: '#000000', unit: 'followers' },
+      instagram: { title: 'Instagram Followers', color: '#E1306C', unit: 'followers' },
+      ugc: { title: 'Total UGC Videos', color: '#8b5cf6', unit: 'videos' }
+    };
+    var meta = labels[metricKey] || { title: metricKey, color: 'var(--tx-1)', unit: '' };
+
+    // Build full-width sparkline
+    var chartHtml = '';
+    if (histData && histData.length >= 2) {
+      chartHtml = buildSparkline(histData, 500, 60).replace('width="', 'style="width:100%;height:60px;" width="');
+    } else {
+      chartHtml = '<p style="font-size:12px;color:var(--tx-3);text-align:center;padding:16px 0;">Not enough history to show a chart yet.</p>';
+    }
+
+    // Build last 7 data points table
+    var histHtml = '';
+    if (histData && histData.length > 0) {
+      var slice = histData.slice(-7);
+      var today = new Date();
+      histHtml = '<div class="pro-metric-panel-history">';
+      slice.forEach(function(val, i) {
+        var d = new Date(today);
+        d.setDate(d.getDate() - (slice.length - 1 - i));
+        var label = (d.getMonth()+1) + '/' + d.getDate();
+        histHtml += '<div class="pro-metric-history-item">' +
+          '<div class="pro-metric-history-date">' + label + '</div>' +
+          '<div class="pro-metric-history-val">' + fmtShort(val) + '</div>' +
+          '</div>';
+      });
+      histHtml += '</div>';
+    }
+
+    // Delta from first to last
+    var deltaHtml = '';
+    if (histData && histData.length >= 2) {
+      var first = histData[0], last = histData[histData.length-1];
+      var diff = last - first;
+      var pct = first > 0 ? ((diff / first) * 100).toFixed(1) : 0;
+      var sign = diff >= 0 ? '+' : '';
+      var color = diff >= 0 ? '#10b981' : '#ef4444';
+      deltaHtml = '<span style="font-size:13px;font-weight:600;color:' + color + ';">' + sign + fmtShort(diff) + ' (' + sign + pct + '%) over ' + histData.length + ' days</span>';
+    }
+
+    var panel = document.createElement('div');
+    panel.className = 'pro-metric-panel';
+    panel.innerHTML =
+      '<div class="pro-metric-panel-header">' +
+        '<span class="pro-metric-panel-title">' + meta.title + '</span>' +
+        '<button class="pro-metric-panel-close" onclick="this.closest('.pro-metric-panel').remove();document.querySelector('[data-metric='+metricKey+']').style.borderRadius='12px';">&times;</button>' +
+      '</div>' +
+      '<div class="pro-metric-panel-sub">' + deltaHtml + '</div>' +
+      '<div class="pro-metric-panel-chart">' + chartHtml + '</div>' +
+      histHtml;
+
+    // Style the card to connect visually
+    cardEl.style.borderRadius = '12px 12px 0 0';
+    cardEl.insertAdjacentElement('afterend', panel);
+    requestAnimationFrame(function() { panel.classList.add('open'); });
+  }
+
+  function fmtShort(n) {
+    if (!n && n !== 0) return '-';
+    if (Math.abs(n) >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1000) return (n/1000).toFixed(1) + 'K';
+    return n.toString();
   }
   </script>
 
