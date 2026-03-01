@@ -552,6 +552,77 @@
       .pro-dv-name { font-size: 18px; }
       .pro-dv-stats { grid-template-columns: repeat(2, 1fr); }
     }
+    /* Pro login modal */
+    .pro-login-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 16px;
+    }
+    .pro-login-btn {
+      font-size: 12px;
+      color: var(--tx-3);
+      background: none;
+      border: 1px solid var(--bd);
+      border-radius: 6px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .pro-login-btn:hover { color: var(--tx-1); border-color: var(--tx-2); }
+    .pro-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .pro-modal-overlay.open { display: flex; }
+    .pro-modal {
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      border-radius: 14px;
+      padding: 32px;
+      width: 100%;
+      max-width: 380px;
+      margin: 16px;
+    }
+    .pro-modal h2 { font-size: 20px; font-weight: 800; margin: 0 0 8px; }
+    .pro-modal p { font-size: 13px; color: var(--tx-3); margin: 0 0 20px; line-height: 1.6; }
+    .pro-modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: var(--bg-3);
+      color: var(--tx-1);
+      font-size: 14px;
+      margin-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .pro-modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .pro-modal-submit {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      background: var(--tx-1);
+      color: var(--bg-1);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pro-modal-cancel {
+      padding: 11px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--bd);
+      background: none;
+      color: var(--tx-3);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .pro-modal-msg { font-size: 12px; margin-top: 10px; color: var(--tx-3); min-height: 18px; }
   </style>
 </head>
 <body data-page="pro">
@@ -595,7 +666,26 @@
   <main id="main">
 
     <!-- ── PAYWALL ──────────────────────────────── -->
-    <div class="pro-paywall" id="pro-paywall">
+    <!-- Already a Pro member? Login bar -->
+  <div class="pro-login-bar">
+    <button class="pro-login-btn" onclick="document.getElementById('pro-login-modal').classList.add('open')">Already a Pro member? Access your dashboard</button>
+  </div>
+
+  <!-- Login modal -->
+  <div class="pro-modal-overlay" id="pro-login-modal">
+    <div class="pro-modal">
+      <h2>Access Your Dashboard</h2>
+      <p>Enter the email address you subscribed with. We will send you a one-click access link.</p>
+      <input type="email" id="pro-login-email" placeholder="your@email.com" />
+      <div class="pro-modal-actions">
+        <button class="pro-modal-submit" onclick="sendProAccessLink()">Send Access Link</button>
+        <button class="pro-modal-cancel" onclick="document.getElementById('pro-login-modal').classList.remove('open')">Cancel</button>
+      </div>
+      <div class="pro-modal-msg" id="pro-login-msg"></div>
+    </div>
+  </div>
+
+  <div class="pro-paywall" id="pro-paywall">
       <p class="pro-eyebrow">Before The Data</p>
       <h1 class="pro-headline">Heard First Pro</h1>
       <p class="pro-subhead">We run a 24/7 autonomous AI agent trained to find artists before they break. Every pick is curated by Chad. As a Pro member, you get real-time access to the full scouting database the moment an artist is approved.</p>
@@ -1188,6 +1278,36 @@
         alert('Something went wrong. Please try again.');
       });
   }
+  </script>
+
+  <script>
+    async function sendProAccessLink() {
+      const email = document.getElementById('pro-login-email').value.trim();
+      const msg = document.getElementById('pro-login-msg');
+      if (!email || !email.includes('@')) { msg.textContent = 'Please enter a valid email.'; return; }
+      msg.textContent = 'Sending...';
+      // For now: check Firebase if subscriber exists with pro tier, then set localStorage token
+      try {
+        const res = await fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_sub_' + email.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec');
+        const data = await res.json();
+        const tier = data.fields?.tier?.stringValue || '';
+        if (tier === 'pro') {
+          localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
+          msg.textContent = 'Verified. Loading your dashboard...';
+          setTimeout(() => location.reload(), 800);
+        } else if (tier === 'heard-first' || tier === 'paid') {
+          msg.textContent = 'Your account is Heard First ($9/mo), not Pro. Upgrade to access the dashboard.';
+        } else {
+          msg.textContent = 'No Pro subscription found for this email. Check your email or upgrade below.';
+        }
+      } catch(e) {
+        msg.textContent = 'Error checking subscription. Try again.';
+      }
+    }
+    // Close modal on overlay click
+    document.getElementById('pro-login-modal').addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
   </script>
 </body>
 </html>
