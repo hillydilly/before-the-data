@@ -1551,12 +1551,21 @@
 
     window.showDashboard();
 
-    // ── Firebase — reuse existing app from firebase.js ──
+    // ── Firebase — init if needed, then get firestore ──
     let proDb = null;
     try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp({
+          apiKey: "AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec",
+          authDomain: "ar-scouting-dashboard.firebaseapp.com",
+          projectId: "ar-scouting-dashboard",
+          storageBucket: "ar-scouting-dashboard.firebasestorage.app",
+          messagingSenderId: "290834477922"
+        });
+      }
       proDb = firebase.firestore();
     } catch(e) {
-      console.error('[Pro] Firebase firestore access failed:', e);
+      console.error('[Pro] Firebase init failed:', e);
       document.getElementById('pro-loading').textContent = 'Failed to connect to database.';
       return;
     }
