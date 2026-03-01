@@ -43,50 +43,88 @@
     }
     .hf-tier-tabs {
       display: flex;
-      gap: 12px;
-      margin: 24px 0 32px;
+      align-items: stretch;
+      gap: 0;
+      margin: 28px 0 36px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--bd);
+      position: relative;
     }
     .hf-tier-tab {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      padding: 16px;
-      border-radius: 10px;
-      border: 1px solid var(--bd);
+      gap: 4px;
+      padding: 20px 22px;
       background: var(--bg-2);
       cursor: pointer;
       text-align: left;
-      transition: border-color 0.15s, background 0.15s;
-      overflow: visible;
-      word-wrap: break-word;
+      transition: background 0.15s;
+      border: none;
+      outline: none;
+      position: relative;
     }
-    .hf-tier-tab:hover { border-color: var(--tx-2); }
-    .hf-tier-tab--selected { border-color: var(--tx-1); background: var(--bg-3); }
-    .hf-tier-tab--pro { background: #111; border-color: rgba(255,255,255,0.15); }
-    .hf-tier-tab--pro.hf-tier-tab--selected { border-color: #fff; }
+    .hf-tier-tab:first-child { border-radius: 13px 0 0 13px; }
+    .hf-tier-tab:last-child { border-radius: 0 13px 13px 0; }
+    .hf-tier-tab--selected { background: #fff; box-shadow: inset 0 0 0 2px #000; }
+    .hf-tier-tab--pro { background: #111; }
+    .hf-tier-tab--pro.hf-tier-tab--selected { background: #000; box-shadow: inset 0 0 0 2px #fff; }
+    .hf-tier-tab:hover:not(.hf-tier-tab--selected) { background: #f0f0f0; }
+    .hf-tier-tab--pro:hover:not(.hf-tier-tab--selected) { background: #1a1a1a; }
     .hf-tier-tab-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--tx-1);
+      letter-spacing: 0.08em;
+      color: #666;
     }
-    .hf-tier-tab--pro .hf-tier-tab-label { color: #fff; }
+    .hf-tier-tab--pro .hf-tier-tab-label { color: rgba(255,255,255,0.45); }
+    .hf-tier-tab--selected .hf-tier-tab-label { color: #000; }
+    .hf-tier-tab--pro.hf-tier-tab--selected .hf-tier-tab-label { color: rgba(255,255,255,0.7); }
     .hf-tier-tab-price {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
-      color: var(--tx-1);
+      color: #000;
       line-height: 1.2;
     }
     .hf-tier-tab--pro .hf-tier-tab-price { color: #fff; }
     .hf-tier-tab-desc {
       font-size: 11px;
-      color: var(--tx-3);
+      color: #999;
       line-height: 1.4;
-      white-space: normal;
     }
-    .hf-tier-tab--pro .hf-tier-tab-desc { color: rgba(255,255,255,0.4); }
+    .hf-tier-tab--pro .hf-tier-tab-desc { color: rgba(255,255,255,0.35); }
+    /* Divider between tabs */
+    .hf-tier-divider {
+      width: 44px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: #f5f5f5;
+      cursor: default;
+      position: relative;
+      z-index: 1;
+    }
+    .hf-tier-divider-arrow {
+      font-size: 13px;
+      color: #bbb;
+      line-height: 1;
+      user-select: none;
+    }
+    .hf-tier-divider-text {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #ccc;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+    }
     .hf-panel { display: none; }
     .hf-panel--active {
       display: block;
@@ -1169,6 +1207,11 @@
             <span class="hf-tier-tab-price">$9/mo</span>
             <span class="hf-tier-tab-desc">48hr early access to every pick</span>
           </button>
+          <div class="hf-tier-divider">
+            <span class="hf-tier-divider-arrow">&#8593;</span>
+            <span class="hf-tier-divider-text">or</span>
+            <span class="hf-tier-divider-arrow">&#8593;</span>
+          </div>
           <button class="hf-tier-tab hf-tier-tab--pro" id="tab-pro" onclick="switchTab('pro')">
             <span class="hf-tier-tab-label">Heard First Pro ★</span>
             <span class="hf-tier-tab-price">$49.99/mo</span>
