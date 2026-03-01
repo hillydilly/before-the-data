@@ -1369,7 +1369,7 @@
         if (tier === 'pro') {
           localStorage.setItem('btd_pro_token', 'verified_' + btoa(email));
           msg.textContent = 'Verified. Loading your dashboard...';
-          setTimeout(() => { showDashboard(); document.getElementById('hf-login-modal').classList.remove('open'); }, 300);
+          setTimeout(() => { window.showDashboard(); document.getElementById('hf-login-modal').classList.remove('open'); }, 300);
         } else if (tier === 'heard-first') {
           msg.textContent = 'Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';
         } else {
@@ -1528,18 +1528,19 @@
     const paywallEl = document.getElementById('pro-paywall');
     const dashEl = document.getElementById('pro-dash');
 
-    window.showDashboard = function showDashboard() {
-      if (paywallEl) paywallEl.style.display = 'none';
-      if (dashEl) dashEl.classList.add('active');
-      const proSection = document.getElementById('hf-pro-dashboard');
-      if (proSection) proSection.style.display = 'block';
-      const mktSection = document.querySelector('.hf-content');
-      if (mktSection) mktSection.style.display = 'none';
-      const loginBar = document.querySelector('.pro-login-bar');
-      if (loginBar) loginBar.style.display = 'none';
-      const brandingBar = document.getElementById('pro-branding-bar');
-      if (brandingBar) brandingBar.classList.add('active');
-      // Clean URL
+    window.showDashboard = function() {
+      const _paywall = document.getElementById('pro-paywall');
+      const _dash = document.getElementById('pro-dash');
+      const _proSection = document.getElementById('hf-pro-dashboard');
+      const _mkt = document.querySelector('.hf-content');
+      const _loginBar = document.querySelector('.pro-login-bar');
+      const _brandingBar = document.getElementById('pro-branding-bar');
+      if (_paywall) _paywall.style.display = 'none';
+      if (_dash) _dash.classList.add('active');
+      if (_proSection) _proSection.style.display = 'block';
+      if (_mkt) _mkt.style.display = 'none';
+      if (_loginBar) _loginBar.style.display = 'none';
+      if (_brandingBar) _brandingBar.classList.add('active');
       window.history.replaceState({}, '', '/heard-first');
     }
 
@@ -1549,7 +1550,7 @@
       return;
     }
 
-    showDashboard();
+    window.showDashboard();
 
     // ── Firebase init (separate from BTD's firebase.js) ──
     const PRO_FB_CONFIG = {
@@ -1779,7 +1780,7 @@
     function buildStatCard(label, value, color, delta, spark, metricKey, histData) {
       var key = metricKey || '';
       var hist = histData ? JSON.stringify(histData) : '[]';
-      var clickAttr = key ? ' onclick="toggleMetricPanel(this, '' + key + '', ' + hist.replace(/"/g,"'") + ')"' : '';
+      var clickAttr = key ? ' onclick="toggleMetricPanel(this, \'' + key + '\', ' + hist.replace(/"/g,"'") + ')"' : '';
       return '<div class="pro-dv-stat"' + clickAttr + ' data-metric="' + key + '">' +
         '<span class="pro-dv-stat-expand-hint">Details</span>' +
         '<div class="pro-dv-stat-label">' + label + '</div>' +
