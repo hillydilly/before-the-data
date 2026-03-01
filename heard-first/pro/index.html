@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heard First Pro</title>
+<link rel="icon" href="/assets/brand/favicon.png">
+<style>
+:root { --bg:#fff;--bg2:#f8f8f8;--tx:#000;--tx2:#666;--tx3:#999;--bd:#eee;--grn:#10b981;--red:#ef4444;--spot:#1DB954;--ig:#E1306C;--purp:#8b5cf6; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5;}
+.bb{display:none;align-items:center;justify-content:space-between;padding:16px 28px;background:#000;border-radius:14px;margin:20px 28px 0;}
+.bb.on{display:flex;}
+.bb-t{font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;}
+.bb-s{font-size:10px;font-weight:500;letter-spacing:1px;color:rgba(255,255,255,0.4);display:block;margin-top:2px;text-transform:uppercase;}
+.bb-btn{font-size:12px;color:rgba(255,255,255,0.5);background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 14px;cursor:pointer;}
+.gate{max-width:420px;margin:80px auto;padding:32px;text-align:center;}
+.gate h2{font-size:24px;font-weight:800;margin-bottom:8px;}
+.gate p{font-size:14px;color:var(--tx2);margin-bottom:20px;line-height:1.6;}
+.gate input{width:100%;padding:12px 14px;border:1px solid var(--bd);border-radius:8px;font-size:14px;margin-bottom:12px;}
+.gate button{width:100%;padding:12px;background:#000;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+.gate-msg{font-size:13px;color:var(--tx3);margin-top:10px;min-height:20px;}
+.dash{display:none;padding:28px;}
+.dash.on{display:block;}
+.dh{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;}
+.dt{font-size:20px;font-weight:800;}
+.dc{font-size:14px;color:var(--tx3);}
+.du{font-size:12px;color:var(--tx3);margin-bottom:20px;}
+.sr{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.si{flex:1;padding:8px 14px;border:1px solid var(--bd);border-radius:8px;font-size:13px;max-width:260px;}
+.sl{font-size:13px;color:var(--tx3);}
+.ss{padding:6px 12px;border:1px solid var(--bd);border-radius:6px;font-size:13px;background:var(--bg);cursor:pointer;}
+table.tbl{width:100%;border-collapse:collapse;}
+.tbl th{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);text-align:left;padding:10px 12px;border-bottom:1px solid var(--bd);}
+.tbl th:not(:first-child){text-align:right;}
+.tbl td{padding:14px 12px;border-bottom:1px solid #f5f5f5;font-size:14px;}
+.tbl td:not(:first-child){text-align:right;}
+.tbl tbody tr{cursor:pointer;transition:background 0.1s;}
+.tbl tbody tr:hover{background:var(--bg2);}
+.ac{display:flex;align-items:center;gap:14px;}
+.ar{width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--tx2);flex-shrink:0;}
+.an{font-weight:700;font-size:14px;}
+.as{font-size:11px;color:var(--tx3);}
+.ub{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:#f5f5f5;color:var(--tx);}
+.ub.hot{background:#fef2f2;color:var(--red);}
+.chev{color:var(--tx3);font-size:16px;}
+.det{display:none;padding:28px;}
+.det.on{display:block;}
+.db{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--tx3);cursor:pointer;border:none;background:none;margin-bottom:20px;}
+.dah{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.dav{width:48px;height:48px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--tx2);}
+.dan{font-size:22px;font-weight:800;}
+.dal{display:flex;gap:8px;margin-top:4px;}
+.dal a{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:4px 10px;border:1px solid var(--bd);border-radius:20px;text-decoration:none;color:var(--tx2);}
+.dal a img{width:14px;height:14px;border-radius:3px;}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:24px;}
+.sc{padding:16px 18px;border:1px solid var(--bd);border-radius:12px;cursor:pointer;transition:border-color 0.15s;}
+.sc:hover{border-color:var(--tx3);}
+.sc-l{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:4px;}
+.sc-v{font-size:26px;font-weight:800;}
+.sc-f{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.sc-d{font-size:12px;font-weight:600;}
+.sc-d.up{color:var(--grn);}
+.sc-d.down{color:var(--red);}
+.ssb{display:flex;align-items:center;gap:16px;padding:16px 18px;border:1px solid var(--bd);border-radius:12px;margin-bottom:24px;cursor:pointer;}
+.ssb:hover{border-color:var(--tx3);}
+.ssb-l{font-size:13px;font-weight:700;flex-shrink:0;}
+.ssb-t{flex:1;height:8px;background:var(--bg2);border-radius:4px;overflow:hidden;}
+.ssb-f{height:100%;border-radius:4px;}
+.ssb-v{font-size:14px;font-weight:800;flex-shrink:0;}
+.sgh{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;}
+.sgt{font-size:16px;font-weight:800;}
+.sgc{font-size:13px;color:var(--tx3);}
+table.stbl{width:100%;border-collapse:collapse;}
+.stbl th{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);text-align:left;padding:8px 10px;border-bottom:1px solid var(--bd);}
+.stbl th:not(:first-child){text-align:right;}
+.stbl td{padding:12px 10px;border-bottom:1px solid #f5f5f5;font-size:13px;}
+.stbl td:not(:first-child){text-align:right;}
+.stc{display:flex;align-items:center;gap:8px;}
+.sd{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ul{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;}
+.ul:hover{opacity:0.7;}
+.ul.tk{background:#f0f0f0;color:#000;}
+.ul.ig{background:#fce7f3;color:var(--ig);}
+.ula{font-size:9px;}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:flex-start;justify-content:center;padding:60px 20px;overflow-y:auto;}
+.mo.open{display:flex;}
+.mb{background:#fff;border-radius:16px;width:100%;max-width:480px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.15);position:relative;animation:mIn 0.2s ease;}
+@keyframes mIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mx{position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;color:#999;cursor:pointer;}
+.mt{font-size:20px;font-weight:800;margin-bottom:4px;}
+.md{font-size:13px;color:#999;margin-bottom:20px;}
+.mgr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.mbx{padding:14px;background:#f5f5f5;border-radius:10px;text-align:center;}
+.mbx-l{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#999;margin-bottom:2px;}
+.mbx-v{font-size:22px;font-weight:800;}
+.mbx-v.up{color:var(--grn);}
+.mbx-v.down{color:var(--red);}
+.mst{font-size:13px;font-weight:700;margin-bottom:10px;}
+.mbk{margin-bottom:20px;}
+.mbr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:1px solid #eee;border-radius:8px;margin-bottom:6px;}
+.mbl{display:flex;align-items:center;gap:8px;font-size:14px;}
+.mbd{width:10px;height:10px;border-radius:3px;}
+.mbv{font-size:15px;font-weight:700;}
+.mch{padding:10px;background:#fafafa;border-radius:10px;margin-bottom:4px;}
+.mcd{display:flex;justify-content:space-between;font-size:10px;color:#999;padding:0 4px;}
+#load{text-align:center;padding:40px;font-size:14px;color:var(--tx3);}
+.mng-o{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;}
+.mng-o.on{display:flex;}
+.mng{background:#fff;border-radius:14px;padding:32px;width:90%;max-width:400px;}
+.mng h3{margin:0 0 8px;font-size:18px;font-weight:700;}
+.mng p{margin:0 0 20px;font-size:14px;color:#666;line-height:1.5;}
+.mng input{width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-bottom:12px;}
+.mng-a{display:flex;gap:10px;}
+.mng-s{flex:1;padding:11px;border-radius:8px;border:none;background:#000;color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.mng-c{padding:11px 18px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#333;font-size:13px;cursor:pointer;}
+.mng-e{font-size:13px;color:#c00;margin-bottom:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="bb" id="bb"><div><span class="bb-t">Heard First Pro</span><span class="bb-s">Active membership</span></div><button class="bb-btn" onclick="openMng()">Manage</button></div>
+<div class="gate" id="gate"><h2>Heard First Pro</h2><p>Enter the email you subscribed with to access your scouting dashboard.</p><input type="email" id="ge" placeholder="your@email.com"><button onclick="verify()">Access Dashboard</button><div class="gate-msg" id="gm"></div></div>
+<div class="dash" id="dash"><div class="dh"><span class="dt">Scouting</span><span class="dc" id="dcnt"></span></div><div class="du" id="dup"></div><div class="sr"><input class="si" id="srch" type="text" placeholder="Search artists..."><span class="sl">Sort:</span><select class="ss" id="srt" onchange="rl()"><option value="streams">Total Streams</option><option value="daily">Daily Change</option><option value="tiktok">TikTok</option><option value="social">Social Score</option></select></div><table class="tbl"><thead><tr><th>Artist</th><th>Streams</th><th>Daily</th><th>TikTok</th><th>Instagram</th><th>UGC</th><th></th></tr></thead><tbody id="tb"></tbody></table><div id="load">Loading scouting data...</div></div>
+<div class="det" id="det"></div>
+<div class="mo" id="mov" onclick="if(event.target===this)cm()"><div class="mb" id="mbo"></div></div>
+<div class="mng-o" id="mngo" onclick="if(event.target===this)this.classList.remove('on')"><div class="mng"><h3>Manage Subscription</h3><p>Enter your email to access your account portal.</p><input type="email" id="mnge" placeholder="your@email.com"><div class="mng-e" id="mngerr"></div><div class="mng-a"><button class="mng-c" onclick="document.getElementById('mngo').classList.remove('on')">Cancel</button><button class="mng-s" onclick="goP()">Go to Portal</button></div></div></div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+'use strict';
+var K='AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec',FC={apiKey:K,authDomain:'ar-scouting-dashboard.firebaseapp.com',projectId:'ar-scouting-dashboard',storageBucket:'ar-scouting-dashboard.firebasestorage.app',messagingSenderId:'290834477922'};
+if(!firebase.apps.length)firebase.initializeApp(FC);
+var db=firebase.firestore(),AA=[],CA=null;
+var tok=localStorage.getItem('btd_pro_token');
+if(tok){sd();ld();}
+window.verify=function(){
+var e=document.getElementById('ge').value.trim(),m=document.getElementById('gm');
+if(!e){m.textContent='Enter your email.';return;}
+m.textContent='Verifying...';
+var k='btd_sub_'+e.replace(/[^a-z0-9]/gi,'_').toLowerCase();
+fetch('https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/'+k+'?key='+K)
+.then(function(r){return r.json();}).then(function(d){
+var t=(d.fields&&d.fields.tier)?d.fields.tier.stringValue:'';
+if(t==='pro'){localStorage.setItem('btd_pro_token','v_'+btoa(e));m.textContent='Verified.';setTimeout(function(){sd();ld();},300);}
+else if(t==='heard-first'){m.textContent='Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.';}
+else{m.textContent='No Pro subscription found.';}
+}).catch(function(){m.textContent='Error. Try again.';});
+};
+function sd(){document.getElementById('gate').style.display='none';document.getElementById('bb').classList.add('on');document.getElementById('dash').classList.add('on');}
+function ld(){
+db.collection('artists').where('division','==','scouting').onSnapshot(function(s){
+AA=[];s.forEach(function(d){var o=d.data();o._id=d.id;AA.push(o);});
+document.getElementById('load').style.display='none';
+document.getElementById('dcnt').textContent='('+AA.length+')';
+document.getElementById('dup').textContent='Last scraped: '+new Date().toISOString().split('T')[0];
+rl();
+});
+document.getElementById('srch').addEventListener('input',rl);
+}
+function f(n){if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toLocaleString();}
+function fs(n){if(n==null)return'-';if(Math.abs(n)>=1e6)return(n/1e6).toFixed(1)+'M';if(Math.abs(n)>=1e3)return(n/1e3).toFixed(1)+'K';return n.toLocaleString();}
+function vl(h,d){if(!h||h.length<2)return 0;var s=h.slice(-(d+1));return s.length>=2?s[s.length-1]-s[0]:0;}
+function st(a){if(!a.sm)return 0;var s=0;Object.values(a.sm).forEach(function(x){s+=(x.st||0);});return s;}
+function sc(a){return a.sm?Object.keys(a.sm).length:0;}
+function ug(a){if(!a.sm)return 0;var s=0;Object.values(a.sm).forEach(function(x){s+=(x.ug||0)+(x.igu||0);});return s;}
+function dy(a){if(!a.sm)return 0;var s=0;Object.values(a.sm).forEach(function(x){s+=vl(x.h&&x.h.st,1);});return s;}
+function svg(d,w,h){if(!d||d.length<2)return'';var mn=Math.min.apply(null,d),mx=Math.max.apply(null,d);if(mn===mx)mx=mn+1;var p=d.map(function(v,i){return(i/(d.length-1)*w).toFixed(1)+','+((1-(v-mn)/(mx-mn))*h).toFixed(1);}).join(' ');return'<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><polyline fill="none" stroke="#10b981" stroke-width="1.5" points="'+p+'"/></svg>';}
+function sSp(sm){if(!sm)return[];var ml=0;Object.values(sm).forEach(function(s){if(s.h&&s.h.st&&s.h.st.length>ml)ml=s.h.st.length;});if(ml<2)return[];var o=[];for(var i=0;i<ml;i++){var s=0;Object.values(sm).forEach(function(x){if(x.h&&x.h.st&&i<x.h.st.length)s+=x.h.st[i];});o.push(s);}return o.slice(-14);}
+function dl(h){if(!h||h.length<2)return{t:0,w:0,m:0};var l=h[h.length-1];return{t:h.length>=2?l-h[h.length-2]:0,w:h.length>=7?l-h[h.length-7]:l-h[0],m:h.length>=30?l-h[h.length-30]:l-h[0]};}
+function dc(n){return n>0?'up':n<0?'down':'';}
+function df(n){if(!n)return'-';return(n>=0?'+':'')+fs(n);}
+window.rl=function(){
+var q=document.getElementById('srch').value.trim().toLowerCase();
+var s=document.getElementById('srt').value;
+var fl=AA.filter(function(a){return!q||(a.name||'').toLowerCase().includes(q);});
+fl.sort(function(a,b){
+if(s==='daily')return dy(b)-dy(a);
+if(s==='tiktok')return((b.m&&b.m.tk)||0)-((a.m&&a.m.tk)||0);
+if(s==='social')return((b.m&&b.m.ss)||0)-((a.m&&a.m.ss)||0);
+return st(b)-st(a);
+});
+var h='';fl.forEach(function(a,i){
+var t=st(a),d=dy(a),tk=(a.m&&a.m.tk)||0,ig=(a.m&&a.m.ig)||0,u=ug(a),c=sc(a);
+h+='<tr onclick="od(\''+a._id+'\')"><td><div class="ac"><span class="ar">'+(i+1)+'</span><div><div class="an">'+(a.name||'?')+'</div><div class="as">'+c+' song'+(c!==1?'s':'')+' &bull; '+f(t)+' streams</div></div></div></td><td><strong>'+f(t)+'</strong></td><td>'+(d?'<span style="color:'+(d>0?'var(--grn)':'var(--red)')+';font-weight:600;">'+df(d)+'</span>':'<span style="color:var(--tx3);">0</span>')+'</td><td>'+f(tk)+'</td><td>'+f(ig)+'</td><td>'+(u>0?'<span class="ub'+(u>1000?' hot':'')+'">'+f(u)+'</span>':'<span style="color:var(--tx3);">&mdash;</span>')+'</td><td class="chev">&rsaquo;</td></tr>';
+});
+document.getElementById('tb').innerHTML=h;
+};
+window.od=function(id){
+var a=AA.find(function(x){return x._id===id;});if(!a)return;CA=a;
+document.getElementById('dash').classList.remove('on');
+var d=document.getElementById('det');d.classList.add('on');
+var t=st(a),dy2=dy(a),tk=(a.m&&a.m.tk)||0,ig=(a.m&&a.m.ig)||0,ml=(a.m&&a.m.ml)||0,u=ug(a),ss=(a.m&&a.m.ss)||0;
+var ssC=ss>=7?'var(--grn)':ss>=4?'#f59e0b':'var(--red)';
+var ini=(a.name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+var lk='';
+if(a.sp)lk+='<a class="dal" href="https://open.spotify.com/artist/'+a.sp+'" target="_blank">Spotify</a> ';
+if(a.m&&a.m.tkUrl)lk+='<a class="dal" href="'+a.m.tkUrl+'" target="_blank">TikTok</a> ';
+var cards='';
+cards+=sCard('Total Streams',f(t),'#10b981',dy2,svg(sSp(a.sm),70,20),'streams');
+cards+=sCard('Monthly Listeners',f(ml),'#1DB954','',svg((a.h&&a.h.sf||[]).slice(-14),70,20),'listeners');
+cards+=sCard('TikTok Followers',f(tk),'#000','',svg((a.h&&a.h.tk||[]).slice(-14),70,20),'tiktok');
+cards+=sCard('IG Followers',f(ig),'#E1306C','',svg((a.h&&a.h.ig||[]).slice(-14),70,20),'instagram');
+cards+=sCard('Total UGC',f(u),'#8b5cf6','','','ugc');
+var sng='';
+if(a.sg){var sorted=a.sg.slice().sort(function(x,y){var mx=a.sm&&a.sm[x.id]?(a.sm[x.id].st||0):0;var my=a.sm&&a.sm[y.id]?(a.sm[y.id].st||0):0;return my-mx;});
+sorted.forEach(function(s){var m=a.sm&&a.sm[s.id]?a.sm[s.id]:{};var sSt=m.st||0,sD=vl(m.h&&m.h.st,1),tkU=m.ug||0,igU=m.igu||0,tkUrl=s.tkUrl||'',igUrl=s.igUrl||'';
+var sp2=m.h&&m.h.st&&m.h.st.length>=2?svg(m.h.st.slice(-14),80,20):'';
+sng+='<tr><td><div class="stc"><span class="sd" style="background:'+(sSt>0?'var(--spot)':'#ddd')+';"></span>'+(s.t||'Untitled')+'</div></td><td><strong>'+f(sSt)+'</strong></td><td>'+(sD?'<span style="color:'+(sD>0?'var(--grn)':'var(--red)')+';font-weight:600;">'+df(sD)+'</span>':'<span style="color:var(--tx3);">0</span>')+'</td><td>'+(tkU>0&&tkUrl?'<a class="ul tk" href="'+tkUrl+'" target="_blank">'+f(tkU)+' <span class="ula">&#x2197;</span></a>':(tkU>0?f(tkU):'<span style="color:var(--tx3);">0</span>'))+'</td><td>'+(igU>0&&igUrl?'<a class="ul ig" href="'+igUrl+'" target="_blank">'+f(igU)+' <span class="ula">&#x2197;</span></a>':(igU>0?f(igU):'<span style="color:var(--tx3);">0</span>'))+'</td><td>'+sp2+'</td></tr>';
+});}
+d.innerHTML='<button class="db" onclick="cd()">&larr; Back to list</button><div class="dah"><div class="dav">'+ini+'</div><div><div class="dan">'+(a.name||'?').toUpperCase()+'</div><div class="dal">'+lk+'</div></div></div><div class="sg">'+cards+'</div><div class="ssb" onclick="om(\'social\')"><span class="ssb-l">Social Score</span><div class="ssb-t"><div class="ssb-f" style="width:'+(ss*10)+'%;background:'+ssC+';"></div></div><span class="ssb-v" style="color:'+ssC+';">'+ss+' / 10</span></div><div class="sgh"><span class="sgt">Songs</span><span class="sgc">'+(a.sg?a.sg.length:0)+' tracks</span></div><table class="stbl"><thead><tr><th>Title</th><th>Streams</th><th>Daily</th><th>TikTok UGC</th><th>Instagram UGC</th><th>14d Trend</th></tr></thead><tbody>'+sng+'</tbody></table>';
+};
+function sCard(l,v,c,d,sp,k){var dH='';if(typeof d==='number'&&d!==0)dH='<span class="sc-d '+(d>0?'up':'down')+'">'+df(d)+'</span>';return'<div class="sc" onclick="om(\''+k+'\')"><div class="sc-l">'+l+'</div><div class="sc-v" style="color:'+c+';">'+v+'</div><div class="sc-f">'+dH+sp+'</div></div>';}
+window.cd=function(){document.getElementById('det').classList.remove('on');document.getElementById('det').innerHTML='';document.getElementById('dash').classList.add('on');CA=null;};
+window.om=function(k){
+var a=CA;if(!a)return;
+var h='<button class="mx" onclick="cm()">&times;</button>';
+if(k==='streams'){var sp=0,yt=0;if(a.sm)Object.values(a.sm).forEach(function(x){sp+=(x.st||0);yt+=(x.yt||0);});var hi=sSp(a.sm),d=dl(hi);h+='<div class="mt">Total Streams</div><div class="md">Combined Spotify and YouTube.</div>'+mg(sp+yt,d)+'<div class="mbk"><div class="mst">Breakdown</div>'+br('Spotify','#1DB954',sp)+br('YouTube','#FF0000',yt)+'</div>'+ch(hi);}
+else if(k==='listeners'){var ml=(a.m&&a.m.ml)||0,hi=(a.h&&a.h.sf)||[],d=dl(hi);h+='<div class="mt">Monthly Listeners</div><div class="md">Spotify monthly listeners.</div>'+mg(ml,d)+ch(hi);}
+else if(k==='tiktok'){var tk=(a.m&&a.m.tk)||0,hi=(a.h&&a.h.tk)||[],d=dl(hi);h+='<div class="mt">TikTok Followers</div><div class="md">Total TikTok followers.</div>'+mg(tk,d)+ch(hi);}
+else if(k==='instagram'){var ig=(a.m&&a.m.ig)||0,hi=(a.h&&a.h.ig)||[],d=dl(hi);h+='<div class="mt">Instagram Followers</div><div class="md">Total Instagram followers.</div>'+mg(ig,d)+ch(hi);}
+else if(k==='ugc'){var tkU=0,igU=0;if(a.sm)Object.values(a.sm).forEach(function(x){tkU+=(x.ug||0);igU+=(x.igu||0);});h+='<div class="mt">TikTok &amp; Instagram UGC</div><div class="md">Videos using artist sounds.</div>'+mg(tkU+igU,{t:0,w:0,m:0})+'<div class="mbk"><div class="mst">Breakdown</div>'+br('TikTok','#000',tkU)+br('Instagram Reels','#E1306C',igU)+'</div>';}
+else if(k==='social'){var ss=(a.m&&a.m.ss)||0;h+='<div class="mt">Social Score</div><div class="md">Based on posting consistency and engagement (0-10).</div><div style="text-align:center;padding:24px 0;"><div style="font-size:56px;font-weight:800;">'+ss+'<span style="font-size:24px;color:#999;">/10</span></div></div>';}
+document.getElementById('mbo').innerHTML=h;document.getElementById('mov').classList.add('open');
+};
+function mg(t,d){return'<div class="mgr"><div class="mbx"><div class="mbx-l">All Time</div><div class="mbx-v">'+fs(t)+'</div></div><div class="mbx"><div class="mbx-l">This Month</div><div class="mbx-v '+dc(d.m)+'">'+df(d.m)+'</div></div><div class="mbx"><div class="mbx-l">This Week</div><div class="mbx-v '+dc(d.w)+'">'+df(d.w)+'</div></div><div class="mbx"><div class="mbx-l">Today</div><div class="mbx-v '+dc(d.t)+'">'+df(d.t)+'</div></div></div>';}
+function br(l,c,v){return'<div class="mbr"><span class="mbl"><span class="mbd" style="background:'+c+';"></span> '+l+'</span><span class="mbv">'+fs(v)+'</span></div>';}
+function ch(h){if(!h||h.length<2)return'<p style="font-size:12px;color:#999;text-align:center;padding:16px;">Not enough history yet.</p>';var sl=h.slice(-14);var s=svg(sl,420,50).replace(/width="420"/,'style="width:100%;height:50px;" width="420"');var td=new Date(),st=new Date(td);st.setDate(st.getDate()-sl.length+1);return'<div class="mst">History (Last '+sl.length+' days)</div><div class="mch">'+s+'</div><div class="mcd"><span>'+(st.getMonth()+1)+'/'+st.getDate()+'</span><span>'+(td.getMonth()+1)+'/'+td.getDate()+'</span></div>';}
+window.cm=function(){document.getElementById('mov').classList.remove('open');};
+window.openMng=function(){document.getElementById('mngo').classList.add('on');document.getElementById('mnge').focus();};
+window.goP=function(){var e=document.getElementById('mnge').value.trim(),er=document.getElementById('mngerr');er.style.display='none';if(!e){er.textContent='Enter your email.';er.style.display='block';return;}var b=document.querySelector('.mng-s');b.textContent='Loading...';b.disabled=true;fetch('/api/customer-portal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e})}).then(function(r){return r.json();}).then(function(d){if(d.url){window.location.href=d.url;}else{er.textContent=d.error||'Not found.';er.style.display='block';b.textContent='Go to Portal';b.disabled=false;}}).catch(function(){er.textContent='Error.';er.style.display='block';b.textContent='Go to Portal';b.disabled=false;});};
+})();
+</script>
+</body>
+</html>

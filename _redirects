@@ -1,6 +1,7 @@
 # Static pages served directly (no redirect needed for .html files)
-# Pro dashboard — redirects to heard-first
-/pro  /heard-first  301
+# Pro dashboard
+/pro  /heard-first/pro  301
+/heard-first/pro  /heard-first/pro/index.html  200
 # Artist pages
 /artist/*  /artist.html  200
 # Catch-all: clean post URLs → post.html (Netlify rewrite, URL stays clean)
