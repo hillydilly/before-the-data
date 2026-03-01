@@ -901,6 +901,9 @@ ul { list-style: none; }
   border-radius: 2px;
   margin-right: 6px;
   transition: opacity 0.15s;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
 }
 .genre-pill:hover { opacity: 0.75; }
 /* Card + list genre pills */
