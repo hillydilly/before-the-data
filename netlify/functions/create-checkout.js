@@ -23,8 +23,8 @@ export default async (req) => {
     productName = 'Heard First';
     productDesc = 'A&R intel. 48 hours early.';
     unitAmount = '900';
-    successUrl = `${origin}/heard-first.html?success=1&session_id={CHECKOUT_SESSION_ID}`;
-    cancelUrl = `${origin}/heard-first.html`;
+    successUrl = `${origin}/heard-first/dashboard?new=1&session_id={CHECKOUT_SESSION_ID}`;
+    cancelUrl = `${origin}/heard-first`;
   }
 
   try {
