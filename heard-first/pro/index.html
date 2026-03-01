@@ -550,8 +550,64 @@ function openModal(key) {
       '<div class="mbk"><div class="mst">Breakdown</div>' + bkrow('TikTok', '#000', tkU) + bkrow('Instagram Reels', '#E1306C', igU) + '</div>';
   } else if (key === 'social') {
     var ss = (a.m && a.m.ss) || 0;
-    html += '<div class="mt">Social Score</div><div class="md">Based on posting consistency and engagement (0-10).</div>' +
-      '<div style="text-align:center;padding:24px 0;"><div style="font-size:56px;font-weight:800;">' + ss + '<span style="font-size:24px;color:#999;">/10</span></div></div>';
+    var tpt = (a.m && a.m.tpt) || 0;
+    var ipt = (a.m && a.m.ipt) || 0;
+    var tp = (a.m && a.m.tp) || 0;
+    var ip = (a.m && a.m.ip) || 0;
+    var ssColor = ss >= 7 ? '#3b82f6' : ss >= 4 ? '#3b82f6' : '#3b82f6';
+    
+    // Calculate new posts from history
+    var tptH = (a.h && a.h.tpt) || [];
+    var igpH = (a.h && a.h.igp) || [];
+    var tk24 = tptH.length >= 2 ? tptH[tptH.length-1] - tptH[tptH.length-2] : 0;
+    var tk7 = tptH.length >= 7 ? tptH[tptH.length-1] - tptH[tptH.length-7] : (tptH.length >= 2 ? tptH[tptH.length-1] - tptH[0] : 0);
+    var tk30 = tptH.length >= 30 ? tptH[tptH.length-1] - tptH[tptH.length-30] : (tptH.length >= 2 ? tptH[tptH.length-1] - tptH[0] : 0);
+    var ig24 = igpH.length >= 2 ? igpH[igpH.length-1] - igpH[igpH.length-2] : 0;
+    var ig7 = igpH.length >= 7 ? igpH[igpH.length-1] - igpH[igpH.length-7] : (igpH.length >= 2 ? igpH[igpH.length-1] - igpH[0] : 0);
+    var ig30 = igpH.length >= 30 ? igpH[igpH.length-1] - igpH[igpH.length-30] : (igpH.length >= 2 ? igpH[igpH.length-1] - igpH[0] : 0);
+    var dash = '<span style="color:#ccc;">&mdash;</span>';
+    
+    html += '<div class="mt">Social Score</div>' +
+      '<div class="md">Based on TikTok and Instagram posting consistency (0-10 scale).</div>' +
+      '<div style="text-align:center;padding:20px 0 24px;">' +
+        '<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3b82f6;margin-bottom:4px;">SOCIAL SCORE</div>' +
+        '<div style="font-size:52px;font-weight:800;color:#3b82f6;">' + ss + '<span style="font-size:22px;color:#93c5fd;">/10</span></div>' +
+      '</div>' +
+      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">Total Posts</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">' +
+        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> TikTok</span><span class="mbv">' + (tpt || dash) + '</span></div>' +
+        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#E1306C;"></span> Instagram</span><span class="mbv">' + (ipt || dash) + '</span></div>' +
+      '</div>' +
+      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">Avg Posts/Week</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">' +
+        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> TikTok</span><span class="mbv" style="color:' + (tp > 3 ? '#10b981' : tp > 0 ? '#f59e0b' : '#999') + ';">' + (tp || dash) + '</span></div>' +
+        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#E1306C;"></span> Instagram</span><span class="mbv" style="color:' + (ip > 3 ? '#10b981' : ip > 0 ? '#f59e0b' : '#999') + ';">' + (ip || dash) + '</span></div>' +
+      '</div>' +
+      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">New Posts (from history)</div>' +
+      '<div style="border:1px solid #eee;border-radius:10px;overflow:hidden;">' +
+        '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
+          '<thead><tr style="border-bottom:1px solid #eee;">' +
+            '<th style="text-align:left;padding:10px 12px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;"></th>' +
+            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">24H</th>' +
+            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">7 DAYS</th>' +
+            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">30 DAYS</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+            '<tr style="border-bottom:1px solid #f5f5f5;">' +
+              '<td style="padding:10px 12px;display:flex;align-items:center;gap:6px;"><span class="mbd" style="background:#000;display:inline-block;"></span> TikTok</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (tk24 || dash) + '</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (tk7 || dash) + '</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (tk30 || dash) + '</td>' +
+            '</tr>' +
+            '<tr>' +
+              '<td style="padding:10px 12px;display:flex;align-items:center;gap:6px;"><span class="mbd" style="background:#E1306C;display:inline-block;"></span> Instagram</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (ig24 || dash) + '</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (ig7 || dash) + '</td>' +
+              '<td style="text-align:center;padding:10px 8px;">' + (ig30 || dash) + '</td>' +
+            '</tr>' +
+          '</tbody>' +
+        '</table>' +
+      '</div>';
   }
 
   document.getElementById('mbo').innerHTML = html;
