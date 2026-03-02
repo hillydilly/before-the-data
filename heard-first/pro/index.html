@@ -219,7 +219,10 @@ table.stbl{width:100%;border-collapse:collapse;}
     <select class="ss" id="srt">
       <option value="streams">Total Streams</option>
       <option value="daily">Daily Change</option>
-      <option value="tiktok">TikTok</option>
+      <option value="tiktok">TikTok Followers</option>
+      <option value="instagram">IG Followers</option>
+      <option value="tkugc">TikTok UGC</option>
+      <option value="igugc">IG UGC</option>
       <option value="social">Social Score</option>
     </select>
   </div>
@@ -328,6 +331,19 @@ function totalUGC(a) {
   Object.values(a.sm).forEach(function(x) { s += (x.ug || 0) + (x.igu || 0); });
   return s;
 }
+function totalTkUgc(a) {
+  if (!a.sm) return 0;
+  var s = 0;
+  Object.values(a.sm).forEach(function(x) { s += (x.ug || 0); });
+  return s;
+}
+function totalIgUgc(a) {
+  if (!a.sm) return 0;
+  var s = 0;
+  Object.values(a.sm).forEach(function(x) { s += (x.igu || 0); });
+  return s;
+}
+
 function dailyDelta(a) {
   if (!a.sm) return 0;
   var s = 0;
@@ -455,6 +471,9 @@ function renderList() {
   filtered.sort(function(a, b) {
     if (sort === 'daily') return dailyDelta(b) - dailyDelta(a);
     if (sort === 'tiktok') return ((b.m && b.m.tk) || 0) - ((a.m && a.m.tk) || 0);
+    if (sort === 'instagram') return ((b.m && b.m.ig) || 0) - ((a.m && a.m.ig) || 0);
+    if (sort === 'tkugc') return totalTkUgc(b) - totalTkUgc(a);
+    if (sort === 'igugc') return totalIgUgc(b) - totalIgUgc(a);
     if (sort === 'social') return ((b.m && b.m.ss) || 0) - ((a.m && a.m.ss) || 0);
     return totalStreams(b) - totalStreams(a);
   });
