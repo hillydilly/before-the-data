@@ -4,7 +4,13 @@
 function truncateTitle(title, maxLen) {
   maxLen = maxLen || 35;
   if (!title) return title;
-  var display = title.replace(/\s*\(feat\..*?\)/i, '').replace(/\s*ft\..*$/i, '').trim();
+  // Strip feat./ft. from titles and artist names
+  var display = title
+    .replace(/\s*\(feat\..*?\)/i, '')
+    .replace(/\s*\(ft\..*?\)/i, '')
+    .replace(/\s*ft\..*$/i, '')
+    .replace(/,.*$/, '')
+    .trim();
   if (display.length > maxLen) display = display.slice(0, maxLen).trim() + '…';
   return display;
 }
@@ -65,7 +71,7 @@ function createMusicCard(post) {
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
     <div class="card-title" title="${post.title}">${truncateTitle(post.title)}</div>
-    <div class="card-artist">${post.artist}</div>
+    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
 
   `;
   // Click art area → play or pause if already playing this track
@@ -98,7 +104,7 @@ function createChartRow(post, rank) {
     <button class="chart-play" data-playing-id="${post.id}">&#9654;</button>
     <img class="chart-art" src="${post.artUrl}" alt="${post.title}" loading="lazy">
     <div class="chart-info">
-      <div class="chart-artist">${post.artist}</div>
+      <div class="chart-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
       <div class="chart-title">${post.title}</div>
     </div>
 
