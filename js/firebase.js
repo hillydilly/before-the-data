@@ -180,7 +180,9 @@ function timeAgo(ts) {
   if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
   if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
   if (diff < 2592000) return Math.floor(diff / 86400) + 'd ago';
-  return Math.floor(diff / 2592000) + 'mo ago';
+  if (diff < 31536000) return Math.floor(diff / 2592000) + 'mo ago';
+  const yrs = Math.floor(diff / 31536000);
+  return yrs === 1 ? '1 year ago' : yrs + ' years ago';
 }
 
 /* --- Firebase / Data --- */
