@@ -70,7 +70,7 @@ function createMusicCard(post) {
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
-    <div class="card-title" title="${post.title}">${truncateTitle(post.title)}</div>
+    <div class="card-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title)}&rdquo;</div>
     <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
 
   `;
@@ -105,7 +105,7 @@ function createChartRow(post, rank) {
     <img class="chart-art" src="${post.artUrl}" alt="${post.title}" loading="lazy">
     <div class="chart-info">
       <div class="chart-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
-      <div class="chart-title">${post.title}</div>
+      <div class="chart-title">&ldquo;${post.title}&rdquo;</div>
     </div>
 
   `;
@@ -129,7 +129,7 @@ function createChartRowFromTrack(track) {
     <img class="chart-art" src="${thumb}" alt="${track.title}" loading="lazy">
     <div class="chart-info">
       <div class="chart-artist">${track.artist}${track.explicit ? ' <span class="explicit">E</span>' : ''}</div>
-      <div class="chart-title">${track.title}</div>
+      <div class="chart-title">&ldquo;${track.title}&rdquo;</div>
     </div>
 
   `;
@@ -197,7 +197,7 @@ function createListItem(post) {
     </div>
     <div class="list-info">
       <a class="list-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
-      <div class="list-title" title="${post.title}">${truncateTitle(post.title, 50)}</div>
+      <div class="list-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title, 50)}&rdquo;</div>
       ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
       <div class="list-genres">${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => '<a href="/new-music.html?genre=' + encodeURIComponent(g) + '" class="genre-pill" onclick="event.stopPropagation()">' + g + '</a>').join('')}</div>
       <div class="list-date">${timeAgo(post.publishedAt)}</div>
@@ -347,7 +347,7 @@ function initSearch() {
         el.innerHTML = `
           <img src="${p.artUrl}" alt="${p.title}" loading="lazy">
           <div class="result-info">
-            <div class="result-title">${p.title}</div>
+            <div class="result-title">&ldquo;${p.title}&rdquo;</div>
             <div class="result-artist">${p.artist}</div>
             <div class="result-date">${timeAgo(p.publishedAt)}</div>
           </div>
@@ -439,7 +439,7 @@ async function renderPost() {
     </div>
     <div class="post-hero-meta">
       <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
-      <div class="post-title">${post.title}</div>
+      <div class="post-title">&ldquo;${post.title}&rdquo;</div>
       <div class="post-date">Published ${timeAgo(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
       <div class="post-stream-links">
@@ -475,7 +475,15 @@ async function renderPost() {
 
   const artWrap = document.getElementById('art-play-wrap');
   if (artWrap && post.previewUrl) {
-    artWrap.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
+    artWrap.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const current = Player.getCurrent();
+      if (current && current.id === post.id) {
+        Player.togglePlay(); // pause/resume if this post is active
+      } else {
+        playPost();
+      }
+    });
   }
 
   const playBtn = document.getElementById('hero-play-btn');
@@ -549,7 +557,7 @@ async function renderPost() {
           <a class="related-item" href="/${rel.id}">
             <img src="${rel.artUrl}" alt="${rel.title}" loading="lazy">
             <div>
-              <div class="rel-title">${rel.title}</div>
+              <div class="rel-title">&ldquo;${rel.title}&rdquo;</div>
               <div class="rel-artist">${rel.artist}</div>
             </div>
           </a>
