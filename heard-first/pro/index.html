@@ -301,10 +301,15 @@ function fmtS(n) {
 }
 function dFmt(n) { return (!n) ? '-' : (n >= 0 ? '+' : '') + fmtS(n); }
 function dCls(n) { return n > 0 ? 'up' : n < 0 ? 'down' : ''; }
+function hVal(x) { return (typeof x === 'object' && x !== null) ? (x.v || 0) : (x || 0); }
 function vel(h, days) {
   if (!h || h.length < 2) return 0;
   var sl = h.slice(-(days + 1));
-  return sl.length >= 2 ? sl[sl.length - 1] - sl[0] : 0;
+  if (sl.length < 2) return 0;
+  var last = sl[sl.length - 1], first = sl[0];
+  var lv = (typeof last === 'object' && last !== null) ? (last.v || 0) : (last || 0);
+  var fv = (typeof first === 'object' && first !== null) ? (first.v || 0) : (first || 0);
+  return lv - fv;
 }
 
 // ── Artist metric helpers ──
@@ -340,7 +345,7 @@ function streamHistory(sm) {
   for (var i = 0; i < maxLen; i++) {
     var sum = 0;
     Object.values(sm).forEach(function(x) {
-      if (x.h && x.h.st && i < x.h.st.length) sum += x.h.st[i];
+      if (x.h && x.h.st && i < x.h.st.length) sum += hVal(x.h.st[i]);
     });
     out.push(sum);
   }
@@ -348,16 +353,17 @@ function streamHistory(sm) {
 }
 function deltas(h) {
   if (!h || h.length < 2) return { t: 0, w: 0, m: 0 };
-  var l = h[h.length - 1];
+  var l = hVal(h[h.length - 1]);
   return {
-    t: h.length >= 2 ? l - h[h.length - 2] : 0,
-    w: h.length >= 7 ? l - h[h.length - 7] : l - h[0],
-    m: h.length >= 30 ? l - h[h.length - 30] : l - h[0]
+    t: h.length >= 2 ? l - hVal(h[h.length - 2]) : 0,
+    w: h.length >= 7 ? l - hVal(h[h.length - 7]) : l - hVal(h[0]),
+    m: h.length >= 30 ? l - hVal(h[h.length - 30]) : l - hVal(h[0])
   };
 }
 
 // ── Spark SVG ──
-function sparkSvg(data, w, h) {
+function sparkSvg(rawData, w, h) {
+  var data = (rawData || []).map(hVal);
   if (!data || data.length < 2) return '';
   var mn = Math.min.apply(null, data), mx = Math.max.apply(null, data);
   if (mn === mx) mx = mn + 1;
