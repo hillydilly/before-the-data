@@ -18,25 +18,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .bb-right{display:flex;align-items:center;gap:8px;}
 .bb-btn{font-size:11px;color:rgba(255,255,255,0.5);background:none;border:1px solid rgba(255,255,255,0.2);border-radius:6px;padding:6px 12px;cursor:pointer;text-decoration:none;white-space:nowrap;}
 
-.wr{margin-bottom:24px;}
-.wr-toggle{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;cursor:pointer;transition:background 0.15s;}
-.wr-toggle:hover{background:#dbeafe;}
-.wr-toggle-left{display:flex;align-items:center;gap:10px;}
-.wr-toggle-icon{font-size:18px;}
-.wr-toggle-title{font-size:14px;font-weight:700;color:#1d4ed8;}
-.wr-toggle-date{font-size:11px;color:#6b7280;margin-left:4px;}
-.wr-toggle-badge{font-size:10px;font-weight:600;background:#1d4ed8;color:#fff;padding:2px 8px;border-radius:10px;}
-.wr-toggle-arrow{font-size:12px;color:#6b7280;transition:transform 0.2s;}
-.wr-toggle-arrow.open{transform:rotate(180deg);}
-.wr-feed{display:none;margin-top:12px;max-height:500px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
-.wr-feed.open{display:flex;}
-.wr-card{padding:16px 18px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;}
-.wr-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.wr-card-img{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#f3f4f6;}
-.wr-card-ini{width:36px;height:36px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#6b7280;}
-.wr-card-name{font-size:14px;font-weight:700;}
-.wr-card-date{font-size:10px;color:#9ca3af;}
-.wr-card-body{font-size:13px;line-height:1.6;color:#374151;}
 @media(min-width:600px){.bb{flex-direction:row;align-items:center;justify-content:space-between;padding:16px 28px;margin:20px 28px 0;border-radius:14px;}.bb-top{flex:1;}}
 /* Login gate */
 .gate{max-width:420px;margin:80px auto;padding:32px;text-align:center;}
@@ -233,7 +214,6 @@ table.stbl{width:100%;border-collapse:collapse;}
     <span class="dc" id="dcnt"></span>
   </div>
   <div class="du" id="dup"></div>
-  <div class="wr" id="weekly-recap"></div>
   <div class="sr">
     <input class="si" id="srch" type="text" placeholder="Search artists...">
     <span class="sl">Sort:</span>
@@ -464,31 +444,7 @@ function loadData() {
       document.getElementById('dcnt').textContent = '(' + AA.length + ')';
       document.getElementById('dup').textContent = 'Last scraped: ' + new Date().toISOString().split('T')[0];
 
-      // Build Weekly Recap feed
-      var recapHtml = '';
-      var recapArtists = AA.filter(function(a) { return a.proBriefing; });
-      if (recapArtists.length > 0) {
-        var latestDate = '';
-        recapArtists.forEach(function(a) { if (a.proBriefingDate > latestDate) latestDate = a.proBriefingDate; });
-        recapHtml = '<div class="wr-toggle" onclick="var f=document.getElementById(\'wr-feed\');f.classList.toggle(\'open\');this.querySelector(\'.wr-toggle-arrow\').classList.toggle(\'open\')">' +
-          '<div class="wr-toggle-left"><span class="wr-toggle-icon">&#128202;</span><span class="wr-toggle-title">Weekly Recap</span><span class="wr-toggle-date">' + (latestDate || '') + '</span></div>' +
-          '<div style="display:flex;align-items:center;gap:8px;"><span class="wr-toggle-badge">' + recapArtists.length + ' artists</span><span class="wr-toggle-arrow">&#9660;</span></div></div>' +
-          '<div class="wr-feed" id="wr-feed">';
-        recapArtists.sort(function(a,b) { return totalStreams(b) - totalStreams(a); });
-        recapArtists.forEach(function(a) {
-          var ini = (a.n || '?').charAt(0).toUpperCase();
-          recapHtml += '<div class="wr-card" onclick="openDetail(\'' + a._id + '\')">' +
-            '<div class="wr-card-head">' +
-              (a.pic ? '<img class="wr-card-img" src="' + a.pic + '">' : '<div class="wr-card-ini">' + ini + '</div>') +
-              '<div><div class="wr-card-name">' + (a.n || '?') + '</div>' +
-              (a.proBriefingDate ? '<div class="wr-card-date">' + a.proBriefingDate + '</div>' : '') +
-            '</div></div>' +
-            '<div class="wr-card-body">' + nl2br(a.proBriefing) + '</div></div>';
-        });
-        recapHtml += '</div>';
-      }
-      document.getElementById('weekly-recap').innerHTML = recapHtml;
-      renderList();
+            renderList();
       // If detail view is open, refresh it with updated data
       if (CA && document.getElementById('det').classList.contains('on')) {
         var updated = AA.find(function(x) { return x._id === CA._id; });
