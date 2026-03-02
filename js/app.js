@@ -1,15 +1,14 @@
 /* ============================================
-
-function truncateTitle(title, maxLen = 35) {
-  // Strip feat. section for display if too long
+   Before The Data — App / Page Logic
+   ============================================ */
+function truncateTitle(title, maxLen) {
+  maxLen = maxLen || 35;
   if (!title) return title;
-  let display = title.replace(/\s*\(feat\..*?\)/i, '').replace(/\s*ft\..*$/i, '').trim();
-  if (display.length > maxLen) display = display.slice(0, maxLen).trim() + '...';
+  var display = title.replace(/\s*\(feat\..*?\)/i, '').replace(/\s*ft\..*$/i, '').trim();
+  if (display.length > maxLen) display = display.slice(0, maxLen).trim() + '…';
   return display;
 }
 
-   Before The Data — App / Page Logic
-   ============================================ */
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Determine current page
