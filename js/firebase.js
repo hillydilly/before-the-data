@@ -167,6 +167,7 @@ const DEMO_POSTS = [
 /* --- Country code to flag emoji --- */
 function countryFlag(code) {
   if (!code) return '';
+  code = code === 'UK' ? 'GB' : code;
   return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt(0)));
 }
 
