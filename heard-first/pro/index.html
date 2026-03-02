@@ -325,6 +325,7 @@ function fmtS(n) {
 }
 function dFmt(n) { return (!n) ? '-' : (n >= 0 ? '+' : '') + fmtS(n); }
 function dCls(n) { return n > 0 ? 'up' : n < 0 ? 'down' : ''; }
+function nl2br(s) { return s ? s.replace(/\n/g, '<br>') : ''; }
 function hVal(x) { return (typeof x === 'object' && x !== null) ? (x.v || 0) : (x || 0); }
 function vel(h, days) {
   if (!h || h.length < 2) return 0;
@@ -482,7 +483,7 @@ function loadData() {
               '<div><div class="wr-card-name">' + (a.n || '?') + '</div>' +
               (a.proBriefingDate ? '<div class="wr-card-date">' + a.proBriefingDate + '</div>' : '') +
             '</div></div>' +
-            '<div class="wr-card-body">' + a.proBriefing + '</div></div>';
+            '<div class="wr-card-body">' + nl2br(a.proBriefing) + '</div></div>';
         });
         recapHtml += '</div>';
       }
@@ -667,7 +668,7 @@ function openDetail(id) {
           '<span class="wu-header-title">Scouting Report</span>' +
           '<span class="wu-header-arrow">&#9662;</span>' +
         '</div>' +
-        '<div class="wu-preview"><div class="wu-text">' + a.heardFirstDraft + '</div></div>' +
+        '<div class="wu-preview"><div class="wu-text">' + nl2br(a.heardFirstDraft) + '</div></div>' +
       '</div>' : '') +
     (a.proBriefing ?
       '<div class="wu-block" id="pb-block" onclick="var b=document.getElementById(\'pb-block\');window.innerWidth<600?b.classList.toggle(\'open\'):b.classList.toggle(\'closed\');">' +
@@ -676,7 +677,7 @@ function openDetail(id) {
           '<span class="wu-header-title">Weekly Briefing' + (a.proBriefingDate ? ' <span style=\"font-size:11px;font-weight:400;color:#6b7280;\">' + a.proBriefingDate + '</span>' : '') + '</span>' +
           '<span class="wu-header-arrow">&#9662;</span>' +
         '</div>' +
-        '<div class="wu-preview"><div class="wu-text">' + a.proBriefing + '</div></div>' +
+        '<div class="wu-preview"><div class="wu-text">' + nl2br(a.proBriefing) + '</div></div>' +
       '</div>' : '') +
     '<div class="sg">' + cards + '</div>' +
     '<div class="ssb" onclick="openModal(\'social\')">' +
