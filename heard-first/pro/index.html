@@ -462,6 +462,31 @@ function loadData() {
       document.getElementById('load').style.display = 'none';
       document.getElementById('dcnt').textContent = '(' + AA.length + ')';
       document.getElementById('dup').textContent = 'Last scraped: ' + new Date().toISOString().split('T')[0];
+
+      // Build Weekly Recap feed
+      var recapHtml = '';
+      var recapArtists = AA.filter(function(a) { return a.proBriefing; });
+      if (recapArtists.length > 0) {
+        var latestDate = '';
+        recapArtists.forEach(function(a) { if (a.proBriefingDate > latestDate) latestDate = a.proBriefingDate; });
+        recapHtml = '<div class="wr-toggle" onclick="var f=document.getElementById(\'wr-feed\');f.classList.toggle(\'open\');this.querySelector(\'.wr-toggle-arrow\').classList.toggle(\'open\')">' +
+          '<div class="wr-toggle-left"><span class="wr-toggle-icon">&#128202;</span><span class="wr-toggle-title">Weekly Recap</span><span class="wr-toggle-date">' + (latestDate || '') + '</span></div>' +
+          '<div style="display:flex;align-items:center;gap:8px;"><span class="wr-toggle-badge">' + recapArtists.length + ' artists</span><span class="wr-toggle-arrow">&#9660;</span></div></div>' +
+          '<div class="wr-feed" id="wr-feed">';
+        recapArtists.sort(function(a,b) { return totalStreams(b) - totalStreams(a); });
+        recapArtists.forEach(function(a) {
+          var ini = (a.n || '?').charAt(0).toUpperCase();
+          recapHtml += '<div class="wr-card" onclick="openDetail(\'' + a._id + '\')">' +
+            '<div class="wr-card-head">' +
+              (a.pic ? '<img class="wr-card-img" src="' + a.pic + '">' : '<div class="wr-card-ini">' + ini + '</div>') +
+              '<div><div class="wr-card-name">' + (a.n || '?') + '</div>' +
+              (a.proBriefingDate ? '<div class="wr-card-date">' + a.proBriefingDate + '</div>' : '') +
+            '</div></div>' +
+            '<div class="wr-card-body">' + a.proBriefing + '</div></div>';
+        });
+        recapHtml += '</div>';
+      }
+      document.getElementById('weekly-recap').innerHTML = recapHtml;
       renderList();
       // If detail view is open, refresh it with updated data
       if (CA && document.getElementById('det').classList.contains('on')) {
@@ -905,40 +930,3 @@ function goPortal() {
 </script>
 </body>
 </html>
-  // Build Weekly Recap feed
-  var recapHtml = '';
-  var recapArtists = allArtists.filter(function(a) { return a.proBriefing; });
-  if (recapArtists.length > 0) {
-    var latestDate = '';
-    recapArtists.forEach(function(a) { if (a.proBriefingDate > latestDate) latestDate = a.proBriefingDate; });
-    recapHtml = '<div class="wr-toggle" onclick="var f=document.getElementById(\'wr-feed\');f.classList.toggle(\'open\');this.querySelector(\'.wr-toggle-arrow\').classList.toggle(\'open\')">' +
-      '<div class="wr-toggle-left">' +
-        '<span class="wr-toggle-icon">&#128202;</span>' +
-        '<span class="wr-toggle-title">Weekly Recap</span>' +
-        '<span class="wr-toggle-date">' + (latestDate || '') + '</span>' +
-      '</div>' +
-      '<div style="display:flex;align-items:center;gap:8px;">' +
-        '<span class="wr-toggle-badge">' + recapArtists.length + ' artists</span>' +
-        '<span class="wr-toggle-arrow">&#9660;</span>' +
-      '</div>' +
-    '</div>' +
-    '<div class="wr-feed" id="wr-feed">';
-    recapArtists.sort(function(a,b) { return totalStreams(b) - totalStreams(a); });
-    recapArtists.forEach(function(a) {
-      var ini = (a.n || '?').charAt(0).toUpperCase();
-      recapHtml += '<div class="wr-card" onclick="openDetail(\'' + a._id + '\')">' +
-        '<div class="wr-card-head">' +
-          (a.pic ? '<img class="wr-card-img" src="' + a.pic + '">' : '<div class="wr-card-ini">' + ini + '</div>') +
-          '<div>' +
-            '<div class="wr-card-name">' + (a.n || '?') + '</div>' +
-            (a.proBriefingDate ? '<div class="wr-card-date">' + a.proBriefingDate + '</div>' : '') +
-          '</div>' +
-        '</div>' +
-        '<div class="wr-card-body">' + a.proBriefing + '</div>' +
-      '</div>';
-    });
-    recapHtml += '</div>';
-  }
-  document.getElementById('weekly-recap').innerHTML = recapHtml;
-
-  
