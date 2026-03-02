@@ -141,7 +141,7 @@ table.stbl{width:100%;border-collapse:collapse;}
 .wu-block.closed .wu-header-arrow{transform:rotate(0deg);}
 .wu-preview{padding:0 18px 18px;max-height:600px;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
 .wu-block.closed .wu-preview{max-height:0;padding:0 18px;}
-@media(max-width:599px){.wu-preview{max-height:0;padding:0 18px;}.wu-block.open .wu-preview{max-height:600px;padding:0 18px 18px;}.wu-header-arrow{transform:rotate(0deg);}.wu-block.open .wu-header-arrow{transform:rotate(180deg);}}
+@media(max-width:599px){.wu-preview{max-height:600px;padding:0 18px 18px;}.wu-block.closed .wu-preview{max-height:0;padding:0 18px;}.wu-header-arrow{transform:rotate(180deg);}.wu-block.closed .wu-header-arrow{transform:rotate(0deg);}}
 .wu-text{font-size:14px;line-height:1.8;color:var(--tx);white-space:pre-wrap;}
 
 /* Mobile card list */
@@ -618,7 +618,7 @@ function openDetail(id) {
       '</div>' +
     '</div>' +
     (a.heardFirstDraft ?
-      '<div class="wu-block" id="wu-block" onclick="var b=document.getElementById(\'wu-block\');window.innerWidth<600?b.classList.toggle(\'open\'):b.classList.toggle(\'closed\');">' +
+      '<div class="wu-block closed" id="wu-block" onclick="document.getElementById(\'wu-block\').classList.toggle(\'closed\');">' +
         '<div class="wu-header">' +
           '<span class="wu-header-icon">📝</span>' +
           '<span class="wu-header-title">Scouting Report</span>' +
@@ -627,7 +627,7 @@ function openDetail(id) {
         '<div class="wu-preview"><div class="wu-text">' + nl2br(a.heardFirstDraft) + '</div></div>' +
       '</div>' : '') +
     (a.proBriefing ?
-      '<div class="wu-block" id="pb-block" onclick="var b=document.getElementById(\'pb-block\');window.innerWidth<600?b.classList.toggle(\'open\'):b.classList.toggle(\'closed\');">' +
+      '<div class="wu-block closed" id="pb-block" onclick="document.getElementById(\'pb-block\').classList.toggle(\'closed\');">' +
         '<div class="wu-header" style="background:#eff6ff;">' +
           '<span class="wu-header-icon">&#128202;</span>' +
           '<span class="wu-header-title">Weekly Briefing' + (a.proBriefingDate ? ' <span style=\"font-size:11px;font-weight:400;color:#6b7280;\">' + a.proBriefingDate + '</span>' : '') + '</span>' +
