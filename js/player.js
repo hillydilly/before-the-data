@@ -54,7 +54,7 @@ const Player = (() => {
       artEl.src = track.artUrl || '';
       artEl.alt = track.title || '';
     }
-    if (titleEl) titleEl.textContent = `${track.artist} — ${track.title}`;
+    if (titleEl) titleEl.textContent = `${track.artist} \u2014 \u201c${track.title}\u201d`;
     if (sourceEl) sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '—');
   }
 

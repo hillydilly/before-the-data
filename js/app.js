@@ -520,7 +520,7 @@ async function renderPost() {
       }
       // Fallback: plain row if no Spotify ID
       return `<div class="track-row">
-        <div class="track-name">${t.title}</div>
+        <div class="track-name">&ldquo;${t.title}&rdquo;</div>
         <div class="track-artist-name">${t.artist}</div>
       </div>`;
     }).join('');
