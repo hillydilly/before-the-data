@@ -623,6 +623,15 @@ function openDetail(id) {
         '</div>' +
         '<div class="wu-preview"><div class="wu-text">' + a.heardFirstDraft + '</div></div>' +
       '</div>' : '') +
+    (a.proBriefing ?
+      '<div class="wu-block" id="pb-block" onclick="var b=document.getElementById(\'pb-block\');window.innerWidth<600?b.classList.toggle(\'open\'):b.classList.toggle(\'closed\');">' +
+        '<div class="wu-header" style="background:#eff6ff;">' +
+          '<span class="wu-header-icon">&#128202;</span>' +
+          '<span class="wu-header-title">Weekly Briefing' + (a.proBriefingDate ? ' <span style=\"font-size:11px;font-weight:400;color:#6b7280;\">' + a.proBriefingDate + '</span>' : '') + '</span>' +
+          '<span class="wu-header-arrow">&#9662;</span>' +
+        '</div>' +
+        '<div class="wu-preview"><div class="wu-text">' + a.proBriefing + '</div></div>' +
+      '</div>' : '') +
     '<div class="sg">' + cards + '</div>' +
     '<div class="ssb" onclick="openModal(\'social\')">' +
       '<span class="ssb-l">Social Score</span>' +
