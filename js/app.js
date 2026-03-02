@@ -1,4 +1,13 @@
 /* ============================================
+
+function truncateTitle(title, maxLen = 35) {
+  // Strip feat. section for display if too long
+  if (!title) return title;
+  let display = title.replace(/\s*\(feat\..*?\)/i, '').replace(/\s*ft\..*$/i, '').trim();
+  if (display.length > maxLen) display = display.slice(0, maxLen).trim() + '...';
+  return display;
+}
+
    Before The Data — App / Page Logic
    ============================================ */
 
@@ -56,7 +65,7 @@ function createMusicCard(post) {
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
-    <div class="card-title">${post.title}</div>
+    <div class="card-title" title="${post.title}">${truncateTitle(post.title)}</div>
     <div class="card-artist">${post.artist}</div>
 
   `;
@@ -183,7 +192,7 @@ function createListItem(post) {
     </div>
     <div class="list-info">
       <a class="list-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
-      <div class="list-title">${post.title}</div>
+      <div class="list-title" title="${post.title}">${truncateTitle(post.title, 50)}</div>
       ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
       <div class="list-genres">${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => '<a href="/new-music.html?genre=' + encodeURIComponent(g) + '" class="genre-pill" onclick="event.stopPropagation()">' + g + '</a>').join('')}</div>
       <div class="list-date">${timeAgo(post.publishedAt)}</div>
