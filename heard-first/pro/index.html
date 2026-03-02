@@ -502,7 +502,7 @@ function renderList() {
         '<div class="acard-stats">' +
           '<div class="acard-stat"><strong>' + fmt(t) + '</strong> streams</div>' +
           (tk ? '<div class="acard-stat"><strong>' + fmt(tk) + '</strong> TikTok</div>' : '') +
-          (ss ? '<div class="acard-stat"><strong>' + ss.toFixed(1) + '</strong> social</div>' : '') +
+          (ss ? '<div class="acard-stat"><strong>' + Math.round(ss) + '/100</strong> social</div>' : '') +
         '</div>' +
       '</div>' +
       '<span class="acard-chev">&#8250;</span>' +
@@ -530,7 +530,7 @@ function openDetail(id) {
   var u = totalUGC(a);
   var ss = (a.m && a.m.ss) || 0;
   var name = a.n || '?';
-  var ssColor = ss >= 7 ? 'var(--grn)' : ss >= 4 ? '#f59e0b' : 'var(--red)';
+  var ssColor = ss >= 70 ? 'var(--grn)' : ss >= 40 ? '#f59e0b' : 'var(--red)';
   var ini = name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
 
   // Links from a.l
@@ -607,8 +607,8 @@ function openDetail(id) {
     '<div class="sg">' + cards + '</div>' +
     '<div class="ssb" onclick="openModal(\'social\')">' +
       '<span class="ssb-l">Social Score</span>' +
-      '<div class="ssb-t"><div class="ssb-f" style="width:' + (ss * 10) + '%;background:' + ssColor + ';"></div></div>' +
-      '<span class="ssb-v" style="color:' + ssColor + ';">' + ss + ' / 10</span>' +
+      '<div class="ssb-t"><div class="ssb-f" style="width:' + ss + '%;background:' + ssColor + ';"></div></div>' +
+      '<span class="ssb-v" style="color:' + ssColor + ';">' + ss + ' / 100</span>' +
     '</div>' +
     (localStorage.getItem('btd_pro_tip_seen') ? '' :
       '<div class="tip-banner" id="pro-tip">' +
@@ -708,59 +708,51 @@ function openModal(key) {
     var ipt = (a.m && a.m.ipt) || 0;
     var tp = (a.m && a.m.tp) || 0;
     var ip = (a.m && a.m.ip) || 0;
-    var ssColor = ss >= 7 ? '#3b82f6' : ss >= 4 ? '#3b82f6' : '#3b82f6';
-    
-    // Calculate new posts from history
-    var tptH = (a.h && a.h.tpt) || [];
-    var igpH = (a.h && a.h.igp) || [];
-    var tk24 = tptH.length >= 2 ? tptH[tptH.length-1] - tptH[tptH.length-2] : 0;
-    var tk7 = tptH.length >= 7 ? tptH[tptH.length-1] - tptH[tptH.length-7] : (tptH.length >= 2 ? tptH[tptH.length-1] - tptH[0] : 0);
-    var tk30 = tptH.length >= 30 ? tptH[tptH.length-1] - tptH[tptH.length-30] : (tptH.length >= 2 ? tptH[tptH.length-1] - tptH[0] : 0);
-    var ig24 = igpH.length >= 2 ? igpH[igpH.length-1] - igpH[igpH.length-2] : 0;
-    var ig7 = igpH.length >= 7 ? igpH[igpH.length-1] - igpH[igpH.length-7] : (igpH.length >= 2 ? igpH[igpH.length-1] - igpH[0] : 0);
-    var ig30 = igpH.length >= 30 ? igpH[igpH.length-1] - igpH[igpH.length-30] : (igpH.length >= 2 ? igpH[igpH.length-1] - igpH[0] : 0);
     var dash = '<span style="color:#ccc;">&mdash;</span>';
     
+    // Calculate 7-day velocity from history (handle {d,v} objects)
+    var tptH = (a.h && a.h.tpt) || [];
+    var igpH = (a.h && a.h.igp) || [];
+    var tk7 = tptH.length >= 7 ? hVal(tptH[tptH.length-1]) - hVal(tptH[tptH.length-7]) : (tptH.length >= 2 ? hVal(tptH[tptH.length-1]) - hVal(tptH[0]) : 0);
+    var ig7 = igpH.length >= 7 ? hVal(igpH[igpH.length-1]) - hVal(igpH[igpH.length-7]) : (igpH.length >= 2 ? hVal(igpH[igpH.length-1]) - hVal(igpH[0]) : 0);
+    
     html += '<div class="mt">Social Score</div>' +
-      '<div class="md">Based on TikTok and Instagram posting consistency (0-10 scale).</div>' +
-      '<div style="text-align:center;padding:20px 0 24px;">' +
+      '<div style="text-align:center;padding:20px 0 24px;background:#eff6ff;border-radius:12px;margin-bottom:16px;">' +
         '<div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#3b82f6;margin-bottom:4px;">SOCIAL SCORE</div>' +
-        '<div style="font-size:52px;font-weight:800;color:#3b82f6;">' + ss + '<span style="font-size:22px;color:#93c5fd;">/10</span></div>' +
+        '<div style="font-size:52px;font-weight:800;color:#1d4ed8;">' + ss + '<span style="font-size:22px;color:#93c5fd;">/100</span></div>' +
       '</div>' +
-      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">Total Posts</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">' +
-        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> TikTok</span><span class="mbv">' + (tpt || dash) + '</span></div>' +
-        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#E1306C;"></span> Instagram</span><span class="mbv">' + (ipt || dash) + '</span></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">' +
+        '<div style="padding:14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;text-align:center;">' +
+          '<div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:6px;"><span style="font-size:11px;">&#9835;</span><span style="font-size:11px;color:#6b7280;">TikTok/wk</span></div>' +
+          '<div style="font-size:24px;font-weight:700;color:' + (tp > 0 ? '#3b82f6' : '#d1d5db') + ';">' + (tp > 0 ? tp : '&mdash;') + '</div>' +
+        '</div>' +
+        '<div style="padding:14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;text-align:center;">' +
+          '<div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:6px;"><span style="font-size:11px;color:#E1306C;">&#9633;</span><span style="font-size:11px;color:#6b7280;">IG/wk</span></div>' +
+          '<div style="font-size:24px;font-weight:700;color:' + (ip > 0 ? '#3b82f6' : '#d1d5db') + ';">' + (ip > 0 ? ip : '&mdash;') + '</div>' +
+        '</div>' +
       '</div>' +
-      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">Avg Posts/Week</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">' +
-        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> TikTok</span><span class="mbv" style="color:' + (tp > 3 ? '#10b981' : tp > 0 ? '#f59e0b' : '#999') + ';">' + (tp || dash) + '</span></div>' +
-        '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#E1306C;"></span> Instagram</span><span class="mbv" style="color:' + (ip > 3 ? '#10b981' : ip > 0 ? '#f59e0b' : '#999') + ';">' + (ip || dash) + '</span></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">' +
+        '<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">' +
+          '<span style="display:flex;align-items:center;gap:5px;"><span style="font-size:11px;">&#9835;</span><span style="font-size:11px;color:#6b7280;">TK Total</span></span>' +
+          '<span style="font-size:13px;font-weight:600;">' + (tpt > 0 ? fmt(tpt) : '&mdash;') + '</span>' +
+        '</div>' +
+        '<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">' +
+          '<span style="display:flex;align-items:center;gap:5px;"><span style="font-size:11px;color:#E1306C;">&#9633;</span><span style="font-size:11px;color:#6b7280;">IG Total</span></span>' +
+          '<span style="font-size:13px;font-weight:600;">' + (ipt > 0 ? fmt(ipt) : '&mdash;') + '</span>' +
+        '</div>' +
       '</div>' +
-      '<div style="font-size:13px;font-weight:700;margin-bottom:8px;">New Posts (from history)</div>' +
-      '<div style="border:1px solid #eee;border-radius:10px;overflow:hidden;">' +
-        '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
-          '<thead><tr style="border-bottom:1px solid #eee;">' +
-            '<th style="text-align:left;padding:10px 12px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;"></th>' +
-            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">24H</th>' +
-            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">7 DAYS</th>' +
-            '<th style="text-align:center;padding:10px 8px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#999;">30 DAYS</th>' +
-          '</tr></thead>' +
-          '<tbody>' +
-            '<tr style="border-bottom:1px solid #f5f5f5;">' +
-              '<td style="padding:10px 12px;display:flex;align-items:center;gap:6px;"><span class="mbd" style="background:#000;display:inline-block;"></span> TikTok</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (tk24 || dash) + '</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (tk7 || dash) + '</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (tk30 || dash) + '</td>' +
-            '</tr>' +
-            '<tr>' +
-              '<td style="padding:10px 12px;display:flex;align-items:center;gap:6px;"><span class="mbd" style="background:#E1306C;display:inline-block;"></span> Instagram</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (ig24 || dash) + '</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (ig7 || dash) + '</td>' +
-              '<td style="text-align:center;padding:10px 8px;">' + (ig30 || dash) + '</td>' +
-            '</tr>' +
-          '</tbody>' +
-        '</table>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">' +
+        '<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">' +
+          '<span style="display:flex;align-items:center;gap:5px;"><span style="font-size:11px;">&#9835;</span><span style="font-size:11px;color:#6b7280;">TK +7d</span></span>' +
+          '<span style="font-size:13px;font-weight:600;color:' + (tk7 > 0 ? '#10b981' : '#d1d5db') + ';">' + (tk7 > 0 ? '+' + tk7 : '&mdash;') + '</span>' +
+        '</div>' +
+        '<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;">' +
+          '<span style="display:flex;align-items:center;gap:5px;"><span style="font-size:11px;color:#E1306C;">&#9633;</span><span style="font-size:11px;color:#6b7280;">IG +7d</span></span>' +
+          '<span style="font-size:13px;font-weight:600;color:' + (ig7 > 0 ? '#10b981' : '#d1d5db') + ';">' + (ig7 > 0 ? '+' + ig7 : '&mdash;') + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div style="padding:10px 14px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;font-size:10px;color:#6b7280;text-align:center;line-height:1.6;">' +
+        '&#128200; Derived from posting consistency across TikTok & Instagram. Formula: 40% TikTok posts/wk + 30% IG posts/wk + 30% consistency (did they post in each of the last 4 weeks?). Scores are relative, normalized across all artists. Accuracy builds after 7+ days of daily tracking.' +
       '</div>';
   }
 
