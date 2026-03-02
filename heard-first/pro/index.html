@@ -668,12 +668,11 @@ function openModal(key) {
   }
 
   if (key === 'streams') {
-    var sp = 0, yt = 0;
-    if (a.sm) Object.values(a.sm).forEach(function(x) { sp += (x.st || 0); yt += (x.yt || 0); });
+    var sp = 0;
+    if (a.sm) Object.values(a.sm).forEach(function(x) { sp += (x.st || 0); });
     var h = streamHistory(a.sm), d = deltas(h);
-    html += '<div class="mt">Total Streams</div><div class="md">Combined Spotify and YouTube.</div>' +
-      mgrid(sp + yt, d) +
-      '<div class="mbk"><div class="mst">Breakdown</div>' + bkrow('Spotify', '#1DB954', sp) + bkrow('YouTube', '#FF0000', yt) + '</div>' +
+    html += '<div class="mt">Spotify Streams</div><div class="md">Total plays across all tracks on Spotify.</div>' +
+      mgrid(sp, d) +
       chart(h);
   } else if (key === 'listeners') {
     var ml = (a.m && a.m.ml) || 0, h = (a.h && a.h.sf) || [], d = deltas(h);
