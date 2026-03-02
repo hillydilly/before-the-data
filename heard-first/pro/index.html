@@ -640,6 +640,40 @@ window.addEventListener('popstate', function(e) {
 });
 
 // ── Metric modal ──
+function pastMonths(h, type) {
+  if (!h || h.length < 2) return '';
+  var months = {};
+  h.forEach(function(entry) {
+    var d = (typeof entry === 'object' && entry.d) ? entry.d : null;
+    var v = hVal(entry);
+    if (!d) return;
+    var m = d.substring(0, 7);
+    if (!months[m]) months[m] = {start: null, end: null, startD: '', endD: ''};
+    if (!months[m].startD || d < months[m].startD) { months[m].start = v; months[m].startD = d; }
+    if (!months[m].endD || d > months[m].endD) { months[m].end = v; months[m].endD = d; }
+  });
+  var sorted = Object.keys(months).sort().reverse();
+  if (sorted.length === 0) return '';
+  var rows = '';
+  sorted.forEach(function(m) {
+    var raw = months[m].end - months[m].start;
+    var change = (type === 'ugc') ? Math.max(0, raw) : raw;
+    var dt = new Date(m + '-01');
+    var name = dt.toLocaleDateString('en-US', {month: 'long', year: 'numeric'});
+    var color = change >= 0 ? '#10b981' : '#ef4444';
+    var sign = change >= 0 ? '+' : '';
+    rows += '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6;">' +
+      '<span style="font-size:12px;color:#6b7280;">' + name + '</span>' +
+      '<div style="text-align:right;">' +
+        '<span style="font-size:12px;font-weight:600;color:' + color + ';">' + sign + fmt(change) + '</span>' +
+        '<span style="font-size:10px;color:#9ca3af;margin-left:8px;">(' + fmt(months[m].end) + ')</span>' +
+      '</div></div>';
+  });
+  return '<div style="margin-top:16px;">' +
+    '<button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'span:last-child\').style.transform=this.nextElementSibling.style.display===\'none\'?\'rotate(0deg)\':\'rotate(180deg)\'" style="display:flex;align-items:center;justify-content:space-between;width:100%;padding:10px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;color:#6b7280;font-size:12px;font-weight:500;cursor:pointer;">' +
+      '<span>&#128197; View Past Months</span><span style="transition:transform .2s;">&#9660;</span></button>' +
+    '<div style="display:none;margin-top:8px;padding:12px;border-radius:8px;background:#f9fafb;max-height:200px;overflow:auto;">' + rows + '</div></div>';
+}
 function openModal(key) {
   var a = CA;
   if (!a) return;
@@ -673,7 +707,7 @@ function openModal(key) {
     var h = streamHistory(a.sm), d = deltas(h);
     html += '<div class="mt">Spotify Streams</div><div class="md">Total plays across all tracks on Spotify.</div>' +
       mgrid(sp, d) +
-      chart(h);
+      chart(h) + pastMonths(h, 'streams');
   } else if (key === 'listeners') {
     var ml = (a.m && a.m.ml) || 0, h = (a.h && a.h.sf) || [], d = deltas(h);
     html += '<div class="mt">Monthly Listeners</div><div class="md">Spotify monthly listeners.</div>' + mgrid(ml, d) + chart(h);
@@ -686,7 +720,7 @@ function openModal(key) {
       '<div class="mbk"><div class="mst">Posting Activity</div>' +
         bkrow('Total Posts', '#000', tpt) +
         '<div class="mbr"><span class="mbl"><span class="mbd" style="background:#000;"></span> Avg Posts/Week</span><span class="mbv" style="color:' + (tp > 3 ? '#10b981' : tp > 0 ? '#f59e0b' : '#999') + ';">' + (tp || dash) + '</span></div>' +
-      '</div>' + chart(h);
+      '</div>' + chart(h) + pastMonths(h, 'tiktok');
   } else if (key === 'instagram') {
     var ig = (a.m && a.m.ig) || 0, h = (a.h && a.h.ig) || [], d = deltas(h);
     var ipt = (a.m && a.m.ip) || 0;
@@ -694,7 +728,7 @@ function openModal(key) {
     html += '<div class="mt">Instagram Followers</div><div class="md">Total Instagram followers.</div>' + mgrid(ig, d) +
       '<div class="mbk"><div class="mst">Posting Activity</div>' +
         bkrow('Total Posts', '#E1306C', ipt) +
-      '</div>' + chart(h);
+      '</div>' + chart(h) + pastMonths(h, 'instagram');
   } else if (key === 'ugc') {
     var tkU = 0, igU = 0;
     if (a.sm) Object.values(a.sm).forEach(function(x) { tkU += (x.ug || 0); igU += (x.igu || 0); });
