@@ -208,7 +208,11 @@ ul { list-style: none; }
 
 /* Account tab — mobile bottom nav only, hidden on desktop */
 #btd-mobile-account-tab { display: none; }
-@media (max-width: 767px) { #btd-mobile-account-tab { display: flex; } }
+@media (max-width: 767px) {
+  #btd-mobile-account-tab { display: flex; }
+  /* Kill 300ms iOS tap delay on all nav items */
+  #sidebar nav a, #btd-mobile-account-tab { touch-action: manipulation; }
+}
 
 /* ── Mobile top bar ── */
 #btd-mobile-topbar {

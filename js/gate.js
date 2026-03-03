@@ -814,12 +814,18 @@ const BTDGate = (() => {
     tab.href = '#';
     tab.setAttribute('aria-label', 'Account');
     tab.innerHTML = `<span class="nav-icon" id="btd-acct-icon">&#x1F464;</span><span id="btd-acct-label">Account</span>`;
-    tab.addEventListener('click', (e) => {
+
+    const handleAccountTap = (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const email = getEmail();
       if (!email) { openAuthModal(); return; }
       showMobileAccountSheet();
-    });
+    };
+    // Use touchend for instant response on iOS (avoids 300ms tap delay)
+    tab.addEventListener('touchend', handleAccountTap, { passive: false });
+    // Fallback for non-touch
+    tab.addEventListener('click', (e) => { e.preventDefault(); });
     nav.appendChild(tab);
     renderMobileAccountTab();
   }
