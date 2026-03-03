@@ -313,22 +313,21 @@ async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limi
 async function fetchPostById(id) {
   // Strip btd_post_ prefix if already present (avoid double-prefix)
   const cleanId = id.replace(/^btd_post_/, '');
-  try {
-    const res = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${cleanId}?key=${FIREBASE_CONFIG.apiKey}`
-    );
-    if (res.ok) {
-      const doc = await res.json();
-      if (doc.fields) return parsePostDoc(doc);
-    }
-  } catch(e) {}
-  // Try direct doc fetch with slug (if id was the full doc name)
-  try {
-    const res = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${cleanId}?key=${FIREBASE_CONFIG.apiKey}`
-    );
-    if (res.ok) return parsePostDoc(await res.json());
-  } catch(e) {}
+  // Normalize: try both dashes and underscores as doc ID separators
+  const underscoreId = cleanId.replace(/-/g, '_');
+  const dashId = cleanId;
+
+  for (const tryId of [underscoreId, dashId]) {
+    try {
+      const res = await fetch(
+        `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_post_${tryId}?key=${FIREBASE_CONFIG.apiKey}`
+      );
+      if (res.ok) {
+        const doc = await res.json();
+        if (doc.fields) return parsePostDoc(doc);
+      }
+    } catch(e) {}
+  }
   // Fallback: scan all posts (up to 500)
   const all = await fetchPosts('publishedAt', 'desc', 500);
   return all.find(p => p.id === cleanId || p.slug === cleanId || p.id === id || p.slug === id) || DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
