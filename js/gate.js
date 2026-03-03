@@ -409,7 +409,13 @@ const BTDGate = (() => {
       return;
     }
 
-    // ── Has email but free/no tier ──────────────────────────────────────────
+    // ── Has email — archive posts are fully unlocked (no daily limit) ───────
+    if (isArchivePost(post)) {
+      // Email = full archive access. Don't gate, don't count.
+      return;
+    }
+
+    // ── Has email but free/no tier — apply daily limit to new posts ──────────
     const dr = getDailyReads();
     if (dr.count >= 2) {
       // Hit daily limit -- show upgrade modal, hide content
