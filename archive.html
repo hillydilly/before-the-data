@@ -53,6 +53,27 @@
       -webkit-overflow-scrolling: touch;
     }
     #archive-year-bar::-webkit-scrollbar { display: none; }
+    #archive-year-dropdown {
+      display: none;
+      width: 100%;
+      margin-bottom: 24px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--bg-2);
+      color: var(--tx-1);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+    }
+    @media (max-width: 767px) {
+      #archive-year-bar { display: none; }
+      #archive-year-dropdown { display: block; }
+    }
 
     .archive-pill {
       flex-shrink: 0;
@@ -243,11 +264,16 @@
       <p class="archive-subtitle">19 years of music discovery. Every artist. Every find.</p>
     </div>
 
-    <!-- Year pill selector -->
+    <!-- Year pill selector (desktop) -->
     <div id="archive-year-bar">
       <button class="archive-pill active" data-year="greatest">Greatest Finds</button>
       <!-- 2007–2023 pills injected by JS -->
     </div>
+    <!-- Year dropdown (mobile) -->
+    <select id="archive-year-dropdown">
+      <option value="greatest">Greatest Finds</option>
+      <!-- 2007–2023 options injected by JS -->
+    </select>
 
     <!-- Greatest Finds grid (default view) -->
     <div id="archive-greatest-finds">
@@ -386,15 +412,25 @@
 
   <script>
     (function () {
-      // Inject year pills 2007-2023
+      // Inject year pills 2007-2023 (desktop) + options (mobile dropdown)
       const bar = document.getElementById('archive-year-bar');
+      const dropdown = document.getElementById('archive-year-dropdown');
       for (let yr = 2023; yr >= 2007; yr--) {
         const btn = document.createElement('button');
         btn.className = 'archive-pill';
         btn.dataset.year = yr;
         btn.textContent = yr;
         bar.appendChild(btn);
+        const opt = document.createElement('option');
+        opt.value = yr;
+        opt.textContent = yr;
+        dropdown.appendChild(opt);
       }
+      dropdown.addEventListener('change', function () {
+        const val = this.value;
+        if (val === 'greatest') { showGreatest(); }
+        else { selectYear(val); }
+      });
 
       let activeYear = null;
       let allPosts = null;
@@ -423,6 +459,7 @@
         bar.querySelectorAll('.archive-pill').forEach(p => {
           p.classList.toggle('active', p.dataset.year === 'greatest');
         });
+        if (dropdown) dropdown.value = 'greatest';
       }
 
       function renderYearGrid(year, posts) {
