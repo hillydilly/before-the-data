@@ -277,23 +277,66 @@ const BTDGate = (() => {
       }
       #btd-blur-gate-backdrop {
         position: fixed; inset: 0; z-index: 7999;
-        background: rgba(255,255,255,0.3);
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(2px);
       }
       #btd-blur-gate-modal {
         position: fixed;
         top: 50%; left: 50%;
         transform: translate(-50%, -50%);
         z-index: 8000;
-        width: 90%;
-        max-width: 420px;
+        width: 92%;
+        max-width: 440px;
         background: #fff;
-        padding: 36px 28px;
-        text-align: center;
-        box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
         box-sizing: border-box;
+        overflow: hidden;
       }
-      #btd-blur-gate-modal .ig-input {
-        width: 100%; box-sizing: border-box;
+      #btd-blur-gate-modal .bgm-top-bar {
+        height: 4px; background: #000;
+      }
+      #btd-blur-gate-modal .bgm-body {
+        padding: 32px 28px 28px;
+        text-align: center;
+      }
+      #btd-blur-gate-modal .bgm-logo {
+        width: 28px; height: 28px; object-fit: contain;
+        display: block; margin: 0 auto 16px;
+      }
+      #btd-blur-gate-modal .bgm-headline {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 30px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        color: #000; margin: 0 0 10px; line-height: 1;
+      }
+      #btd-blur-gate-modal .bgm-sub {
+        font-size: 13px; color: #555;
+        line-height: 1.6; margin: 0 0 22px;
+      }
+      #btd-blur-gate-modal .bgm-form {
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      #btd-blur-gate-modal .bgm-input {
+        width: 100%; padding: 13px 14px;
+        border: 1.5px solid #e0e0e0;
+        font-size: 14px; font-family: inherit;
+        outline: none; background: #fafafa;
+        box-sizing: border-box;
+        transition: border-color 0.15s;
+      }
+      #btd-blur-gate-modal .bgm-input:focus { border-color: #000; background: #fff; }
+      #btd-blur-gate-modal .bgm-submit {
+        width: 100%; padding: 13px;
+        background: #000; color: #fff;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 2px; text-transform: uppercase;
+        border: none; cursor: pointer; font-family: inherit;
+        transition: background 0.15s;
+      }
+      #btd-blur-gate-modal .bgm-submit:hover { background: #222; }
+      #btd-blur-gate-modal .bgm-submit:disabled { opacity: 0.6; cursor: default; }
+      #btd-blur-gate-modal .bgm-fine {
+        font-size: 11px; color: #aaa; margin: 14px 0 0;
       }
     `;
     document.head.appendChild(style);
@@ -340,14 +383,18 @@ const BTDGate = (() => {
     const modal = document.createElement('div');
     modal.id = 'btd-blur-gate-modal';
     modal.innerHTML = `
-      <h2 class="ig-headline">${headline}</h2>
-      <p class="ig-sub">${subtext}</p>
-      <form class="ig-form" id="btd-ig-form">
-        <input type="email" class="ig-input" id="btd-ig-email"
-          placeholder="your@email.com" required autocomplete="email">
-        <button type="submit" class="ig-submit">Continue &rarr;</button>
-      </form>
-      <p class="ig-fine">No spam. Unsubscribe anytime.</p>
+      <div class="bgm-top-bar"></div>
+      <div class="bgm-body">
+        <img src="/assets/brand/logo-black-mark.png" alt="BTD" class="bgm-logo">
+        <h2 class="bgm-headline">${headline}</h2>
+        <p class="bgm-sub">${subtext}</p>
+        <form class="bgm-form" id="btd-ig-form">
+          <input type="email" class="bgm-input" id="btd-ig-email"
+            placeholder="your@email.com" required autocomplete="email">
+          <button type="submit" class="bgm-submit">Continue &rarr;</button>
+        </form>
+        <p class="bgm-fine">No spam &middot; Unsubscribe anytime</p>
+      </div>
     `;
     document.body.appendChild(modal);
 
@@ -355,7 +402,7 @@ const BTDGate = (() => {
       e.preventDefault();
       const emailVal = modal.querySelector('#btd-ig-email').value.trim();
       if (!emailVal) return;
-      const btn = modal.querySelector('.ig-submit');
+      const btn = modal.querySelector('.bgm-submit');
       btn.textContent = 'Checking...';
       btn.disabled = true;
 
