@@ -409,6 +409,9 @@ function verifyEmail(email, onSuccess, onFail) {
       if (tier === 'pro') {
         localStorage.setItem('btd_pro_token', 'v_' + btoa(email));
         localStorage.setItem('btd_pro_email', email);
+        // Sync to gate keys so main site recognises as logged-in Pro
+        localStorage.setItem('btd_email', email);
+        localStorage.setItem('btd_tier', 'pro');
         onSuccess();
       } else if (tier === 'heard-first') {
         onFail('Your account is Heard First ($9/mo). Upgrade to Pro for dashboard access.');
@@ -830,6 +833,8 @@ function closeMo() { document.getElementById('mov').classList.remove('open'); }
 function doLogout() {
   localStorage.removeItem('btd_pro_token');
   localStorage.removeItem('btd_pro_email');
+  localStorage.removeItem('btd_email');
+  localStorage.removeItem('btd_tier');
   window.location.href = '/heard-first';
 }
 

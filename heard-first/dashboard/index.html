@@ -224,6 +224,9 @@ function verifyEmail(email, onOk, onFail) {
         localStorage.setItem('btd_hf_token', 'v_' + btoa(email));
         localStorage.setItem('btd_hf_email', email);
         localStorage.setItem('btd_hf_tier', tier);
+        // Sync to gate keys so main site recognises as logged-in
+        localStorage.setItem('btd_email', email);
+        localStorage.setItem('btd_tier', tier);
         onOk(tier);
       } else {
         onFail('No subscription found. Subscribe at beforethedata.com/heard-first');
@@ -403,6 +406,8 @@ function doLogout() {
   localStorage.removeItem('btd_hf_token');
   localStorage.removeItem('btd_hf_email');
   localStorage.removeItem('btd_hf_tier');
+  localStorage.removeItem('btd_email');
+  localStorage.removeItem('btd_tier');
   window.location.href = '/heard-first';
 }
 
