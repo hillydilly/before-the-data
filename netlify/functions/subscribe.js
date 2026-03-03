@@ -129,6 +129,11 @@ export default async (req) => {
         <a href="https://beforethedata.com/heard-first" style="display:inline-block;background:#000000;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">JOIN HEARD FIRST &#x2192;</a>
       </div>
       <p style="margin:16px 0 0;text-align:center;font-size:11px;color:#999999;">$9/mo. Cancel anytime.</p>
+      <div style="margin-top:20px;padding:16px 20px;background:#f7f7f7;border-radius:10px;border:1px solid #eeeeee;text-align:center;">
+        <p style="margin:0 0 6px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#999999;font-weight:600;">FOR A&amp;R PROFESSIONALS</p>
+        <p style="margin:0 0 12px;font-size:13px;color:#333333;line-height:1.5;">Want 7-day exclusive access and a live scouting dashboard? <strong>Heard First Pro</strong> is $49.99/mo.</p>
+        <a href="https://beforethedata.com/heard-first" style="display:inline-block;background:#ffffff;color:#000000;border:1px solid #000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;text-decoration:none;">Learn More &#x2192;</a>
+      </div>
     </td>
   </tr>
 
