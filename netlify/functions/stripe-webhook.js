@@ -76,6 +76,13 @@ function proWelcomeEmail(email) {
             <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">When Chad approves a new artist, you get an email immediately. Full write-up, live data, and a link to the dashboard.</p>
           </td>
         </tr>
+        <tr>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Search by city</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Find artists and producers by city. Nashville, Atlanta, London. See every act we have covered from there.</p>
+          </td>
+        </tr>
       </table>
     </td>
   </tr>
@@ -263,6 +270,13 @@ export default async (req) => {
           <td style="padding:10px 0;">
             <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Monthly ones to watch</p>
             <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Top momentum artists of the month, ranked by data. Before the industry catches on.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:10px 0;vertical-align:top;width:24px;font-size:14px;color:#000000;">&#x2192;</td>
+          <td style="padding:10px 0;">
+            <p style="margin:0;font-size:14px;font-weight:700;color:#000000;line-height:1.4;">Search by city</p>
+            <p style="margin:4px 0 0;font-size:13px;color:#666666;line-height:1.5;">Find artists and producers by city. Nashville, Atlanta, London. See every act we have covered from there.</p>
           </td>
         </tr>
       </table>

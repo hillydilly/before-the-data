@@ -340,14 +340,14 @@ const BTDGate = (() => {
             <div class="um-plan">
               <div>
                 <div class="um-plan-name">Heard First</div>
-                <div class="um-plan-desc">Unlimited reads, early access picks, weekly tracker.</div>
+                <div class="um-plan-desc">Unlimited reads, early access, archive access, search by city.</div>
               </div>
               <div class="um-plan-price">$9/mo</div>
             </div>
             <div class="um-plan um-plan-pro">
               <div>
                 <div class="um-plan-name">Heard First Pro</div>
-                <div class="um-plan-desc">Everything plus full A&amp;R scouting reports and data.</div>
+                <div class="um-plan-desc">Everything plus live scouting dashboard, A&amp;R data, and city search.</div>
               </div>
               <div class="um-plan-price">$49.99/mo</div>
             </div>

@@ -98,6 +98,10 @@ export default async (req) => {
           <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; Monthly ones to watch</p>
           <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Top momentum artists of the month, ranked by data. Before the industry catches on.</p>
         </td></tr>
+        <tr><td style="padding:10px 0;">
+          <p style="margin:0;font-size:14px;font-weight:700;color:#ffffff;">&#x2192; Search by city</p>
+          <p style="margin:4px 0 0;font-size:13px;color:#999999;line-height:1.5;">Find artists and producers by city. Nashville, Atlanta, London. Every act we have covered from there.</p>
+        </td></tr>
       </table>
       <div style="margin-top:28px;text-align:center;">
         <a href="https://beforethedata.com/heard-first.html" style="display:inline-block;background:#ffffff;color:#000000;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 36px;text-decoration:none;">JOIN HEARD FIRST &#x2192;</a>
