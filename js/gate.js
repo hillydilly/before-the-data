@@ -571,11 +571,13 @@ const BTDGate = (() => {
     const email = getEmail();
     const tier = getTier();
     if (email) {
+      const isPaidTier = PAID_TIERS.includes(tier);
       block.innerHTML = `
         <div id="sidebar-account-info">
           <strong>${email}</strong>
           ${getTierLabel(tier)}
           <br>
+          ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(email)}" style="color:var(--tx-3);font-size:10px;text-decoration:underline;">Manage subscription</a> &middot; ` : ''}
           <button class="sidebar-logout" onclick="BTDGate.siteLogout()">Log out</button>
         </div>`;
     } else {
