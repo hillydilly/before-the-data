@@ -601,7 +601,7 @@ async function renderPost() {
   let sidebarHTML = '';
 
   // Written By
-  if (post.writtenBy) {
+  if (post.writtenBy && post.writtenBy.name && post.writtenBy.name !== 'undefined') {
     sidebarHTML += `
       <section>
         <h4>Written By</h4>
@@ -609,7 +609,7 @@ async function renderPost() {
           <img class="author-avatar" src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772287609/btd/chad-profile.jpg" alt="${post.writtenBy.name}">
           <div>
             <div class="author-name">${post.writtenBy.name}</div>
-            <div class="author-location">${post.writtenBy.location}</div>
+            ${post.writtenBy.location ? `<div class="author-location">${post.writtenBy.location}</div>` : ''}
           </div>
         </div>
       </section>
