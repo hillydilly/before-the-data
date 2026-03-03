@@ -277,6 +277,17 @@ async function renderNewMusic() {
   let activeGenre = urlGenre || null;
   let activeYear = urlYear ? parseInt(urlYear) : null;
 
+  // Update page title when filtering by genre — this is a sitewide genre browse
+  if (activeGenre) {
+    const h1 = document.querySelector('.page-header h1, h1.page-title, h1');
+    if (h1) h1.textContent = activeGenre;
+    document.title = activeGenre + ' — Before The Data';
+  } else if (activeYear) {
+    const h1 = document.querySelector('.page-header h1, h1.page-title, h1');
+    if (h1) h1.textContent = activeYear;
+    document.title = activeYear + ' — Before The Data';
+  }
+
   // Inject genre + year filter bar
   const pageHeader = document.querySelector('.page-header') || grid.parentElement;
   const existingBar = document.getElementById('genre-filter-bar');
@@ -313,6 +324,10 @@ async function renderNewMusic() {
         if (activeGenre) url.searchParams.set('genre', activeGenre);
         else url.searchParams.delete('genre');
         history.replaceState({}, '', url);
+        // Update page title
+        const h1 = document.querySelector('.page-header h1, h1.page-title, h1');
+        if (h1) h1.textContent = activeGenre || 'New Music';
+        document.title = (activeGenre || 'New Music') + ' — Before The Data';
       }
     });
 
@@ -353,7 +368,13 @@ async function renderNewMusic() {
     let posts = allPosts;
     if (activeGenre) posts = posts.filter(p => (p.genres || [p.genre]).includes(activeGenre));
     if (activeYear) posts = posts.filter(p => p.publishedAt && new Date(p.publishedAt).getFullYear() === activeYear);
+    // Filter out posts with no artist or title (incomplete archive stubs)
+    posts = posts.filter(p => p.artist && p.title);
     grid.innerHTML = '';
+    if (!posts.length) {
+      grid.innerHTML = `<div style="padding:48px 0;text-align:center;color:#888;font-size:15px;">No posts found${activeGenre ? ' for <strong>' + activeGenre + '</strong>' : ''}.</div>`;
+      return;
+    }
     if (view === 'list') {
       grid.className = 'music-grid list-view';
       posts.forEach(p => grid.appendChild(createListItem(p)));
