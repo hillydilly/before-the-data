@@ -48,19 +48,30 @@
     #search-archive-hint a:hover { text-decoration: underline; }
     #archive-strip {
       display: none;
-      margin: 24px 0 8px;
+      margin: 40px 0 8px;
     }
-    .archive-strip-label {
-      display: block;
-      font-size: 11px;
+    .archive-strip-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      border-bottom: 3px solid var(--acc);
+      padding-bottom: 8px;
+    }
+    .archive-strip-header h2 {
+      font-family: var(--font-heading);
+      font-size: 20px;
       font-weight: 700;
-      letter-spacing: 2px;
       text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+      color: var(--tx-1);
+    }
+    .archive-strip-header a.archive-strip-view-all {
+      font-size: 12px;
       color: var(--tx-3);
       text-decoration: none;
-      margin-bottom: 10px;
     }
-    .archive-strip-label span { font-size: 10px; }
     .archive-strip-scroll {
       display: flex;
       gap: 8px;
@@ -140,7 +151,10 @@
 
     <!-- Archive strip (mobile only) -->
     <div id="archive-strip">
-      <a class="archive-strip-label" href="/archive">Archive <span>&#x2192;</span></a>
+      <div class="archive-strip-header">
+        <h2>Archive</h2>
+        <a class="archive-strip-view-all" href="/archive">View all &#x2192;</a>
+      </div>
       <div class="archive-strip-scroll">
         <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273e69fbb3f6b3c1b42c5eba61c" alt="Lorde"></a>
         <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bd89802e14" alt="Billie Eilish"></a>
