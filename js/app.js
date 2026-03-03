@@ -261,30 +261,76 @@ async function renderNewMusic() {
   const allPosts = await fetchPosts('publishedAt', 'desc', 500);
 
   const urlGenre = new URLSearchParams(window.location.search).get('genre');
+  const urlYear = new URLSearchParams(window.location.search).get('year');
   let activeGenre = urlGenre || null;
+  let activeYear = urlYear ? parseInt(urlYear) : null;
 
-  // Inject genre filter bar
+  // Inject genre + year filter bar
   const pageHeader = document.querySelector('.page-header') || grid.parentElement;
   const existingBar = document.getElementById('genre-filter-bar');
   if (!existingBar && pageHeader) {
     const genres = [...new Set(allPosts.flatMap(p => p.genres && p.genres.length ? p.genres : (p.genre ? [p.genre] : [])))].sort();
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let y = currentYear; y >= 2007; y--) years.push(y);
+
     const bar = document.createElement('div');
     bar.id = 'genre-filter-bar';
     bar.innerHTML = `
-      <button class="genre-btn ${!activeGenre ? 'active' : ''}" data-genre="">All</button>
+      <button class="genre-btn ${!activeGenre && !activeYear ? 'active' : ''}" data-genre="">All</button>
       ${genres.map(g => `<button class="genre-btn ${activeGenre === g ? 'active' : ''}" data-genre="${g}">${g}</button>`).join('')}
+      <div class="year-filter-wrap" id="year-filter-wrap">
+        <button class="genre-btn year-pill ${activeYear ? 'active' : ''}" id="year-pill-btn">
+          ${activeYear ? activeYear : 'Year'} ▾
+        </button>
+        <div class="year-dropdown" id="year-dropdown">
+          ${years.map(y => `<button class="year-option ${activeYear === y ? 'active' : ''}" data-year="${y}">${y}</button>`).join('')}
+        </div>
+      </div>
     `;
     pageHeader.insertBefore(bar, grid);
+
+    // Genre filter clicks
     bar.addEventListener('click', e => {
-      if (!e.target.classList.contains('genre-btn')) return;
-      activeGenre = e.target.dataset.genre || null;
-      bar.querySelectorAll('.genre-btn').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
+      const genreBtn = e.target.closest('.genre-btn:not(.year-pill)');
+      if (genreBtn && genreBtn.dataset.genre !== undefined) {
+        activeGenre = genreBtn.dataset.genre || null;
+        bar.querySelectorAll('.genre-btn:not(.year-pill)').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
+        renderView(currentView);
+        const url = new URL(window.location.href);
+        if (activeGenre) url.searchParams.set('genre', activeGenre);
+        else url.searchParams.delete('genre');
+        history.replaceState({}, '', url);
+      }
+    });
+
+    // Year pill toggle dropdown
+    const yearBtn = document.getElementById('year-pill-btn');
+    const yearDropdown = document.getElementById('year-dropdown');
+    yearBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      yearDropdown.classList.toggle('open');
+    });
+
+    // Year option clicks
+    yearDropdown.addEventListener('click', e => {
+      const opt = e.target.closest('.year-option');
+      if (!opt) return;
+      const y = parseInt(opt.dataset.year);
+      activeYear = activeYear === y ? null : y;
+      yearDropdown.querySelectorAll('.year-option').forEach(o => o.classList.toggle('active', parseInt(o.dataset.year) === activeYear));
+      yearBtn.textContent = activeYear ? activeYear + ' ▾' : 'Year ▾';
+      yearBtn.classList.toggle('active', !!activeYear);
+      yearDropdown.classList.remove('open');
       renderView(currentView);
       const url = new URL(window.location.href);
-      if (activeGenre) url.searchParams.set('genre', activeGenre);
-      else url.searchParams.delete('genre');
+      if (activeYear) url.searchParams.set('year', activeYear);
+      else url.searchParams.delete('year');
       history.replaceState({}, '', url);
     });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', () => yearDropdown.classList.remove('open'));
   }
 
   Player.setQueue(allPosts);
@@ -292,7 +338,9 @@ async function renderNewMusic() {
   function renderView(view) {
     currentView = view;
     _setView(view);
-    const posts = activeGenre ? allPosts.filter(p => (p.genres || [p.genre]).includes(activeGenre)) : allPosts;
+    let posts = allPosts;
+    if (activeGenre) posts = posts.filter(p => (p.genres || [p.genre]).includes(activeGenre));
+    if (activeYear) posts = posts.filter(p => p.publishedAt && new Date(p.publishedAt).getFullYear() === activeYear);
     grid.innerHTML = '';
     if (view === 'list') {
       grid.className = 'music-grid list-view';

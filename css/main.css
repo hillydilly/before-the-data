@@ -950,6 +950,44 @@ ul { list-style: none; }
 .genre-btn:hover { background: #e0e0e0; }
 .genre-btn.active { background: #000; color: #fff; }
 
+.year-filter-wrap {
+  position: relative;
+  display: inline-block;
+}
+.year-pill { min-width: 68px; }
+.year-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  z-index: 100;
+  padding: 4px 0;
+  min-width: 80px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.year-dropdown.open { display: block; }
+.year-option {
+  display: block;
+  width: 100%;
+  padding: 6px 14px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  color: #222;
+}
+.year-option:hover { background: #f2f2f2; }
+.year-option.active { background: #000; color: #fff; }
+
 /* ── Artist Pages ─────────────────────────────────────────────── */
 .artist-hero {
   padding: 0;
