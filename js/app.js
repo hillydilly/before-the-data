@@ -270,7 +270,7 @@ async function renderNewMusic() {
 
   // Skeleton while fetching
   if (!grid.querySelector(".music-list-item:not(.skeleton-card)")) { grid.innerHTML = Array(8).fill(0).map(() => `<div class="music-list-item skeleton-card" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;"><div style="width:52px;height:52px;border-radius:6px;background:#f0f0f0;flex-shrink:0;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="flex:1;"><div style="height:13px;background:#f0f0f0;border-radius:4px;width:60%;margin-bottom:7px;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="height:11px;background:#f0f0f0;border-radius:4px;width:40%;animation:btd-pulse 1.4s ease-in-out infinite;"></div></div></div>`).join(""); }
-  const allPosts = await fetchPosts('publishedAt', 'desc', 500);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
 
   const urlGenre = new URLSearchParams(window.location.search).get('genre');
   const urlYear = new URLSearchParams(window.location.search).get('year');
@@ -435,7 +435,7 @@ async function renderArtist() {
   const slug = pathParts[1] || pathParts[0] || '';
   if (!slug) return;
 
-  const allPosts = await fetchPosts('publishedAt', 'desc', 500);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
   // Match by artistSlug
   const posts = allPosts.filter(p => artistSlug(p.artist || '') === slug || (p.artist || '').split(',').some(a => artistSlug(a.trim()) === slug));
 
