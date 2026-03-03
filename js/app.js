@@ -501,7 +501,7 @@ async function renderPost() {
       <div class="post-date">${formatPostDate(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
       <div class="post-stream-links">
-        ${(post.previewUrl || post.trackId || post.youtubeId) ? `<button class="post-play-btn" id="hero-play-btn">▶ ${post.previewUrl ? 'Play Preview' : post.trackId ? 'Play on Spotify' : 'Watch on YouTube'}</button>` : ''}
+        ${(post.previewUrl || post.trackId || post.youtubeId) ? `<button class="post-play-btn" id="hero-play-btn">▶ ${post.youtubeId && !post.trackId ? 'Watch on YouTube' : 'Play Preview'}</button>` : ''}
         ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
         ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
       </div>
@@ -523,35 +523,62 @@ async function renderPost() {
     </div>
   `;
 
-  // Play button — play preview if available, otherwise scroll to Spotify embed
-  const scrollToEmbed = () => {
-    const embed = document.getElementById('post-spotify-embed');
+  // Play button — always plays 30s preview in the bottom player bar
+  // If previewUrl not stored, fetch it live from /api/spotify-preview
+  let _resolvedPreviewUrl = post.previewUrl || null;
+  let _fetchingPreview = false;
+
+  const scrollToYouTube = () => {
+    const embed = document.getElementById('post-youtube-embed');
     if (embed) {
       embed.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const color = post.youtubeId && !post.trackId ? '#FF0000' : '#1DB954';
-      embed.style.outline = `2px solid ${color}`;
+      embed.style.outline = '2px solid #FF0000';
       setTimeout(() => { embed.style.outline = ''; }, 1800);
     }
   };
 
-  const playPost = () => {
-    if (post.previewUrl) {
-      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-      const playBtn = document.getElementById('hero-play-btn');
-      if (playBtn) playBtn.textContent = '▶ Playing in player bar ↑';
-    } else {
-      scrollToEmbed();
+  const doPlay = (previewUrl) => {
+    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl });
+    const btn = document.getElementById('hero-play-btn');
+    if (btn) btn.textContent = '▶ Playing...';
+  };
+
+  const playPost = async () => {
+    // If we already have a preview URL, play it immediately
+    if (_resolvedPreviewUrl) { doPlay(_resolvedPreviewUrl); return; }
+
+    // No previewUrl but has trackId — fetch from our proxy
+    if (post.trackId && !_fetchingPreview) {
+      _fetchingPreview = true;
+      const btn = document.getElementById('hero-play-btn');
+      if (btn) btn.textContent = '▶ Loading...';
+      try {
+        const res = await fetch(`/api/spotify-preview?trackId=${post.trackId}`);
+        const data = await res.json();
+        if (data.previewUrl) {
+          _resolvedPreviewUrl = data.previewUrl;
+          doPlay(_resolvedPreviewUrl);
+        } else {
+          // Track exists on Spotify but has no preview — fall back to YouTube
+          if (post.youtubeId) { scrollToYouTube(); }
+          else if (btn) btn.textContent = '▶ No Preview Available';
+        }
+      } catch (e) {
+        if (btn) btn.textContent = '▶ Play Preview';
+      } finally { _fetchingPreview = false; }
+      return;
     }
+
+    // No trackId, has youtubeId — scroll to YouTube embed
+    if (post.youtubeId) { scrollToYouTube(); }
   };
 
   const artWrap = document.getElementById('art-play-wrap');
   if (artWrap && (post.previewUrl || post.trackId || post.youtubeId)) {
     artWrap.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (post.previewUrl) {
-        const current = Player.getCurrent();
-        if (current && current.id === post.id) { Player.togglePlay(); return; }
-      }
+      const current = Player.getCurrent();
+      if (_resolvedPreviewUrl && current && current.id === post.id) { Player.togglePlay(); return; }
       playPost();
     });
   }
@@ -588,7 +615,7 @@ async function renderPost() {
     body.appendChild(embedWrap);
   } else if (post.youtubeId) {
     const embedWrap = document.createElement('div');
-    embedWrap.id = 'post-spotify-embed'; // same id so scrollToEmbed finds it
+    embedWrap.id = 'post-youtube-embed';
     embedWrap.className = 'post-youtube-embed';
     embedWrap.innerHTML = `<iframe width="100%" height="200" style="border-radius:8px"
       src="https://www.youtube.com/embed/${post.youtubeId}?rel=0"
