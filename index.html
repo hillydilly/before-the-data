@@ -45,52 +45,7 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
     /* Archive banner — mobile only, full-width strip */
-    #archive-banner {
-      display: none; /* JS controls visibility */
-      background: #000;
-      color: #fff;
-      position: relative;
-      margin: -24px -16px 16px; /* bleed to edges on mobile */
-    }
-    #archive-banner a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 40px 12px 16px;
-      color: #fff;
-      text-decoration: none;
-      gap: 8px;
-    }
-    #archive-banner .archive-banner-text {
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 1.4;
-    }
-    #archive-banner .archive-banner-cta {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    #archive-banner-dismiss {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #888;
-      font-size: 12px;
-      cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-    }
-    #archive-banner-dismiss:hover { color: #fff; }
-    /* Only show on mobile */
-    @media (min-width: 768px) {
-      #archive-banner { display: none !important; }
-    }
+    #search-archive-hint a:hover { text-decoration: underline; }
   </style>
 </head>
 <body data-page="discover">
@@ -139,14 +94,9 @@
     <!-- Mobile sticky search bar -->
     <div id="mobile-search-bar">
       <input type="text" id="mobile-search-input" placeholder="Search artists or tracks..." autocomplete="off">
-    </div>
-    <!-- Archive banner (mobile only, dismissible) -->
-    <div id="archive-banner" style="display:none;">
-      <a href="/archive" id="archive-banner-link">
-        <span class="archive-banner-text">Explore the archive. 19 years of music discovery.</span>
-        <span class="archive-banner-cta">Browse &rarr;</span>
-      </a>
-      <button id="archive-banner-dismiss" title="Dismiss" aria-label="Dismiss">&#10005;</button>
+      <div id="search-archive-hint" style="display:none;padding:10px 14px 8px;font-size:12px;color:#999999;border-top:1px solid #222222;">
+        Looking further back? <a href="/archive" style="color:#ffffff;font-weight:600;text-decoration:none;">Browse the archive &#x2192;</a> <span style="color:#666666;font-size:11px;">19 years of music discovery</span>
+      </div>
     </div>
 
     <div class="section-header">
@@ -169,26 +119,16 @@
   <script src="js/player.js?v=202603012131"></script>
   <script src="js/app.js?v=202603012131"></script>
 
-  <!-- Archive banner JS -->
+  <!-- Search archive hint JS -->
   <script>
     (function () {
-      var DISMISS_KEY = 'btd_archive_banner_dismissed';
-      var banner = document.getElementById('archive-banner');
-      var dismissBtn = document.getElementById('archive-banner-dismiss');
-      if (!banner) return;
-      try {
-        if (!localStorage.getItem(DISMISS_KEY) && window.innerWidth < 768) {
-          banner.style.display = 'block';
-        }
-      } catch (e) {}
-      if (dismissBtn) {
-        dismissBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          banner.style.display = 'none';
-          try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
-        });
-      }
+      var input = document.getElementById('mobile-search-input');
+      var hint = document.getElementById('search-archive-hint');
+      if (!input || !hint) return;
+      input.addEventListener('focus', function () { hint.style.display = 'block'; });
+      input.addEventListener('blur', function () {
+        setTimeout(function () { hint.style.display = 'none'; }, 200);
+      });
     })();
   </script>
 
