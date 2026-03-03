@@ -731,8 +731,10 @@ ul { list-style: none; }
 
   #main {
     margin-left: 0;
-    padding: 24px 16px 80px;
+    padding: 16px 16px 80px;
   }
+  .section-header { margin-bottom: 14px; }
+  .music-scroll { gap: 12px; }
 
   .post-hero { flex-direction: column; padding: 24px 16px; margin: -24px -16px 0; }
   .post-art-wrap { width: 100%; height: auto; aspect-ratio: 1; max-width: 300px; align-self: center; }
