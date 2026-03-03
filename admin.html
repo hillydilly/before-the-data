@@ -297,6 +297,7 @@ async function loadSubmissions() {
           bio: f.bio?.stringValue || '',
           status: f.status?.stringValue || 'pending',
           tier: f.tier?.stringValue || 'free',
+          feedbackRequested: f.feedbackRequested?.booleanValue || false,
           submittedAt: f.submittedAt?.stringValue || '',
           stripeSessionId: f.stripeSessionId?.stringValue || ''
         };
@@ -389,7 +390,7 @@ function renderDetail(s) {
   document.getElementById('detail-panel').innerHTML = `
     <div class="detail-header">
       <div class="detail-artist">${esc(s.artistName)}</div>
-      <div class="detail-genre">${esc(s.genre)} · ${s.tier === 'paid' ? '★ PAID — Guaranteed Listen' : 'FREE — Standard Queue'}</div>
+      <div class="detail-genre">${esc(s.genre)} · ${s.tier === 'paid' ? '★ PAID — Guaranteed Listen' : 'FREE — Standard Queue'}${s.feedbackRequested ? ' · <strong>🎤 Feedback requested</strong>' : ''}</div>
     </div>
 
     ${statusBanner}
@@ -486,6 +487,18 @@ async function handleAction(id, action) {
       body: JSON.stringify({ id, action })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // If denied + feedback was requested, ping CLAWD in #btd-agent via webhook
+    if (action === 'deny') {
+      const sub = allSubmissions.find(s => s.id === id);
+      if (sub?.feedbackRequested) {
+        await fetch('/api/request-feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, artistName: sub.artistName, spotifyUrl: sub.spotifyUrl, email: sub.email })
+        }).catch(() => {}); // fire and forget — don't block the deny flow
+      }
+    }
 
     // Update local state
     const newStatus = action === 'approve' ? 'approved' : 'denied';

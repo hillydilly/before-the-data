@@ -250,6 +250,13 @@
               </div>
             </div>
 
+            <div id="feedback-option" style="display:none;margin:0 0 20px;padding:14px 16px;border:1px solid #e0e0e0;border-radius:8px;background:#fafafa;">
+              <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px;color:#222;line-height:1.5;">
+                <input type="checkbox" id="feedback-checkbox" name="feedbackRequested" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;cursor:pointer;">
+                <span><strong>Request feedback</strong> (optional) — If we pass, Chad will drop a quick voice note explaining why. Included free with your $5 submission.</span>
+              </label>
+            </div>
+
             <button type="submit" class="btn-primary" id="submit-btn">Submit Track →</button>
             <p class="fine-print">By submitting you confirm this is your original work. Paid submissions are processed via Stripe. No refunds on paid submissions.</p>
           </form>
@@ -317,6 +324,9 @@
       document.getElementById('tier-paid').classList.toggle('selected', tier === 'paid');
       const btn = document.getElementById('submit-btn');
       btn.textContent = tier === 'paid' ? 'Pay $5 & Submit →' : 'Submit Track (Free) →';
+      // Show feedback checkbox only for paid tier
+      const fbOpt = document.getElementById('feedback-option');
+      if (fbOpt) fbOpt.style.display = tier === 'paid' ? 'block' : 'none';
     }
 
     // On load
@@ -513,7 +523,8 @@
             email: capturedEmail,
             ...finalData,
             tier: paidReturn ? 'paid' : 'free',
-            stripeSessionId: sessionId
+            stripeSessionId: sessionId,
+            feedbackRequested: paidReturn ? (document.getElementById('feedback-checkbox')?.checked || false) : false
           })
         });
         if (!res.ok) {

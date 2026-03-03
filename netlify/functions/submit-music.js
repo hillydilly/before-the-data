@@ -37,7 +37,8 @@ export default async (req) => {
     tiktokUrl = '',
     bio = '',
     stripeSessionId = '',
-    tier = 'free'
+    tier = 'free',
+    feedbackRequested = false
   } = body;
 
   // Validate required fields
@@ -65,10 +66,11 @@ export default async (req) => {
           tiktokUrl:       { stringValue: tiktokUrl },
           bio:             { stringValue: bio },
           stripeSessionId: { stringValue: stripeSessionId },
-          tier:            { stringValue: tier },
-          guaranteed:      { booleanValue: tier === 'paid' },
-          submittedAt:     { stringValue: new Date(timestamp).toISOString() },
-          status:          { stringValue: 'pending' }
+          tier:              { stringValue: tier },
+          guaranteed:        { booleanValue: tier === 'paid' },
+          feedbackRequested: { booleanValue: tier === 'paid' && !!feedbackRequested },
+          submittedAt:       { stringValue: new Date(timestamp).toISOString() },
+          status:            { stringValue: 'pending' }
         }
       })
     });

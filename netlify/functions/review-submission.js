@@ -40,7 +40,9 @@ export default async (req) => {
       email: f.email?.stringValue || '',
       artistName: f.artistName?.stringValue || '',
       spotifyUrl: f.spotifyUrl?.stringValue || '',
-      genre: f.genre?.stringValue || ''
+      genre: f.genre?.stringValue || '',
+      feedbackRequested: f.feedbackRequested?.booleanValue || false,
+      feedbackText: f.feedbackText?.stringValue || ''
     };
   } catch (err) {
     return new Response(JSON.stringify({ error: 'Submission not found' }), {
@@ -136,6 +138,12 @@ export default async (req) => {
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">We genuinely appreciate you submitting to Before The Data.</p>
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">After listening, this one is not the right fit for us right now. We are going to pass.</p>
       <p style="margin:0 0 16px;font-size:15px;color:#333333;line-height:1.8;">Please know this is just our opinion, and opinions change. We approve on a song by song basis, so we encourage you to keep submitting. You never know what will land.</p>
+      ${sub.feedbackRequested && sub.feedbackText ? `
+      <div style="margin:24px 0;padding:20px 24px;background:#f7f7f7;border-left:3px solid #000000;border-radius:4px;">
+        <p style="margin:0 0 8px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#999999;font-weight:700;">CHAD'S FEEDBACK</p>
+        <p style="margin:0;font-size:15px;color:#111111;line-height:1.8;">${sub.feedbackText}</p>
+      </div>
+      ` : ''}
       <p style="margin:0;font-size:15px;color:#333333;line-height:1.8;">Keep creating. The right one is coming.</p>
     </td>
   </tr>
