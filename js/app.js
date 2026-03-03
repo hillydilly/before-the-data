@@ -566,38 +566,27 @@ async function renderPost() {
   // Increment views
   incrementViews(post.id);
 
-  // Hero
+  // Hero — Hillydilly two-column layout: artwork left, metadata right
   const hero = document.getElementById('post-hero');
+  const postGenreList = (post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : []));
+  const hasAudio = post.previewUrl || post.trackId || post.youtubeId;
+  const playBtnLabel = (post.youtubeId && !post.trackId) ? 'Watch on YouTube' : '&#9654; Play Preview';
+
   hero.innerHTML = `
-    <div class="post-hero-bg" style="background-image:url('${post.artUrl}')"></div>
-    <div class="post-art-wrap" id="art-play-wrap">
-      <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
-      <div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>
+    <div class="hd-hero-art" id="art-play-wrap">
+      <img src="${post.artUrl}" alt="${post.title}">
+      ${hasAudio ? `<div class="hd-art-overlay"><div class="hd-art-play-circle">&#9654;</div></div>` : ''}
     </div>
-    <div class="post-hero-meta">
-      <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
-      <div class="post-title">&ldquo;${post.title}&rdquo;</div>
-      <div class="post-date">${formatPostDate(post.publishedAt)}</div>
-      <div class="post-country">${countryFlag(post.country)}</div>
-      <div class="post-stream-links">
-        ${(post.previewUrl || post.trackId || post.youtubeId) ? `<button class="post-play-btn" id="hero-play-btn">▶ ${post.youtubeId && !post.trackId ? 'Watch on YouTube' : 'Play Preview'}</button>` : ''}
-        ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
-        ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
-      </div>
-      <div class="post-socials">
-        ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank" class="social-pill">Instagram</a>` : ''}
-        ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank" class="social-pill">TikTok</a>` : ''}
-        ${post.socialLinks?.twitter ? `<a href="${post.socialLinks.twitter}" target="_blank" class="social-pill">Twitter</a>` : ''}
-        ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
-      </div>
-      <div class="post-tags">
-        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href='/new-music.html?genre=${encodeURIComponent(g)}'">${g}</a>`).join('')}
-        ${(post.tags || []).filter(t => {
-          const skip = ['artist-discovery','new-music','new-release','featured','editorial','scouting'];
-          if (skip.includes(t.toLowerCase())) return false;
-          const gl = (post.genres || []).map(g => g.toLowerCase());
-          return !gl.includes(t.toLowerCase());
-        }).map(t => `<span>${t}</span>`).join('')}
+    <div class="hd-hero-meta">
+      <div class="hd-post-title">&ldquo;${post.title}&rdquo;</div>
+      <a class="hd-post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
+      <div class="hd-post-date-line">Published <span class="hd-date-val">${formatPostDate(post.publishedAt)}</span>${post.country ? ' &nbsp;' + countryFlag(post.country) : ''}</div>
+      ${hasAudio ? `<button class="hd-post-play-btn" id="hero-play-btn">${playBtnLabel}</button>` : ''}
+      ${postGenreList.length ? `<div class="hd-tagged-as">Tagged as:</div><div class="hd-genre-pills">${postGenreList.map(g => `<a class="hd-genre-pill" href="/new-music.html?genre=${encodeURIComponent(g)}" onclick="event.stopPropagation();window.location.href='/new-music.html?genre=${encodeURIComponent(g)}'">${g}</a>`).join('')}</div>` : ''}
+      <div class="hd-stream-row">
+        ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="hd-stream-link spotify">Spotify</a>` : ''}
+        ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank" class="hd-stream-link">Instagram</a>` : ''}
+        ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank" class="hd-stream-link">TikTok</a>` : ''}
       </div>
     </div>
   `;
