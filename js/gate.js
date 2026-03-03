@@ -412,12 +412,11 @@ const BTDGate = (() => {
       setTier(tier);
       netlifySubscribe(emailVal);
 
-      // Remove gate entirely
-      modal.remove();
-      backdrop.remove();
-      gatedEls.forEach(el => { if (el) el.classList.remove('btd-content-hidden'); });
-      wrap.replaceWith(...gatedEls.filter(Boolean));
-      onUnlock();
+      // Show brief success then reload so content unlocks cleanly
+      btn.textContent = tier === 'pro' ? 'Welcome back, Pro member.' : tier === 'heard-first' ? 'Welcome back!' : 'You\'re in!';
+      renderSidebarLogin();
+      renderMobileAccountTab();
+      setTimeout(() => { window.location.reload(); }, 900);
     });
   }
 
@@ -743,10 +742,15 @@ const BTDGate = (() => {
             <p style="font-size:22px;margin:0 0 12px;">&#x2713;</p>
             <p>${tier === 'pro' ? 'Welcome back, Pro member.' : tier === 'heard-first' ? 'Welcome back, Heard First member.' : 'You\'re in. Welcome to Before The Data.'}</p>
           </div>`;
+        // Update UI immediately (don't wait for close animation)
+        renderSidebarLogin();
+        renderMobileAccountTab();
+
         setTimeout(() => {
           modal.classList.remove('visible');
-          renderSidebarLogin();
-        }, 1800);
+          // Reload page so gated content unlocks and sidebar shows correct state
+          window.location.reload();
+        }, 1200);
       });
     }
     modal.classList.add('visible');
