@@ -263,7 +263,7 @@ function parsePostDoc(doc) {
     trackId: strVal(f.trackId) || strVal(f.spotifyId),
     youtubeId: strVal(f.youtubeId) || strVal(f.ytId),
     country: strVal(f.country),
-    publishedAt: { seconds: strVal(f.publishedAt) ? Math.floor(new Date(strVal(f.publishedAt)).getTime() / 1000) : 0 },
+    publishedAt: { seconds: (() => { const ts = f.publishedAt?.timestampValue || f.publishedAt?.stringValue; return ts ? Math.floor(new Date(ts).getTime() / 1000) : 0; })() },
     tags: arrVal(f.tags),
     genres: arrVal(f.genres) || (strVal(f.genre) ? [strVal(f.genre)] : []),
     socialLinks: mapVal(f.socialLinks),
