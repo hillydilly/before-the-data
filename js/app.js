@@ -602,11 +602,19 @@ async function renderPost() {
 
   // Written By
   if (post.writtenBy && post.writtenBy.name && post.writtenBy.name !== 'undefined') {
+    // Known author photos — add more as we import the archive
+    const AUTHOR_PHOTOS = {
+      'chad hillard': 'https://res.cloudinary.com/dd9nbystx/image/upload/v1772287609/btd/chad-profile.jpg',
+      'hillydilly': 'https://res.cloudinary.com/dd9nbystx/image/upload/v1772287609/btd/chad-profile.jpg',
+    };
+    const GENERIC_AVATAR = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e0e0e0'/%3E%3Ccircle cx='20' cy='15' r='7' fill='%23bbb'/%3E%3Cellipse cx='20' cy='36' rx='12' ry='9' fill='%23bbb'/%3E%3C/svg%3E`;
+    const authorKey = (post.writtenBy.name || '').toLowerCase().trim();
+    const avatarSrc = AUTHOR_PHOTOS[authorKey] || (post.writtenBy.photo || GENERIC_AVATAR);
     sidebarHTML += `
       <section>
         <h4>Written By</h4>
         <div class="written-by">
-          <img class="author-avatar" src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772287609/btd/chad-profile.jpg" alt="${post.writtenBy.name}">
+          <img class="author-avatar" src="${avatarSrc}" alt="${post.writtenBy.name}">
           <div>
             <div class="author-name">${post.writtenBy.name}</div>
             ${post.writtenBy.location ? `<div class="author-location">${post.writtenBy.location}</div>` : ''}
