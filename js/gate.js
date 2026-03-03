@@ -531,8 +531,53 @@ const BTDGate = (() => {
     try { return !!localStorage.getItem(KEY_EMAIL); } catch(e) { return false; }
   }
 
+  // ── Play gate — 2 free plays per day, then email required ──────────────────
+  // Counts plays from the bottom player bar (new music cards + charts + post play buttons)
+  // Separate from the post-page read counter (btd_daily_reads)
+  const KEY_PLAY_COUNT = 'btd_daily_plays';
+  const FREE_PLAYS = 2;
+
+  function getPlayCount() {
+    try {
+      const raw = localStorage.getItem(KEY_PLAY_COUNT);
+      if (!raw) return { date: '', count: 0 };
+      const d = JSON.parse(raw);
+      const today = new Date().toISOString().slice(0, 10);
+      if (d.date !== today) return { date: today, count: 0 };
+      return d;
+    } catch(e) { return { date: '', count: 0 }; }
+  }
+
+  function incrementPlayCount() {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const current = getPlayCount();
+      const next = { date: today, count: (current.date === today ? current.count : 0) + 1 };
+      localStorage.setItem(KEY_PLAY_COUNT, JSON.stringify(next));
+      return next.count;
+    } catch(e) { return 0; }
+  }
+
   function checkGate() {
-    return true; // play gating removed; content gate handles access
+    // Signed-in users always pass
+    if (getEmail()) return true;
+
+    const playData = getPlayCount();
+    const today = new Date().toISOString().slice(0, 10);
+    const todayCount = playData.date === today ? playData.count : 0;
+
+    if (todayCount < FREE_PLAYS) {
+      // Allow this play — increment counter
+      incrementPlayCount();
+      return true;
+    }
+
+    // Limit reached — show auth modal
+    openAuthModal({
+      headline: 'You\'ve heard your 2 free plays',
+      subtext: 'Sign up free to keep listening. No credit card needed.',
+    });
+    return false; // block the play
   }
 
   // ── Search gate ──────────────────────────────────────────────────────────
@@ -686,6 +731,7 @@ const BTDGate = (() => {
         <div class="am-card">
           <p class="am-title" id="am-title">Sign in</p>
           <p class="am-sub" id="am-sub">Enter your email to access the archive, search, and more.</p>
+
           <input class="am-input" id="am-email-input" type="email" placeholder="Your email address" autocomplete="email">
           <button class="am-btn" id="am-submit-btn">Continue &#x2192;</button>
           <p class="am-note">New? We will create a free account. Already a Heard First member? You will be recognised automatically.</p>
@@ -752,6 +798,15 @@ const BTDGate = (() => {
           window.location.reload();
         }, 1200);
       });
+    }
+    // Apply custom headline/subtext if provided
+    if (opts?.headline) {
+      const t = document.getElementById('am-title');
+      if (t) t.textContent = opts.headline;
+    }
+    if (opts?.subtext) {
+      const s = document.getElementById('am-sub');
+      if (s) s.textContent = opts.subtext;
     }
     modal.classList.add('visible');
     setTimeout(() => document.getElementById('am-email-input')?.focus(), 50);
