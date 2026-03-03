@@ -174,13 +174,29 @@ function countryFlag(code) {
 /* --- Time ago --- */
 function timeAgo(ts) {
   if (!ts) return '';
-  const secs = typeof ts === 'number' ? ts : (ts.seconds || Math.floor(ts.getTime() / 1000));
-  const diff = Math.floor(Date.now() / 1000) - secs;
+  let ms;
+  if (typeof ts === 'number') {
+    ms = ts * 1000;
+  } else if (ts && typeof ts === 'object' && ts.seconds) {
+    ms = ts.seconds * 1000;
+  } else if (typeof ts === 'string') {
+    ms = new Date(ts).getTime();
+  } else if (ts instanceof Date) {
+    ms = ts.getTime();
+  } else {
+    return '';
+  }
+  if (!ms || isNaN(ms)) return '';
+  const diff = Math.floor((Date.now() - ms) / 1000);
   if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
-  if (diff < 2592000) return Math.floor(diff / 86400) + 'd ago';
-  if (diff < 31536000) return Math.floor(diff / 2592000) + 'mo ago';
+  if (diff < 120) return '1 minute ago';
+  if (diff < 3600) return Math.floor(diff / 60) + ' minutes ago';
+  if (diff < 7200) return '1 hour ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+  if (diff < 172800) return '1 day ago';
+  if (diff < 2592000) return Math.floor(diff / 86400) + ' days ago';
+  if (diff < 5184000) return '1 month ago';
+  if (diff < 31536000) return Math.floor(diff / 2592000) + ' months ago';
   const yrs = Math.floor(diff / 31536000);
   return yrs === 1 ? '1 year ago' : yrs + ' years ago';
 }
