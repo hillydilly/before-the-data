@@ -46,6 +46,42 @@
   <style>
     /* Archive banner — mobile only, full-width strip */
     #search-archive-hint a:hover { text-decoration: underline; }
+    #archive-strip {
+      display: none;
+      margin: 24px 0 8px;
+    }
+    .archive-strip-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--tx-3);
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+    .archive-strip-label span { font-size: 10px; }
+    .archive-strip-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 4px;
+    }
+    .archive-strip-scroll::-webkit-scrollbar { display: none; }
+    .archive-strip-scroll a { flex-shrink: 0; }
+    .archive-strip-scroll img {
+      width: 56px;
+      height: 56px;
+      border-radius: 6px;
+      object-fit: cover;
+      display: block;
+      opacity: 0.85;
+    }
+    @media (max-width: 767px) {
+      #archive-strip { display: block; }
+    }
   </style>
 </head>
 <body data-page="discover">
@@ -94,15 +130,28 @@
     <!-- Mobile sticky search bar -->
     <div id="mobile-search-bar">
       <input type="text" id="mobile-search-input" placeholder="Search artists or tracks..." autocomplete="off">
-      <div id="search-archive-hint" style="display:none;padding:10px 14px 8px;font-size:12px;color:#999999;border-top:1px solid #222222;">
-        Looking further back? <a href="/archive" style="color:#ffffff;font-weight:600;text-decoration:none;">Check it out &#x2192;</a>
-      </div>
+
     </div>
 
     <div class="section-header">
       <h2>New Music</h2>
     </div>
     <div id="new-music-scroll" class="music-scroll"></div>
+
+    <!-- Archive strip (mobile only) -->
+    <div id="archive-strip">
+      <a class="archive-strip-label" href="/archive">Archive <span>&#x2192;</span></a>
+      <div class="archive-strip-scroll">
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273e69fbb3f6b3c1b42c5eba61c" alt="Lorde"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273a91c10fe9472d9bd89802e14" alt="Billie Eilish"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273fe6e3ca0c4dc3b7c8a87ab2e" alt="Halsey"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b2737ba7e0d9a0e1e1e1e1e1e1e1" alt="Hozier" onerror="this.src='https://i.scdn.co/image/ab67616d0000b27363f44a68a99af27d4e1edce8'"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273c6b0a86de716ea61f0c6f67c" alt="Daniel Caesar"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b2732a67e9ebf30d42b85f1c55dd" alt="Dominic Fike"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b2733d98a0ae7c78a3a9babaf8af" alt="Maggie Rogers"></a>
+        <a href="/archive"><img src="https://i.scdn.co/image/ab67616d0000b273da0e44b5e1b3b6cdb2649c3a" alt="LANY"></a>
+      </div>
+    </div>
 
     <div class="section-header mt-40">
       <h2>Charts</h2>
@@ -119,18 +168,7 @@
   <script src="js/player.js?v=202603012131"></script>
   <script src="js/app.js?v=202603012131"></script>
 
-  <!-- Search archive hint JS -->
-  <script>
-    (function () {
-      var input = document.getElementById('mobile-search-input');
-      var hint = document.getElementById('search-archive-hint');
-      if (!input || !hint) return;
-      input.addEventListener('focus', function () { hint.style.display = 'block'; });
-      input.addEventListener('blur', function () {
-        setTimeout(function () { hint.style.display = 'none'; }, 200);
-      });
-    })();
-  </script>
+
 
   <!-- Mobile Heard First sticky CTA -->
   <div id="hf-mobile-cta">
