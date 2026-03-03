@@ -1616,14 +1616,13 @@
       var proEmail = localStorage.getItem('btd_pro_email');
       var hfTok = localStorage.getItem('btd_hf_token');
       var hfEmail = localStorage.getItem('btd_hf_email');
-      if (proTok && proEmail) {
-        window.location.href = '/heard-first/pro';
-        return;
-      }
-      if (hfTok && hfEmail) {
-        window.location.href = '/heard-first/dashboard';
-        return;
-      }
+      var tier = localStorage.getItem('btd_tier');
+      var email = localStorage.getItem('btd_email');
+      // Check dashboard tokens first, then fall back to gate keys
+      if (proTok && proEmail) { window.location.href = '/heard-first/pro'; return; }
+      if (hfTok && hfEmail) { window.location.href = '/heard-first/dashboard'; return; }
+      if (tier === 'pro' && email) { window.location.href = '/heard-first/pro'; return; }
+      if (tier === 'heard-first' && email) { window.location.href = '/heard-first/dashboard'; return; }
     })();
 </script>
 </body>

@@ -877,10 +877,19 @@ function goPortal() {
     );
     return;
   }
-  // Check stored token + email
+  // Check stored token + email (dashboard keys)
   var tok = localStorage.getItem('btd_pro_token');
   var tokEmail = localStorage.getItem('btd_pro_email');
+  // Also accept gate keys (set by main site auth modal)
+  var gateTier = localStorage.getItem('btd_tier');
+  var gateEmail = localStorage.getItem('btd_email');
   if (tok && tokEmail) {
+    showDash();
+    loadData();
+  } else if (gateTier === 'pro' && gateEmail) {
+    // Promote gate keys to dashboard keys so future loads work
+    localStorage.setItem('btd_pro_token', 'v_' + btoa(gateEmail));
+    localStorage.setItem('btd_pro_email', gateEmail);
     showDash();
     loadData();
   } else {
