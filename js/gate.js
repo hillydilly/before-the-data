@@ -703,7 +703,56 @@ const BTDGate = (() => {
       else sidebar.appendChild(block);
     }
     renderSidebarLogin();
+
+    // Inject mobile top bar if not already present
+    if (!document.getElementById('btd-mobile-topbar')) {
+      const bar = document.createElement('div');
+      bar.id = 'btd-mobile-topbar';
+      bar.innerHTML = `
+        <a class="mtb-brand" href="/">Before The Data</a>
+        <button class="mtb-account-btn" id="mtb-account-btn" aria-label="Account"></button>`;
+      document.body.insertBefore(bar, document.body.firstChild);
+    }
+    renderMobileTopBar();
   }
 
-  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, checkGate, isSubscribed };
+  function renderMobileTopBar() {
+    const btn = document.getElementById('mtb-account-btn');
+    if (!btn) return;
+    const email = getEmail();
+    const tier = getTier();
+    if (email) {
+      btn.textContent = email.charAt(0).toUpperCase();
+      btn.classList.add('logged-in');
+      btn.title = email;
+    } else {
+      btn.innerHTML = '&#x1F464;';
+      btn.classList.remove('logged-in');
+      btn.title = 'Log in';
+    }
+    // Remove old listener by cloning
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    newBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!getEmail()) { openAuthModal(); return; }
+      // Toggle dropdown
+      let menu = document.getElementById('btd-mobile-account-menu');
+      if (!menu) {
+        menu = document.createElement('div');
+        menu.id = 'btd-mobile-account-menu';
+        document.body.appendChild(menu);
+        document.addEventListener('click', () => menu.classList.remove('visible'));
+      }
+      const isPaidTier = PAID_TIERS.includes(tier);
+      menu.innerHTML = `
+        <div class="mam-email">${getEmail()}</div>
+        <div class="mam-tier">${getTierLabel(tier)}</div>
+        ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(getEmail())}">Manage subscription</a>` : ''}
+        <button onclick="BTDGate.siteLogout();document.getElementById('btd-mobile-account-menu').classList.remove('visible');BTDGate.renderMobileTopBar()">Log out</button>`;
+      menu.classList.toggle('visible');
+    });
+  }
+
+  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, renderMobileTopBar, checkGate, isSubscribed };
 })();
