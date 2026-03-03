@@ -257,68 +257,108 @@ const BTDGate = (() => {
         text-align: center; margin-top: 10px;
       }
 
-      /* Content hidden until gate cleared */
+      /* Blur gate — content visible but blurred, modal floats over */
       .btd-content-hidden {
-        display: none !important;
+        display: block !important;
+        filter: blur(6px);
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.5;
+      }
+      #btd-blur-gate-wrap {
+        position: relative;
+      }
+      #btd-blur-gate-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: 10;
+        background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.6) 30%, rgba(255,255,255,0.95) 100%);
+        pointer-events: none;
+      }
+      #btd-blur-gate-modal {
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 8000;
+        width: 90%;
+        max-width: 420px;
+        background: #fff;
+        border: 1.5px solid #e0e0e0;
+        padding: 36px 32px;
+        text-align: center;
+        box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+        box-sizing: border-box;
       }
     `;
     document.head.appendChild(style);
   }
 
-  // ── Inline email gate ──────────────────────────────────────────────────────
+  // ── Blur gate — wraps gated content, floats modal over blur ──────────────
 
-  function buildInlineGate(post, onUnlock) {
+  function buildBlurGate(post, gatedEls, onUnlock) {
     const isArchive = isArchivePost(post);
-
-    const el = document.createElement('div');
-    el.id = 'btd-inline-gate';
-
-    const headline = isArchive
-      ? 'Sign up free to keep reading.'
-      : 'Enter your email to keep reading.';
-
+    const headline = isArchive ? 'Sign up free to keep reading.' : 'Enter your email to keep reading.';
     const subtext = isArchive
       ? 'This post is from the Before The Data archive. Sign up free to explore 19 years of music discovery.'
       : 'Free music discovery. No spam. Unsubscribe anytime.';
 
-    el.innerHTML = `
-      <div class="ig-logo">
-        <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="28">
-      </div>
+    // Wrap gated elements in a relative container
+    const firstEl = gatedEls.find(el => el && el.parentElement);
+    if (!firstEl) return;
+
+    const wrap = document.createElement('div');
+    wrap.id = 'btd-blur-gate-wrap';
+
+    // Insert wrap before first gated element
+    firstEl.parentElement.insertBefore(wrap, firstEl);
+
+    // Move all gated els into wrap, blurred
+    gatedEls.forEach(el => {
+      if (el) {
+        el.classList.add('btd-content-hidden');
+        wrap.appendChild(el);
+      }
+    });
+
+    // Gradient fade overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'btd-blur-gate-overlay';
+    wrap.appendChild(overlay);
+
+    // Centered signup modal inside the wrap
+    const modal = document.createElement('div');
+    modal.id = 'btd-blur-gate-modal';
+    modal.innerHTML = `
       <h2 class="ig-headline">${headline}</h2>
       <p class="ig-sub">${subtext}</p>
       <form class="ig-form" id="btd-ig-form">
         <input type="email" class="ig-input" id="btd-ig-email"
           placeholder="your@email.com" required autocomplete="email">
-        <button type="submit" class="ig-submit">Continue</button>
+        <button type="submit" class="ig-submit">Continue &rarr;</button>
       </form>
       <p class="ig-fine">No spam. Unsubscribe anytime.</p>
     `;
+    wrap.appendChild(modal);
 
-    el.querySelector('#btd-ig-form').addEventListener('submit', async (e) => {
+    modal.querySelector('#btd-ig-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = el.querySelector('#btd-ig-email').value.trim();
-      if (!email) return;
-      const btn = el.querySelector('.ig-submit');
+      const emailVal = modal.querySelector('#btd-ig-email').value.trim();
+      if (!emailVal) return;
+      const btn = modal.querySelector('.ig-submit');
       btn.textContent = 'Checking...';
       btn.disabled = true;
 
-      // Check Firebase for existing record
-      const existing = await lookupSubscriber(email);
+      const existing = await lookupSubscriber(emailVal);
       const tier = existing ? existing.tier : 'free';
-
-      setEmail(email);
+      setEmail(emailVal);
       setTier(tier);
+      netlifySubscribe(emailVal);
 
-      // Subscribe via Netlify function
-      netlifySubscribe(email);
-
-      // Unlock content
-      el.remove();
+      // Remove gate entirely
+      gatedEls.forEach(el => { if (el) el.classList.remove('btd-content-hidden'); });
+      wrap.replaceWith(...gatedEls.filter(Boolean));
       onUnlock();
     });
-
-    return el;
   }
 
   // ── Upgrade modal ──────────────────────────────────────────────────────────
@@ -398,21 +438,11 @@ const BTDGate = (() => {
 
     const email = getEmail();
 
-    // ── No email ────────────────────────────────────────────────────────────
+    // ── No email — blur gate ─────────────────────────────────────────────────
     if (!email) {
-      hideGated();
-
-      const gateEl = buildInlineGate(post, () => {
-        showGated();
-        // Count this read for free tier
+      buildBlurGate(post, gatedEls, () => {
         if (!isPaid()) incrementDailyReads();
       });
-
-      if (insertBeforeEl && insertBeforeEl.parentElement) {
-        insertBeforeEl.parentElement.insertBefore(gateEl, insertBeforeEl);
-      } else {
-        document.getElementById('post-content')?.appendChild(gateEl);
-      }
       return;
     }
 
@@ -704,7 +734,75 @@ const BTDGate = (() => {
     }
     renderSidebarLogin();
 
-    // Mobile top bar intentionally disabled — account access via bottom nav account tab
+    // Mobile account tab — inject into bottom nav
+    injectMobileAccountTab();
+  }
+
+  function injectMobileAccountTab() {
+    // Only on mobile (sidebar = bottom nav)
+    const nav = document.querySelector('#sidebar nav');
+    if (!nav) return;
+    if (document.getElementById('btd-mobile-account-tab')) return;
+
+    const tab = document.createElement('a');
+    tab.id = 'btd-mobile-account-tab';
+    tab.href = '#';
+    tab.setAttribute('aria-label', 'Account');
+    tab.innerHTML = `<span class="nav-icon" id="btd-acct-icon">&#x1F464;</span><span id="btd-acct-label">Account</span>`;
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = getEmail();
+      if (!email) { openAuthModal(); return; }
+      showMobileAccountSheet();
+    });
+    nav.appendChild(tab);
+    renderMobileAccountTab();
+  }
+
+  function renderMobileAccountTab() {
+    const icon = document.getElementById('btd-acct-icon');
+    const label = document.getElementById('btd-acct-label');
+    if (!icon || !label) return;
+    const email = getEmail();
+    if (email) {
+      icon.textContent = email.charAt(0).toUpperCase();
+      icon.style.cssText = 'width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;';
+      label.textContent = 'Account';
+    } else {
+      icon.style.cssText = '';
+      icon.innerHTML = '&#x1F464;';
+      label.textContent = 'Log in';
+    }
+  }
+
+  function showMobileAccountSheet() {
+    let sheet = document.getElementById('btd-account-sheet');
+    if (!sheet) {
+      sheet = document.createElement('div');
+      sheet.id = 'btd-account-sheet';
+      // Styles injected inline so they work without CSS file changes
+      sheet.style.cssText = `
+        position:fixed;bottom:60px;left:0;right:0;z-index:500;
+        background:#fff;border-top:1px solid #e0e0e0;
+        padding:20px 24px;box-shadow:0 -4px 20px rgba(0,0,0,.1);
+      `;
+      document.body.appendChild(sheet);
+      document.addEventListener('click', (e) => {
+        if (!sheet.contains(e.target) && e.target.id !== 'btd-mobile-account-tab') {
+          sheet.style.display = 'none';
+        }
+      });
+    }
+    const email = getEmail();
+    const tier = getTier();
+    const isPaidTier = PAID_TIERS.includes(tier);
+    sheet.innerHTML = `
+      <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:2px;">${email}</div>
+      <div style="font-size:11px;color:#888;margin-bottom:16px;">${getTierLabel(tier)}</div>
+      ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(email)}" style="display:block;font-size:13px;color:#111;text-decoration:none;font-weight:600;padding:10px 0;border-top:1px solid #f0f0f0;">Manage subscription &rarr;</a>` : ''}
+      <button onclick="BTDGate.siteLogout();document.getElementById('btd-account-sheet').style.display='none';BTDGate.renderMobileAccountTab();" style="display:block;width:100%;text-align:left;font-size:13px;color:#888;background:none;border:none;border-top:1px solid #f0f0f0;padding:10px 0;cursor:pointer;">Log out</button>
+    `;
+    sheet.style.display = 'block';
   }
 
   function renderMobileTopBar() {
@@ -745,5 +843,5 @@ const BTDGate = (() => {
     });
   }
 
-  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, renderMobileTopBar, checkGate, isSubscribed };
+  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, renderMobileAccountTab, checkGate, isSubscribed };
 })();
