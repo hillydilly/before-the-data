@@ -99,7 +99,7 @@ export default async (req) => {
   <tr>
     <td style="padding:0;line-height:0;font-size:0;">
       <a href="https://beforethedata.com" style="display:block;text-decoration:none;">
-        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
+        <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
              alt="BEFORE THE DATA" width="560"
              style="display:block;width:100%;max-width:560px;border:0;" />
       </a>

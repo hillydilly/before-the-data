@@ -86,7 +86,7 @@ export default async (req) => {
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
   <tr>
     <td align="center" style="padding:0;line-height:0;font-size:0;">
-      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
            alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
@@ -125,7 +125,7 @@ export default async (req) => {
 <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
   <tr>
     <td align="center" style="padding:0;line-height:0;font-size:0;">
-      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772326488/btd/btd-email-header-submit-dark.png"
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201417/btd/btd-email-header-submit.png"
            alt="Before The Data" width="480" style="display:block;max-width:100%;border:0;">
     </td>
   </tr>
