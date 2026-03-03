@@ -354,6 +354,7 @@ const BTDGate = (() => {
           </div>
           <a href="/heard-first" class="um-cta">See Plans</a>
           <p class="um-fine">Cancel anytime. No contracts.</p>
+          <p class="um-fine" style="margin-top:12px;">Or <a href="/archive" style="color:#000000;font-weight:600;text-decoration:underline;">browse the archive</a> to explore 19 years of music discovery.</p>
         </div>
       </div>
     `;
