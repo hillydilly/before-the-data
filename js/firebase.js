@@ -280,11 +280,13 @@ async function fetchPostsFromFirebase() {
   const CACHE_TTL = 5 * 60 * 1000; // 5 min TTL
 
   // Check for cache bust signal from Firebase (written by BTD agent after each import)
+  // Run this in background — don't block rendering
   let bustTs = 0;
   try {
-    const bustDoc = await fetch(
-      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_cache?key=${FIREBASE_CONFIG.apiKey}`
-    ).then(r=>r.json());
+    const bustDoc = await Promise.race([
+      fetch(`https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_cache?key=${FIREBASE_CONFIG.apiKey}`).then(r=>r.json()),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 2000))
+    ]);
     bustTs = parseInt(bustDoc.fields?.lastImport?.integerValue || 0);
   } catch(e) {}
 

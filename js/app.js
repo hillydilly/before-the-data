@@ -172,13 +172,25 @@ async function renderDiscover() {
   const chartList = document.getElementById('chart-list');
   if (!scrollContainer || !chartList) return;
 
-  // Always grid on discover page
-  const latest = await fetchPosts('publishedAt', 'desc', 10);
+  // Show skeletons immediately so layout appears before data loads
+  const skelCard = () => `<div class="music-card skeleton-card" style="width:140px;flex-shrink:0;border-radius:8px;overflow:hidden;"><div style="width:140px;height:140px;background:#f0f0f0;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="padding:8px 4px;"><div style="height:11px;background:#f0f0f0;border-radius:4px;width:80%;margin-bottom:5px;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="height:10px;background:#f0f0f0;border-radius:4px;width:55%;animation:btd-pulse 1.4s ease-in-out infinite;"></div></div></div>`;
+  const skelRow = () => `<div class="chart-row skeleton-card" style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f5f5f5;"><div style="width:36px;height:36px;border-radius:4px;background:#f0f0f0;flex-shrink:0;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="flex:1;"><div style="height:11px;background:#f0f0f0;border-radius:4px;width:65%;margin-bottom:5px;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="height:10px;background:#f0f0f0;border-radius:4px;width:40%;animation:btd-pulse 1.4s ease-in-out infinite;"></div></div></div>`;
+  scrollContainer.innerHTML = Array(6).fill(0).map(skelCard).join('');
+  chartList.innerHTML = Array(8).fill(0).map(skelRow).join('');
+
+  // Fetch new music + charts in parallel
+  const [latest, charts] = await Promise.all([
+    fetchPosts('publishedAt', 'desc', 10),
+    fetchCharts()
+  ]);
+
+  // Render new music
+  scrollContainer.innerHTML = '';
   Player.setQueue(latest);
   latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
 
-  // Charts
-  const charts = await fetchCharts();
+  // Render charts (or fallback to popular)
+  chartList.innerHTML = '';
   if (charts.length > 0) {
     charts.forEach(t => chartList.appendChild(createChartRowFromTrack(t)));
   } else {
