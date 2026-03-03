@@ -277,7 +277,7 @@ function parsePostDoc(doc) {
 /* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
 async function fetchPostsFromFirebase() {
   const CACHE_KEY = 'btd_posts_cache';
-  const CACHE_TTL = 2 * 60 * 1000; // 2 min — keeps posts fresh after batch imports
+  const CACHE_TTL = 10 * 60 * 1000; // 10 min cache — posts don't change that often
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
     if (cached) {
@@ -286,23 +286,28 @@ async function fetchPostsFromFirebase() {
     }
   } catch(e) {}
   try {
-    let allDocs = [], pageToken = null;
-    do {
-      const url = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=500${pageToken ? '&pageToken=' + pageToken : ''}`;
-      let res;
-      for (let attempt = 0; attempt < 4; attempt++) {
-        res = await fetch(url);
-        if (res.status !== 429) break;
-        console.warn(`[BTD] Firebase rate limited, retrying in ${(attempt+1)*1500}ms...`);
-        await new Promise(r => setTimeout(r, (attempt+1) * 1500));
+    // Use runQuery to filter only btd_post_ docs — much faster than listing entire collection
+    const queryBody = {
+      structuredQuery: {
+        from: [{ collectionId: 'config' }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: 'btdPostLive' },
+            op: 'EQUAL',
+            value: { booleanValue: true }
+          }
+        },
+        orderBy: [{ field: { fieldPath: 'publishedAt' }, direction: 'DESCENDING' }],
+        limit: 400
       }
-      if (!res.ok) { console.warn('[BTD] Firebase fetch failed:', res.status); break; }
-      const data = await res.json();
-      const docs = (data.documents || []).filter(d => d.name?.includes('btd_post_'));
-      allDocs = allDocs.concat(docs);
-      pageToken = data.nextPageToken || null;
-      if (pageToken) await new Promise(r => setTimeout(r, 300));
-    } while (pageToken);
+    };
+    const res = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents:runQuery?key=${FIREBASE_CONFIG.apiKey}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(queryBody) }
+    );
+    if (!res.ok) throw new Error('Query failed: ' + res.status);
+    const results = await res.json();
+    const allDocs = results.filter(r => r.document?.fields).map(r => r.document);
     if (allDocs.length === 0) return null;
     const posts = allDocs.map(parsePostDoc);
     try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}

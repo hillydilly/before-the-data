@@ -1350,3 +1350,8 @@ ul { list-style: none; }
   object-fit: cover;
   flex-shrink: 0;
 }
+
+@keyframes btd-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
