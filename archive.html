@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Archive — Before The Data</title>
+  <meta name="description" content="19 years of music discovery. Every artist. Every find. The complete Before The Data and Hillydilly archive from 2007 to 2023.">
+  <meta name="keywords" content="music archive, hillydilly archive, before the data, music discovery history, lorde, billie eilish, halsey, lany, hozier, daniel caesar, dominic fike">
+  <meta name="author" content="Chad Hillard">
+  <link rel="canonical" href="https://beforethedata.com/archive">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://beforethedata.com/archive">
+  <meta property="og:title" content="Archive — Before The Data">
+  <meta property="og:description" content="19 years of music discovery. Every artist. Every find.">
+  <meta property="og:image" content="https://beforethedata.com/assets/og-image.jpg">
+  <meta property="og:site_name" content="Before The Data">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@beforethedata">
+  <meta name="twitter:title" content="Archive — Before The Data">
+  <meta name="twitter:description" content="19 years of music discovery. Every artist. Every find.">
+  <meta name="twitter:image" content="https://beforethedata.com/assets/og-image.jpg">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <style>
+    /* ── Archive page styles ─────────────────────────────────────── */
+    .archive-header {
+      margin-bottom: 28px;
+    }
+    .archive-header h1 {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .archive-header .archive-subtitle {
+      font-size: 15px;
+      color: var(--tx-3);
+      margin: 0;
+    }
+
+    /* ── Year pill row ───────────────────────────────────────────── */
+    #archive-year-bar {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    #archive-year-bar::-webkit-scrollbar { display: none; }
+
+    .archive-pill {
+      flex-shrink: 0;
+      padding: 5px 14px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+      color: var(--tx-2);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      font-family: var(--font-body);
+      white-space: nowrap;
+    }
+    .archive-pill:hover {
+      background: var(--bd);
+    }
+    .archive-pill.active {
+      background: var(--tx-1);
+      color: var(--bg);
+      border-color: var(--tx-1);
+    }
+
+    /* ── Greatest Finds grid ─────────────────────────────────────── */
+    #archive-grid-wrap {
+      min-height: 200px;
+    }
+
+    .greatest-finds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .archive-card {
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .archive-card:hover .archive-card-art img {
+      transform: scale(1.05);
+    }
+    .archive-card-art {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      overflow: hidden;
+      background: var(--bg-2);
+      border-radius: 4px;
+    }
+    .archive-card-art img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+    .archive-card-art .archive-card-year-badge {
+      position: absolute;
+      bottom: 6px;
+      right: 8px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
+      border-radius: 2px;
+    }
+    .archive-card-title {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .archive-card-artist {
+      font-size: 12px;
+      color: var(--tx-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── Back catalog note ──────────────────────────────────────── */
+    .archive-coming-soon {
+      font-size: 12px;
+      color: var(--tx-3);
+      font-style: italic;
+      margin-top: 8px;
+      margin-bottom: 32px;
+    }
+
+    /* ── Year results section ────────────────────────────────────── */
+    #archive-year-results {
+      display: none;
+    }
+    #archive-year-results.visible {
+      display: block;
+    }
+    .archive-year-heading {
+      font-family: var(--font-heading);
+      font-size: 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      color: var(--tx-1);
+    }
+    .archive-year-empty {
+      padding: 40px 0;
+      color: var(--tx-3);
+      font-size: 14px;
+    }
+
+    /* ── Loading state ───────────────────────────────────────────── */
+    .archive-loading {
+      padding: 40px 0;
+      color: var(--tx-3);
+      font-size: 14px;
+    }
+
+    /* ── Mobile ─────────────────────────────────────────────────── */
+    @media (max-width: 767px) {
+      .archive-header h1 {
+        font-size: 36px;
+      }
+      .greatest-finds-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body data-page="archive">
+
+  <!-- PLAYER BAR -->
+  <div id="player-bar">
+    <img class="player-art" src="/assets/brand/logo-black.jpg" alt="">
+    <div class="player-controls">
+      <button class="prev-btn" title="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h1.5v5.4L13 2.2v11.6L4.5 8.6V14H3z"/></svg></button>
+      <button class="play-btn" title="Play">&#9654;</button>
+      <button class="next-btn" title="Next"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13 2h-1.5v5.4L3 2.2v11.6l8.5-5.2V14H13z"/></svg></button>
+    </div>
+    <div class="player-info">
+      <div class="player-title">Select a track to play</div>
+      <div class="player-source">SPOTIFY</div>
+    </div>
+    <div class="player-right">
+      <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.8">
+    </div>
+    <div class="player-progress"><div class="player-progress-fill"></div></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="/assets/brand/logo-black.jpg" alt="BTD">
+      <span class="brand-name">Before The Data</span>
+    </a>
+    <nav>
+      <a href="/"><span class="nav-icon">◈</span> Discover</a>
+      <a href="/new-music.html"><span class="nav-icon">♪</span> New Music</a>
+      <a href="/popular.html"><span class="nav-icon">▲</span> Popular</a>
+      <a href="/search.html"><span class="nav-icon">⌕</span> Search</a>
+      <a href="/archive" class="active"><span class="nav-icon">◷</span> Archive</a>
+      <a href="/submit.html"><span class="nav-icon">📬</span> Submit Music</a>
+      <a href="/heard-first.html" class="nav-heard-first"><span class="nav-icon">★</span> Heard First</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main">
+
+    <!-- Page header -->
+    <div class="archive-header">
+      <h1>Archive</h1>
+      <p class="archive-subtitle">19 years of music discovery. Every artist. Every find.</p>
+    </div>
+
+    <!-- Year pill selector -->
+    <div id="archive-year-bar">
+      <button class="archive-pill active" data-year="greatest">Greatest Finds</button>
+      <!-- 2007–2023 pills injected by JS -->
+    </div>
+
+    <!-- Greatest Finds grid (default view) -->
+    <div id="archive-greatest-finds">
+      <div class="greatest-finds-grid">
+
+        <!-- 1. Lorde -->
+        <a class="archive-card" href="/artist/lorde">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb4293385d324db8558179afd9" alt="Lorde" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/lorde.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2012</span>
+          </div>
+          <div class="archive-card-title">"Royals"</div>
+          <div class="archive-card-artist">Lorde</div>
+        </a>
+
+        <!-- 2. Billie Eilish -->
+        <a class="archive-card" href="/artist/billie-eilish">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb8ea62e5b2ee05b3d0d4e9528" alt="Billie Eilish" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/billie-eilish.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2016</span>
+          </div>
+          <div class="archive-card-title">"ocean eyes"</div>
+          <div class="archive-card-artist">Billie Eilish</div>
+        </a>
+
+        <!-- 3. Halsey -->
+        <a class="archive-card" href="/artist/halsey">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb7af5c0ae5f6be4ebf7d56d2f" alt="Halsey" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/halsey.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2014</span>
+          </div>
+          <div class="archive-card-title">"Ghost"</div>
+          <div class="archive-card-artist">Halsey</div>
+        </a>
+
+        <!-- 4. Daniel Caesar -->
+        <a class="archive-card" href="/artist/daniel-caesar">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb8ae7f2aaa9817a704a87ea36" alt="Daniel Caesar" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/daniel-caesar.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2016</span>
+          </div>
+          <div class="archive-card-title">"Get You"</div>
+          <div class="archive-card-artist">Daniel Caesar</div>
+        </a>
+
+        <!-- 5. LANY -->
+        <a class="archive-card" href="/artist/lany">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb51b60fbdb2d37fe27b1c3b04" alt="LANY" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/lany.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2015</span>
+          </div>
+          <div class="archive-card-title">"ILYSB"</div>
+          <div class="archive-card-artist">LANY</div>
+        </a>
+
+        <!-- 6. Hozier -->
+        <a class="archive-card" href="/artist/hozier">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb9e0e7eb406d87d3a37d5d5a3" alt="Hozier" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/hozier.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2013</span>
+          </div>
+          <div class="archive-card-title">"Take Me To Church"</div>
+          <div class="archive-card-artist">Hozier</div>
+        </a>
+
+        <!-- 7. Dominic Fike -->
+        <a class="archive-card" href="/artist/dominic-fike">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb8b49aaca8f35d2cebc3d2fa0" alt="Dominic Fike" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/dominic-fike.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2018</span>
+          </div>
+          <div class="archive-card-title">"3 Nights"</div>
+          <div class="archive-card-artist">Dominic Fike</div>
+        </a>
+
+        <!-- 8. Maggie Rogers -->
+        <a class="archive-card" href="/artist/maggie-rogers">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb43d374ae665aaddbe42d9e53" alt="Maggie Rogers" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/maggie-rogers.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2016</span>
+          </div>
+          <div class="archive-card-title">"Alaska"</div>
+          <div class="archive-card-artist">Maggie Rogers</div>
+        </a>
+
+        <!-- 9. James Bay -->
+        <a class="archive-card" href="/artist/james-bay">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5ebf99898f24c01dfdd93adbacc" alt="James Bay" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/james-bay.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2014</span>
+          </div>
+          <div class="archive-card-title">"Hold Back The River"</div>
+          <div class="archive-card-artist">James Bay</div>
+        </a>
+
+        <!-- 10. Lainey Wilson -->
+        <a class="archive-card" href="/artist/lainey-wilson">
+          <div class="archive-card-art">
+            <img src="https://i.scdn.co/image/ab6761610000e5eb6ff2f8dfff58acaed70fec43" alt="Lainey Wilson" loading="lazy"
+              onerror="this.src='https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill,g_auto/ar-scouting-dashboard/lainey-wilson.jpg'; this.onerror=null;">
+            <span class="archive-card-year-badge">2021</span>
+          </div>
+          <div class="archive-card-title">"Things A Man Oughta Know"</div>
+          <div class="archive-card-artist">Lainey Wilson</div>
+        </a>
+
+      </div>
+      <p class="archive-coming-soon">Full back catalog coming soon. Posts being added from 2007 to 2023.</p>
+    </div>
+
+    <!-- Year results (shown when a year pill is selected) -->
+    <div id="archive-year-results">
+      <div id="archive-year-heading" class="archive-year-heading"></div>
+      <div id="archive-year-grid" class="greatest-finds-grid"></div>
+      <div id="archive-year-empty" class="archive-year-empty" style="display:none;"></div>
+    </div>
+
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="/js/firebase.js?v=202603012131"></script>
+  <script src="/js/gate.js"></script>
+  <script src="/js/player.js?v=202603012131"></script>
+  <script src="/js/app.js?v=202603012131"></script>
+
+  <script>
+    (function () {
+      // Inject year pills 2007-2023
+      const bar = document.getElementById('archive-year-bar');
+      for (let yr = 2023; yr >= 2007; yr--) {
+        const btn = document.createElement('button');
+        btn.className = 'archive-pill';
+        btn.dataset.year = yr;
+        btn.textContent = yr;
+        bar.appendChild(btn);
+      }
+
+      let activeYear = null;
+      let allPosts = null;
+      let loading = false;
+
+      function getPostYear(post) {
+        if (!post.publishedAt) return null;
+        let ms;
+        if (typeof post.publishedAt === 'object' && post.publishedAt.seconds) {
+          ms = post.publishedAt.seconds * 1000;
+        } else if (typeof post.publishedAt === 'string') {
+          ms = new Date(post.publishedAt).getTime();
+        } else if (typeof post.publishedAt === 'number') {
+          ms = post.publishedAt * 1000;
+        } else {
+          return null;
+        }
+        if (!ms || isNaN(ms)) return null;
+        return new Date(ms).getFullYear();
+      }
+
+      function showGreatest() {
+        document.getElementById('archive-greatest-finds').style.display = '';
+        document.getElementById('archive-year-results').classList.remove('visible');
+        activeYear = null;
+        bar.querySelectorAll('.archive-pill').forEach(p => {
+          p.classList.toggle('active', p.dataset.year === 'greatest');
+        });
+      }
+
+      function renderYearGrid(year, posts) {
+        const heading = document.getElementById('archive-year-heading');
+        const grid = document.getElementById('archive-year-grid');
+        const empty = document.getElementById('archive-year-empty');
+        const results = document.getElementById('archive-year-results');
+
+        document.getElementById('archive-greatest-finds').style.display = 'none';
+        results.classList.add('visible');
+
+        heading.textContent = year;
+        grid.innerHTML = '';
+        empty.style.display = 'none';
+
+        const yearPosts = posts.filter(p => getPostYear(p) === parseInt(year));
+
+        if (yearPosts.length === 0) {
+          empty.textContent = 'No posts from ' + year + ' yet. Back catalog import in progress.';
+          empty.style.display = 'block';
+          return;
+        }
+
+        yearPosts.forEach(post => {
+          const card = document.createElement('a');
+          card.className = 'archive-card';
+          card.href = '/' + (post.slug || post.id);
+          const artSrc = post.artUrl || post.artUrlSm || 'https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill/ar-scouting-dashboard/placeholder.jpg';
+          card.innerHTML = `
+            <div class="archive-card-art">
+              <img src="${artSrc}" alt="${post.artist || ''}" loading="lazy">
+              <span class="archive-card-year-badge">${year}</span>
+            </div>
+            <div class="archive-card-title">"${post.title || ''}"</div>
+            <div class="archive-card-artist">${post.artist || ''}</div>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      async function selectYear(year) {
+        if (year === 'greatest') { showGreatest(); return; }
+        activeYear = year;
+        bar.querySelectorAll('.archive-pill').forEach(p => {
+          p.classList.toggle('active', p.dataset.year === String(year));
+        });
+
+        const heading = document.getElementById('archive-year-heading');
+        const grid = document.getElementById('archive-year-grid');
+        const empty = document.getElementById('archive-year-empty');
+        const results = document.getElementById('archive-year-results');
+
+        document.getElementById('archive-greatest-finds').style.display = 'none';
+        results.classList.add('visible');
+        heading.textContent = year;
+        grid.innerHTML = '<div class="archive-loading">Loading...</div>';
+        empty.style.display = 'none';
+
+        if (!allPosts) {
+          if (loading) return;
+          loading = true;
+          try {
+            allPosts = await fetchPostsFromFirebase();
+            if (!allPosts) allPosts = [];
+          } catch (e) {
+            allPosts = [];
+          }
+          loading = false;
+        }
+
+        renderYearGrid(year, allPosts);
+      }
+
+      // Pill click handler
+      bar.addEventListener('click', e => {
+        const pill = e.target.closest('.archive-pill');
+        if (!pill) return;
+        selectYear(pill.dataset.year);
+      });
+
+    })();
+  </script>
+
+  <!-- Mobile Heard First sticky CTA -->
+  <div id="hf-mobile-cta">
+    <a href="/heard-first.html">
+      <span>★ Heard First</span>
+      <span class="hf-sub">Get early access &rarr;</span>
+    </a>
+  </div>
+</body>
+</html>

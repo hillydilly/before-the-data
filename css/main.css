@@ -605,6 +605,11 @@ ul { list-style: none; }
   #sidebar nav a[href='/search'],
   #sidebar nav a[href='search'] { display: none !important; }
 
+  /* Archive — desktop sidebar only, not in mobile bottom nav */
+  #sidebar nav a[href='/archive'],
+  #sidebar nav a[href='archive'],
+  #sidebar nav a[href='/archive.html'] { display: none !important; }
+
   #main {
     margin-left: 0;
     padding: 24px 16px 80px;

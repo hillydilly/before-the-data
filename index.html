@@ -42,7 +42,57 @@
   }
   </script>
   <link rel="stylesheet" href="css/main.css">
-  <link rel="icon" href="favicon.ico" type="image/x-icon"></head>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    /* Archive banner — mobile only, full-width strip */
+    #archive-banner {
+      display: none; /* JS controls visibility */
+      background: #000;
+      color: #fff;
+      position: relative;
+      margin: -24px -16px 16px; /* bleed to edges on mobile */
+    }
+    #archive-banner a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 40px 12px 16px;
+      color: #fff;
+      text-decoration: none;
+      gap: 8px;
+    }
+    #archive-banner .archive-banner-text {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    #archive-banner .archive-banner-cta {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    #archive-banner-dismiss {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px;
+      line-height: 1;
+    }
+    #archive-banner-dismiss:hover { color: #fff; }
+    /* Only show on mobile */
+    @media (min-width: 768px) {
+      #archive-banner { display: none !important; }
+    }
+  </style>
+</head>
 <body data-page="discover">
 
   <!-- PLAYER BAR -->
@@ -74,6 +124,7 @@
       <a href="/new-music.html"><span class="nav-icon">♪</span> New Music</a>
       <a href="/popular.html"><span class="nav-icon">▲</span> Popular</a>
       <a href="/search.html"><span class="nav-icon">⌕</span> Search</a>
+      <a href="/archive"><span class="nav-icon">◷</span> Archive</a>
       <a href="/submit.html"><span class="nav-icon">📬</span> Submit Music</a>
       <a href="/heard-first.html" class="nav-heard-first"><span class="nav-icon">★</span> Heard First</a>
     </nav>
@@ -89,6 +140,15 @@
     <div id="mobile-search-bar">
       <input type="text" id="mobile-search-input" placeholder="Search artists or tracks..." autocomplete="off">
     </div>
+    <!-- Archive banner (mobile only, dismissible) -->
+    <div id="archive-banner" style="display:none;">
+      <a href="/archive" id="archive-banner-link">
+        <span class="archive-banner-text">Explore the archive. 19 years of music discovery.</span>
+        <span class="archive-banner-cta">Browse &rarr;</span>
+      </a>
+      <button id="archive-banner-dismiss" title="Dismiss" aria-label="Dismiss">&#10005;</button>
+    </div>
+
     <div class="section-header">
       <h2>New Music</h2>
     </div>
@@ -108,6 +168,29 @@
   <script src="js/gate.js"></script>
   <script src="js/player.js?v=202603012131"></script>
   <script src="js/app.js?v=202603012131"></script>
+
+  <!-- Archive banner JS -->
+  <script>
+    (function () {
+      var DISMISS_KEY = 'btd_archive_banner_dismissed';
+      var banner = document.getElementById('archive-banner');
+      var dismissBtn = document.getElementById('archive-banner-dismiss');
+      if (!banner) return;
+      try {
+        if (!localStorage.getItem(DISMISS_KEY) && window.innerWidth < 768) {
+          banner.style.display = 'block';
+        }
+      } catch (e) {}
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          banner.style.display = 'none';
+          try { localStorage.setItem(DISMISS_KEY, '1'); } catch (e) {}
+        });
+      }
+    })();
+  </script>
 
   <!-- Mobile Heard First sticky CTA -->
   <div id="hf-mobile-cta">
