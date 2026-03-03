@@ -539,6 +539,17 @@ async function renderPost() {
     playBtn.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
   }
 
+  // Content gate — check access before rendering body/sidebar/tracklist
+  if (typeof BTDGate !== 'undefined' && BTDGate.initPostGate) {
+    const bodyWrap = document.querySelector('.post-body-wrap');
+    const tracklist = document.getElementById('post-tracklist');
+    BTDGate.initPostGate(
+      post,
+      [bodyWrap, tracklist],
+      bodyWrap
+    );
+  }
+
   // Body
   const body = document.getElementById('post-body');
   body.innerHTML = post.writeup || '<p>No writeup available.</p>';

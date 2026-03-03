@@ -1,45 +1,95 @@
 /* ============================================
-   Before The Data — Email Gate
-   One free play, then email capture modal
+   Before The Data — Content Gate
+   Three tiers:
+     1. No email  -> email capture (inline or archive)
+     2. Free      -> 2 reads/day, then upgrade modal
+     3. Paid      -> full access, no gates
    ============================================ */
 
 const BTDGate = (() => {
-  const STORAGE_KEY = 'btd_plays';
-  const SUBSCRIBER_KEY = 'btd_subscriber';
-  const FREE_PLAYS = 1;
-  const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
+  // localStorage keys
+  const KEY_EMAIL        = 'btd_email';
+  const KEY_TIER         = 'btd_tier';
+  const KEY_DAILY        = 'btd_daily_reads';
+
+  // Paid tiers that bypass all gates
+  const PAID_TIERS = ['heard-first', 'pro'];
+
+  const FIREBASE_KEY  = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
   const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
 
-  let modalEl = null;
+  // ── Helpers ────────────────────────────────────────────────────────────────
 
-  function getPlays() {
-    try { return parseInt(localStorage.getItem(STORAGE_KEY) || '0'); } catch(e) { return 0; }
+  function getEmail() {
+    try { return localStorage.getItem(KEY_EMAIL) || ''; } catch(e) { return ''; }
   }
 
-  function incrementPlays() {
-    try { localStorage.setItem(STORAGE_KEY, getPlays() + 1); } catch(e) {}
+  function setEmail(email) {
+    try { localStorage.setItem(KEY_EMAIL, email); } catch(e) {}
   }
 
-  function isSubscribed() {
-    try { return !!localStorage.getItem(SUBSCRIBER_KEY); } catch(e) { return false; }
+  function getTier() {
+    try { return localStorage.getItem(KEY_TIER) || 'free'; } catch(e) { return 'free'; }
   }
 
-  function markSubscribed(email, tier) {
+  function setTier(tier) {
+    try { localStorage.setItem(KEY_TIER, tier); } catch(e) {}
+  }
+
+  function isPaid() {
+    return PAID_TIERS.includes(getTier());
+  }
+
+  // Daily read tracking: { date: "YYYY-MM-DD", count: N }
+  function todayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth() + 1).padStart(2, '0') + '-' +
+      String(d.getDate()).padStart(2, '0');
+  }
+
+  function getDailyReads() {
     try {
-      localStorage.setItem(SUBSCRIBER_KEY, email);
-      if (tier) localStorage.setItem('btd_tier', tier);
+      const raw = localStorage.getItem(KEY_DAILY);
+      if (!raw) return { date: todayStr(), count: 0 };
+      const obj = JSON.parse(raw);
+      if (obj.date !== todayStr()) return { date: todayStr(), count: 0 };
+      return obj;
+    } catch(e) { return { date: todayStr(), count: 0 }; }
+  }
+
+  function incrementDailyReads() {
+    try {
+      const dr = getDailyReads();
+      dr.count += 1;
+      localStorage.setItem(KEY_DAILY, JSON.stringify(dr));
     } catch(e) {}
   }
 
-  function getStoredTier() {
-    try { return localStorage.getItem('btd_tier') || 'free'; } catch(e) { return 'free'; }
+  // Returns year of post (from publishedAt which can be {seconds:N} or ISO string)
+  function postYear(post) {
+    if (!post || !post.publishedAt) return new Date().getFullYear();
+    const pa = post.publishedAt;
+    if (typeof pa === 'object' && pa.seconds) {
+      return new Date(pa.seconds * 1000).getFullYear();
+    }
+    if (typeof pa === 'string') {
+      return new Date(pa).getFullYear();
+    }
+    return new Date().getFullYear();
   }
 
-  // Check Firebase for existing subscriber — returns { found, tier } or null
+  function isArchivePost(post) {
+    return postYear(post) <= 2023;
+  }
+
+  // Check Firebase for subscriber record to get stored tier
   async function lookupSubscriber(email) {
     try {
       const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-      const res = await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}`);
+      const res = await fetch(
+        `${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}`
+      );
       if (!res.ok) return null;
       const data = await res.json();
       const tier = data.fields?.tier?.stringValue || 'free';
@@ -47,191 +97,59 @@ const BTDGate = (() => {
     } catch(e) { return null; }
   }
 
-  function createModal() {
-    const el = document.createElement('div');
-    el.id = 'btd-gate-modal';
-    el.innerHTML = `
-      <div class="gate-backdrop"></div>
-      <div class="gate-card">
-        <div class="gate-art-strip"></div>
-        <div class="gate-body">
-          <div class="gate-logo">
-            <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32">
-          </div>
-          <h2 class="gate-headline">Enter your email.</h2>
-          <p class="gate-sub">Already a member? Enter your email to get back in. New here? Enter your email to get access. Free.</p>
-          <form class="gate-form" id="btd-gate-form">
-            <input type="email" class="gate-input" id="gate-email" placeholder="your@email.com" required autocomplete="email">
-            <button type="submit" class="gate-submit">Continue →</button>
-          </form>
-          <p class="gate-fine">No spam. Unsubscribe anytime.</p>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(el);
-
-    el.querySelector('.gate-backdrop').addEventListener('click', () => hideModal());
-
-    el.querySelector('#btd-gate-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = el.querySelector('#gate-email').value.trim();
-      if (!email) return;
-      await submitEmail(email, el);
-    });
-
-    modalEl = el;
-    return el;
+  // Subscribe via Netlify function (fire and forget)
+  function netlifySubscribe(email) {
+    fetch('/.netlify/functions/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    }).catch(() => {});
   }
 
-  function showModal() {
-    if (!modalEl) createModal();
-    modalEl.classList.add('visible');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => modalEl.querySelector('#gate-email')?.focus(), 100);
-  }
+  // ── Gate styles ────────────────────────────────────────────────────────────
 
-  function hideModal() {
-    if (modalEl) modalEl.classList.remove('visible');
-    document.body.style.overflow = '';
-  }
-
-  async function submitEmail(email, el) {
-    const btn = el.querySelector('.gate-submit');
-    btn.textContent = 'Checking...';
-    btn.disabled = true;
-
-    try {
-      // Check Firebase first — existing subscriber?
-      const existing = await lookupSubscriber(email);
-
-      if (existing) {
-        // Returning subscriber — just let them in, no welcome email
-        markSubscribed(email, existing.tier);
-        const greeting = existing.tier === 'paid'
-          ? `<h2 class="gate-headline">Welcome back.</h2><p class="gate-sub">You're a Heard First member. Full access unlocked.</p>`
-          : `<h2 class="gate-headline">Welcome back.</h2><p class="gate-sub">Good to see you. Keep listening.</p>`;
-        el.querySelector('.gate-body').innerHTML = `
-          <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>
-          ${greeting}
-          <button class="gate-submit" id="gate-close-btn">Keep Listening →</button>
-        `;
-        el.querySelector('#gate-close-btn').addEventListener('click', () => hideModal());
-        return;
-      }
-
-      // New subscriber — save to Firebase + send welcome email
-      const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-      await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}&updateMask.fieldPaths=email&updateMask.fieldPaths=subscribedAt&updateMask.fieldPaths=source&updateMask.fieldPaths=tier`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: {
-          email: { stringValue: email },
-          subscribedAt: { stringValue: new Date().toISOString() },
-          source: { stringValue: 'play-gate' },
-          tier: { stringValue: 'free' }
-        }})
-      });
-
-      // Send welcome email (fire and forget)
-      fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      }).catch(() => {});
-
-      markSubscribed(email, 'free');
-      el.querySelector('.gate-body').innerHTML = `
-        <div class="gate-logo"><img src="/assets/brand/logo-black-mark.png" alt="BTD" width="32"></div>
-        <h2 class="gate-headline">You're in.</h2>
-        <p class="gate-sub">Check your inbox. Every pick comes to you first. Before the blogs, before the playlists, before anyone else.</p>
-        <button class="gate-submit" id="gate-close-btn">Keep Listening →</button>
-      `;
-      el.querySelector('#gate-close-btn').addEventListener('click', () => hideModal());
-    } catch(err) {
-      btn.textContent = 'Get Access';
-      btn.disabled = false;
-      console.warn('[BTD Gate] Submit failed:', err);
-      markSubscribed(email, 'free');
-      hideModal();
-    }
-  }
-
-  // Called by Player before each play
-  function checkGate() {
-    if (isSubscribed()) return true; // already in, always allow
-    const plays = getPlays();
-    if (plays < FREE_PLAYS) {
-      incrementPlays();
-      return true; // allow play
-    }
-    // Over limit — show gate
-    showModal();
-    return false; // block play
-  }
-
-  // Inject styles
   function injectStyles() {
+    if (document.getElementById('btd-gate-styles')) return;
     const style = document.createElement('style');
+    style.id = 'btd-gate-styles';
     style.textContent = `
-      #btd-gate-modal {
-        display: none;
-        position: fixed; inset: 0; z-index: 9999;
-        align-items: center; justify-content: center;
+      /* ── Inline email prompt (soft gate above content) ── */
+      #btd-inline-gate {
+        background: #fff;
+        border: 1.5px solid #e0e0e0;
+        padding: 32px 28px;
+        margin: 0 0 28px;
+        text-align: center;
       }
-      #btd-gate-modal.visible { display: flex; }
-      .gate-backdrop {
-        position: absolute; inset: 0;
-        background: rgba(0,0,0,0.7);
-        backdrop-filter: blur(4px);
+      #btd-inline-gate .ig-logo {
+        margin: 0 auto 16px;
       }
-      .gate-card {
-        position: relative; z-index: 1;
-        background: #ffffff;
-        width: 100%; max-width: 420px;
-        margin: 16px;
-        overflow: hidden;
-      }
-      .gate-art-strip {
-        height: 4px;
-        background: #000000;
-      }
-      .gate-body {
-        padding: 40px 36px;
-      }
-      .gate-logo {
-        margin-bottom: 20px;
-      }
-      .gate-headline {
+      #btd-inline-gate .ig-headline {
         font-family: 'Barlow Condensed', sans-serif;
-        font-size: 42px; font-weight: 700;
+        font-size: 28px; font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #000; margin: 0 0 10px;
-        line-height: 1;
+        color: #000; margin: 0 0 8px; line-height: 1;
       }
-      .gate-sub {
+      #btd-inline-gate .ig-sub {
         font-size: 14px; color: #444;
-        line-height: 1.6; margin: 0 0 12px;
+        line-height: 1.6; margin: 0 0 20px;
       }
-      .gate-sub2 {
-        font-size: 14px; font-weight: 700; color: #000;
-        line-height: 1.5; margin: 0 0 24px;
-      }
-      .gate-form {
+      #btd-inline-gate .ig-form {
         display: flex; flex-direction: column; gap: 10px;
-        margin-bottom: 14px;
+        max-width: 360px; margin: 0 auto 10px;
       }
-      .gate-input {
-        width: 100%; padding: 13px 16px;
+      #btd-inline-gate .ig-input {
+        width: 100%; padding: 12px 14px;
         border: 1.5px solid #e0e0e0;
         font-size: 14px; font-family: inherit;
         outline: none; background: #fafafa;
-        transition: border-color 0.15s;
         box-sizing: border-box;
+        transition: border-color 0.15s;
       }
-      .gate-input:focus { border-color: #000; background: #fff; }
-      .gate-submit {
-        width: 100%; padding: 13px;
+      #btd-inline-gate .ig-input:focus { border-color: #000; background: #fff; }
+      #btd-inline-gate .ig-submit {
+        width: 100%; padding: 12px;
         background: #000; color: #fff;
         font-size: 13px; font-weight: 700;
         letter-spacing: 1.5px; text-transform: uppercase;
@@ -239,18 +157,280 @@ const BTDGate = (() => {
         font-family: inherit;
         transition: background 0.15s;
       }
-      .gate-submit:hover { background: #222; }
-      .gate-submit:disabled { opacity: 0.6; cursor: default; }
-      .gate-fine {
-        font-size: 11px; color: #999;
-        line-height: 1.5; margin: 0;
+      #btd-inline-gate .ig-submit:hover { background: #222; }
+      #btd-inline-gate .ig-submit:disabled { opacity: 0.6; cursor: default; }
+      #btd-inline-gate .ig-fine {
+        font-size: 11px; color: #999; margin: 0;
       }
-      .gate-fine a { color: #000; text-decoration: underline; }
+
+      /* ── Upgrade modal (free limit hit) ── */
+      #btd-upgrade-modal {
+        display: none;
+        position: fixed; inset: 0; z-index: 9999;
+        align-items: center; justify-content: center;
+      }
+      #btd-upgrade-modal.visible { display: flex; }
+      #btd-upgrade-modal .um-backdrop {
+        position: absolute; inset: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(4px);
+      }
+      #btd-upgrade-modal .um-card {
+        position: relative; z-index: 1;
+        background: #fff;
+        width: 100%; max-width: 440px;
+        margin: 16px;
+        overflow: hidden;
+      }
+      #btd-upgrade-modal .um-top-bar {
+        height: 4px;
+        background: #000;
+      }
+      #btd-upgrade-modal .um-body {
+        padding: 36px 32px;
+      }
+      #btd-upgrade-modal .um-logo {
+        margin-bottom: 16px;
+      }
+      #btd-upgrade-modal .um-headline {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 36px; font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #000; margin: 0 0 10px; line-height: 1;
+      }
+      #btd-upgrade-modal .um-sub {
+        font-size: 14px; color: #444;
+        line-height: 1.6; margin: 0 0 24px;
+      }
+      #btd-upgrade-modal .um-plans {
+        display: flex; flex-direction: column; gap: 12px;
+        margin-bottom: 24px;
+      }
+      #btd-upgrade-modal .um-plan {
+        border: 1.5px solid #e0e0e0;
+        padding: 16px;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px;
+      }
+      #btd-upgrade-modal .um-plan.um-plan-pro {
+        border-color: #000;
+        background: #000;
+        color: #fff;
+      }
+      #btd-upgrade-modal .um-plan-name {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 18px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .5px;
+      }
+      #btd-upgrade-modal .um-plan.um-plan-pro .um-plan-name { color: #fff; }
+      #btd-upgrade-modal .um-plan-desc {
+        font-size: 12px; color: #666; margin-top: 2px; line-height: 1.4;
+      }
+      #btd-upgrade-modal .um-plan.um-plan-pro .um-plan-desc { color: #aaa; }
+      #btd-upgrade-modal .um-plan-price {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 20px; font-weight: 700;
+        white-space: nowrap; flex-shrink: 0;
+      }
+      #btd-upgrade-modal .um-plan.um-plan-pro .um-plan-price { color: #fff; }
+      #btd-upgrade-modal .um-cta {
+        display: block; width: 100%; padding: 14px;
+        background: #000; color: #fff;
+        font-size: 13px; font-weight: 700;
+        letter-spacing: 1.5px; text-transform: uppercase;
+        text-align: center; text-decoration: none;
+        border: none; font-family: inherit;
+        cursor: pointer; box-sizing: border-box;
+        transition: background 0.15s;
+      }
+      #btd-upgrade-modal .um-cta:hover { background: #222; }
+      #btd-upgrade-modal .um-fine {
+        font-size: 11px; color: #999;
+        text-align: center; margin-top: 10px;
+      }
+
+      /* Content hidden until gate cleared */
+      .btd-content-hidden {
+        display: none !important;
+      }
     `;
     document.head.appendChild(style);
   }
 
-  injectStyles();
+  // ── Inline email gate ──────────────────────────────────────────────────────
 
-  return { checkGate, isSubscribed };
+  function buildInlineGate(post, onUnlock) {
+    const isArchive = isArchivePost(post);
+
+    const el = document.createElement('div');
+    el.id = 'btd-inline-gate';
+
+    const headline = isArchive
+      ? 'Sign up free to keep reading.'
+      : 'Enter your email to keep reading.';
+
+    const subtext = isArchive
+      ? 'This post is from the Before The Data archive. Sign up free to explore 19 years of music discovery.'
+      : 'Free music discovery. No spam. Unsubscribe anytime.';
+
+    el.innerHTML = `
+      <div class="ig-logo">
+        <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="28">
+      </div>
+      <h2 class="ig-headline">${headline}</h2>
+      <p class="ig-sub">${subtext}</p>
+      <form class="ig-form" id="btd-ig-form">
+        <input type="email" class="ig-input" id="btd-ig-email"
+          placeholder="your@email.com" required autocomplete="email">
+        <button type="submit" class="ig-submit">Continue</button>
+      </form>
+      <p class="ig-fine">No spam. Unsubscribe anytime.</p>
+    `;
+
+    el.querySelector('#btd-ig-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = el.querySelector('#btd-ig-email').value.trim();
+      if (!email) return;
+      const btn = el.querySelector('.ig-submit');
+      btn.textContent = 'Checking...';
+      btn.disabled = true;
+
+      // Check Firebase for existing record
+      const existing = await lookupSubscriber(email);
+      const tier = existing ? existing.tier : 'free';
+
+      setEmail(email);
+      setTier(tier);
+
+      // Subscribe via Netlify function
+      netlifySubscribe(email);
+
+      // Unlock content
+      el.remove();
+      onUnlock();
+    });
+
+    return el;
+  }
+
+  // ── Upgrade modal ──────────────────────────────────────────────────────────
+
+  let upgradeModalEl = null;
+
+  function showUpgradeModal() {
+    if (upgradeModalEl) {
+      upgradeModalEl.classList.add('visible');
+      return;
+    }
+
+    const el = document.createElement('div');
+    el.id = 'btd-upgrade-modal';
+    el.innerHTML = `
+      <div class="um-backdrop"></div>
+      <div class="um-card">
+        <div class="um-top-bar"></div>
+        <div class="um-body">
+          <div class="um-logo">
+            <img src="/assets/brand/logo-black-mark.png" alt="BTD" width="28">
+          </div>
+          <h2 class="um-headline">Upgrade to keep reading.</h2>
+          <p class="um-sub">You've read your 2 free posts for today. Upgrade to Heard First for unlimited access to every post, past and present.</p>
+          <div class="um-plans">
+            <div class="um-plan">
+              <div>
+                <div class="um-plan-name">Heard First</div>
+                <div class="um-plan-desc">Unlimited reads, early access picks, weekly tracker.</div>
+              </div>
+              <div class="um-plan-price">$9/mo</div>
+            </div>
+            <div class="um-plan um-plan-pro">
+              <div>
+                <div class="um-plan-name">Heard First Pro</div>
+                <div class="um-plan-desc">Everything plus full A&amp;R scouting reports and data.</div>
+              </div>
+              <div class="um-plan-price">$49.99/mo</div>
+            </div>
+          </div>
+          <a href="/heard-first" class="um-cta">See Plans</a>
+          <p class="um-fine">Cancel anytime. No contracts.</p>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(el);
+    el.querySelector('.um-backdrop').addEventListener('click', () => {
+      // Don't allow dismissal -- content stays hidden
+    });
+
+    upgradeModalEl = el;
+    requestAnimationFrame(() => el.classList.add('visible'));
+  }
+
+  // ── Main entry point ───────────────────────────────────────────────────────
+  // Called from renderPost() after post data is loaded.
+  // post: the post object (needs publishedAt)
+  // gatedEls: array of DOM elements to hide when gate is active
+  // insertBeforeEl: element to insert the inline gate prompt before
+
+  function initPostGate(post, gatedEls, insertBeforeEl) {
+    injectStyles();
+
+    function hideGated() {
+      gatedEls.forEach(el => el && el.classList.add('btd-content-hidden'));
+    }
+    function showGated() {
+      gatedEls.forEach(el => el && el.classList.remove('btd-content-hidden'));
+    }
+
+    // Paid tier -- full access, no gate
+    if (isPaid()) {
+      return;
+    }
+
+    const email = getEmail();
+
+    // ── No email ────────────────────────────────────────────────────────────
+    if (!email) {
+      hideGated();
+
+      const gateEl = buildInlineGate(post, () => {
+        showGated();
+        // Count this read for free tier
+        if (!isPaid()) incrementDailyReads();
+      });
+
+      if (insertBeforeEl && insertBeforeEl.parentElement) {
+        insertBeforeEl.parentElement.insertBefore(gateEl, insertBeforeEl);
+      } else {
+        document.getElementById('post-content')?.appendChild(gateEl);
+      }
+      return;
+    }
+
+    // ── Has email but free/no tier ──────────────────────────────────────────
+    const dr = getDailyReads();
+    if (dr.count >= 2) {
+      // Hit daily limit -- show upgrade modal, hide content
+      hideGated();
+      showUpgradeModal();
+      return;
+    }
+
+    // Under the limit -- allow read, increment counter
+    incrementDailyReads();
+  }
+
+  // ── Legacy: checkGate (used by Player for play gating) ────────────────────
+  // Keep this so Player doesn't break if it still references BTDGate.checkGate
+
+  function isSubscribed() {
+    try { return !!localStorage.getItem(KEY_EMAIL); } catch(e) { return false; }
+  }
+
+  function checkGate() {
+    return true; // play gating removed; content gate handles access
+  }
+
+  return { initPostGate, checkGate, isSubscribed };
 })();
