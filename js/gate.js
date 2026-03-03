@@ -918,7 +918,8 @@ const BTDGate = (() => {
       });
       const d = await r.json();
       if (d.url) { window.location.href = d.url; }
-      else { alert('Could not open billing portal. Please contact support.'); }
+      else if (d.error === 'no_stripe_account') { alert('Your account was set up manually.\nTo manage your subscription, email chad@dreamsneverdie.xyz'); }
+      else { alert(d.message || 'Could not open billing portal. Please email chad@dreamsneverdie.xyz'); }
     } catch(err) {
       alert('Could not open billing portal. Please try again.');
     }

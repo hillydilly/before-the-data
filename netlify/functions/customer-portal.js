@@ -42,7 +42,7 @@ export default async (req) => {
     const customer = searchData.data?.[0];
 
     if (!customer) {
-      return new Response(JSON.stringify({ error: 'No subscription found for that email.' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      return new Response(JSON.stringify({ error: 'no_stripe_account', message: 'No billing account found. If you were added manually, email chad@dreamsneverdie.xyz to manage your subscription.' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
     }
 
     // Create portal session
