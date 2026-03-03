@@ -108,6 +108,34 @@
     @media (max-width: 767px) {
       #archive-strip { display: block; }
     }
+    .mobile-discover-footer {
+      display: none;
+    }
+    @media (max-width: 767px) {
+      .mobile-discover-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 28px 0 80px;
+        border-top: 1px solid #f0f0f0;
+        margin-top: 24px;
+      }
+      .mobile-footer-link {
+        font-size: 13px;
+        color: #888;
+        text-decoration: none;
+        font-family: 'Barlow', sans-serif;
+        letter-spacing: 0.02em;
+      }
+      .mobile-footer-link:active {
+        color: #111;
+      }
+      .mobile-footer-dot {
+        color: #ccc;
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body data-page="discover">
@@ -195,6 +223,13 @@
       <span class="updated">Our favorite tracks</span>
     </div>
     <div id="chart-list" class="chart-list"></div>
+
+    <!-- Mobile footer links — shows below charts on discover page, mobile only -->
+    <div class="mobile-discover-footer">
+      <a href="/about.html" class="mobile-footer-link">About</a>
+      <span class="mobile-footer-dot">·</span>
+      <a href="/submit.html" class="mobile-footer-link">Submit Music</a>
+    </div>
   </main>
 
   <!-- SCRIPTS -->
