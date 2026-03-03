@@ -277,7 +277,7 @@ function parsePostDoc(doc) {
 /* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
 async function fetchPostsFromFirebase() {
   const CACHE_KEY = 'btd_posts_cache';
-  const CACHE_TTL = 10 * 60 * 1000; // 10 min cache — posts don't change that often
+  const CACHE_TTL = 3 * 60 * 1000; // 3 min cache — balances freshness vs speed
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
     if (cached) {
