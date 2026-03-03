@@ -773,8 +773,71 @@ async function renderPost() {
   }
   sidebar.innerHTML = sidebarHTML;
 
+  // ── Bottom nav: Next Post + Related Tracks ─────────────────────────────────
+  await renderPostFooter(post);
+
   updatePostMeta(post);
   updateJsonLd(post);
+}
+
+async function renderPostFooter(post) {
+  const container = document.getElementById('post-footer-nav');
+  if (!container) return;
+
+  // Fetch all posts to find next + related
+  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
+  const thisSlug = post.slug || post.id;
+
+  // Next post: the post immediately after this one chronologically
+  // (sorted desc, so "next" = older = higher index)
+  const idx = allPosts.findIndex(p => (p.slug || p.id) === thisSlug);
+  const nextPost = idx >= 0 && idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
+
+  // Related tracks: same genre, excluding current post, shuffle + take 3
+  const postGenres = post.genres || (post.genre ? [post.genre] : []);
+  const related = allPosts
+    .filter(p => {
+      if ((p.slug || p.id) === thisSlug) return false;
+      const pg = p.genres || (p.genre ? [p.genre] : []);
+      return postGenres.some(g => pg.includes(g));
+    })
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 3);
+
+  let html = '<div class="post-footer-nav">';
+
+  // Related Tracks (left column)
+  if (related.length > 0) {
+    html += `<div class="pfn-related">
+      <div class="pfn-label">Related Tracks</div>`;
+    for (const r of related) {
+      html += `<a class="pfn-related-item" href="/${r.slug || r.id}">
+        <img src="${r.artUrlSm || r.artUrl}" alt="${r.title}" loading="lazy">
+        <div class="pfn-related-text">
+          <div class="pfn-related-title">${r.title}</div>
+          <div class="pfn-related-artist">${r.artist}</div>
+        </div>
+      </a>`;
+    }
+    html += `</div>`;
+  }
+
+  // Next Post (right column)
+  if (nextPost) {
+    html += `<div class="pfn-next">
+      <div class="pfn-label">Next Post</div>
+      <a class="pfn-next-item" href="/${nextPost.slug || nextPost.id}">
+        <img src="${nextPost.artUrl}" alt="${nextPost.title}" loading="lazy">
+        <div class="pfn-next-text">
+          <div class="pfn-next-title">${nextPost.title}</div>
+          <div class="pfn-next-artist">${nextPost.artist}</div>
+        </div>
+      </a>
+    </div>`;
+  }
+
+  html += '</div>';
+  container.innerHTML = html;
 }
 
 // ─── SEO: Dynamic meta tags for post pages ───────────────────────────────────
