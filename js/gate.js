@@ -433,5 +433,115 @@ const BTDGate = (() => {
     return true; // play gating removed; content gate handles access
   }
 
-  return { initPostGate, checkGate, isSubscribed };
+  // ── Search gate ──────────────────────────────────────────────────────────
+  // If user has no email, intercept search focus/input and show signup prompt
+
+  function initSearchGate() {
+    const inputs = [
+      document.getElementById('search-input'),
+      document.getElementById('mobile-search-input'),
+    ].filter(Boolean);
+
+    if (!inputs.length) return;
+    if (getEmail()) return; // already signed up, no gate needed
+
+    inputs.forEach(input => {
+      // Show a tooltip/prompt on focus instead of letting them type
+      input.addEventListener('focus', function onFocus() {
+        if (getEmail()) return; // signed up mid-session
+        input.blur();
+        showSearchSignupPrompt(input);
+      }, { once: false });
+    });
+  }
+
+  function showSearchSignupPrompt(nearEl) {
+    if (document.getElementById('btd-search-gate')) return; // already showing
+
+    const el = document.createElement('div');
+    el.id = 'btd-search-gate';
+    el.innerHTML = `
+      <style>
+        #btd-search-gate {
+          position: fixed; inset: 0; z-index: 9000;
+          display: flex; align-items: center; justify-content: center;
+          background: rgba(0,0,0,0.55);
+        }
+        #btd-search-gate .sg-card {
+          background: #fff; color: #000;
+          padding: 36px 32px; max-width: 400px; width: 90%;
+          text-align: center;
+        }
+        #btd-search-gate .sg-headline {
+          font-size: 22px; font-weight: 800; text-transform: uppercase;
+          letter-spacing: 1px; margin: 0 0 10px;
+        }
+        #btd-search-gate .sg-sub {
+          font-size: 14px; color: #555; line-height: 1.6; margin: 0 0 24px;
+        }
+        #btd-search-gate .sg-form {
+          display: flex; flex-direction: column; gap: 10px;
+        }
+        #btd-search-gate .sg-input {
+          padding: 12px 14px; border: 1px solid #ccc;
+          font-size: 14px; outline: none; width: 100%; box-sizing: border-box;
+        }
+        #btd-search-gate .sg-input:focus { border-color: #000; }
+        #btd-search-gate .sg-btn {
+          padding: 13px; background: #000; color: #fff;
+          font-size: 11px; font-weight: 700; letter-spacing: 2px;
+          text-transform: uppercase; border: none; cursor: pointer;
+        }
+        #btd-search-gate .sg-btn:hover { background: #222; }
+        #btd-search-gate .sg-dismiss {
+          margin-top: 14px; font-size: 12px; color: #999; cursor: pointer;
+          text-decoration: underline; background: none; border: none;
+        }
+      </style>
+      <div class="sg-card">
+        <p class="sg-headline">Search the catalog</p>
+        <p class="sg-sub">19 years of music discovery, all searchable. Free to sign up.</p>
+        <div class="sg-form">
+          <input class="sg-input" id="sg-email-input" type="email" placeholder="Your email address" autocomplete="email">
+          <button class="sg-btn" id="sg-submit-btn">Unlock Search &#x2192;</button>
+        </div>
+        <button class="sg-dismiss" id="sg-dismiss-btn">Maybe later</button>
+      </div>
+    `;
+    document.body.appendChild(el);
+
+    const emailInput = el.querySelector('#sg-email-input');
+    const submitBtn  = el.querySelector('#sg-submit-btn');
+    const dismissBtn = el.querySelector('#sg-dismiss-btn');
+
+    emailInput.focus();
+
+    submitBtn.addEventListener('click', async () => {
+      const email = emailInput.value.trim();
+      if (!email || !email.includes('@')) {
+        emailInput.style.borderColor = 'red';
+        return;
+      }
+      submitBtn.textContent = 'Saving...';
+      submitBtn.disabled = true;
+      try {
+        await fetch('/.netlify/functions/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source: 'search-gate' }),
+        });
+      } catch(e) {}
+      setEmail(email);
+      el.remove();
+      // Re-focus the original search input
+      if (nearEl) { nearEl.focus(); }
+    });
+
+    dismissBtn.addEventListener('click', () => { el.remove(); });
+
+    // Close on backdrop click
+    el.addEventListener('click', e => { if (e.target === el) el.remove(); });
+  }
+
+  return { initPostGate, initSearchGate, checkGate, isSubscribed };
 })();

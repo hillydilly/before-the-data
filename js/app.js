@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       a.classList.add('active');
   });
 
+  // Search gate — prompt email signup before allowing search
+  if (typeof BTDGate !== 'undefined' && BTDGate.initSearchGate) {
+    BTDGate.initSearchGate();
+  }
+
   // Mobile sticky search — filter new music list on index page
   const mobileSearchInput = document.getElementById('mobile-search-input');
   if (mobileSearchInput) {
