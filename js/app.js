@@ -313,11 +313,26 @@ async function renderNewMusic() {
     `;
     pageHeader.insertBefore(bar, grid);
 
+    // Gate helper — returns true if user can proceed, false if gate shown
+    function requireEmail(label) {
+      if (typeof BTDGate !== 'undefined' && BTDGate.isSubscribed()) return true;
+      if (typeof BTDGate !== 'undefined') {
+        BTDGate.openAuthModal({
+          headline: 'Sign up free to browse by ' + label,
+          subtext: 'Get access to genre pages, year archives, and 19+ years of music discovery.'
+        });
+      }
+      return false;
+    }
+
     // Genre filter clicks
     bar.addEventListener('click', e => {
       const genreBtn = e.target.closest('.genre-btn:not(.year-pill)');
       if (genreBtn && genreBtn.dataset.genre !== undefined) {
-        activeGenre = genreBtn.dataset.genre || null;
+        const newGenre = genreBtn.dataset.genre || null;
+        // Gate: require email for any specific genre filter
+        if (newGenre && !requireEmail('genre')) return;
+        activeGenre = newGenre;
         bar.querySelectorAll('.genre-btn:not(.year-pill)').forEach(b => b.classList.toggle('active', b.dataset.genre === (activeGenre || '')));
         renderView(currentView);
         const url = new URL(window.location.href);
@@ -331,11 +346,22 @@ async function renderNewMusic() {
       }
     });
 
+    // Also gate genre filter when arriving via URL param
+    if (activeGenre && typeof BTDGate !== 'undefined' && !BTDGate.isSubscribed()) {
+      BTDGate.openAuthModal({
+        headline: 'Sign up free to browse ' + activeGenre,
+        subtext: 'Get access to genre pages, year archives, and 19+ years of music discovery.'
+      });
+      activeGenre = null;
+    }
+
     // Year pill toggle dropdown
     const yearBtn = document.getElementById('year-pill-btn');
     const yearDropdown = document.getElementById('year-dropdown');
     yearBtn.addEventListener('click', (e) => {
       e.stopPropagation();
+      // Gate: require email to open year dropdown
+      if (!requireEmail('year')) return;
       yearDropdown.classList.toggle('open');
     });
 
@@ -354,7 +380,20 @@ async function renderNewMusic() {
       if (activeYear) url.searchParams.set('year', activeYear);
       else url.searchParams.delete('year');
       history.replaceState({}, '', url);
+      // Update page title
+      const h1 = document.querySelector('.page-header h1, h1.page-title, h1');
+      if (h1) h1.textContent = activeYear ? String(activeYear) : 'New Music';
+      document.title = (activeYear || 'New Music') + ' — Before The Data';
     });
+
+    // Also gate year filter when arriving via URL param
+    if (activeYear && typeof BTDGate !== 'undefined' && !BTDGate.isSubscribed()) {
+      BTDGate.openAuthModal({
+        headline: 'Sign up free to browse ' + activeYear,
+        subtext: 'Get access to genre pages, year archives, and 19+ years of music discovery.'
+      });
+      activeYear = null;
+    }
 
     // Close dropdown on outside click
     document.addEventListener('click', () => yearDropdown.classList.remove('open'));
@@ -367,12 +406,17 @@ async function renderNewMusic() {
     _setView(view);
     let posts = allPosts;
     if (activeGenre) posts = posts.filter(p => (p.genres || [p.genre]).includes(activeGenre));
-    if (activeYear) posts = posts.filter(p => p.publishedAt && new Date(p.publishedAt).getFullYear() === activeYear);
+    if (activeYear) posts = posts.filter(p => {
+      if (!p.publishedAt) return false;
+      // publishedAt is stored as { seconds } object from Firebase timestamp
+      const sec = typeof p.publishedAt === 'object' ? p.publishedAt.seconds : Math.floor(new Date(p.publishedAt).getTime() / 1000);
+      return new Date(sec * 1000).getFullYear() === activeYear;
+    });
     // Filter out posts with no artist or title (incomplete archive stubs)
     posts = posts.filter(p => p.artist && p.title);
     grid.innerHTML = '';
     if (!posts.length) {
-      grid.innerHTML = `<div style="padding:48px 0;text-align:center;color:#888;font-size:15px;">No posts found${activeGenre ? ' for <strong>' + activeGenre + '</strong>' : ''}.</div>`;
+      grid.innerHTML = `<div style="padding:48px 0;text-align:center;color:#888;font-size:15px;">No posts found${activeGenre ? ' for <strong>' + activeGenre + '</strong>' : (activeYear ? ' for <strong>' + activeYear + '</strong>' : '')}.</div>`;
       return;
     }
     if (view === 'list') {
