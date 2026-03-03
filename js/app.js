@@ -501,7 +501,7 @@ async function renderPost() {
       <div class="post-date">${formatPostDate(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
       <div class="post-stream-links">
-        ${post.previewUrl ? `<button class="post-play-btn" id="hero-play-btn">▶ Play Preview</button>` : ''}
+        ${(post.previewUrl || post.trackId) ? `<button class="post-play-btn" id="hero-play-btn">▶ ${post.previewUrl ? 'Play Preview' : 'Play on Spotify'}</button>` : ''}
         ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
         ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
       </div>
@@ -523,29 +523,51 @@ async function renderPost() {
     </div>
   `;
 
-  // Play button — play preview
+  // Play button — play preview if available, otherwise scroll to Spotify embed
+  const scrollToEmbed = () => {
+    const embed = document.getElementById('post-spotify-embed');
+    if (embed) {
+      embed.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      embed.style.outline = '2px solid #1DB954';
+      setTimeout(() => { embed.style.outline = ''; }, 1800);
+    } else if (post.trackId) {
+      // Inject embed if not yet rendered
+      const body = document.querySelector('.post-body-wrap');
+      if (body) {
+        const embedDiv = document.createElement('div');
+        embedDiv.id = 'post-spotify-embed';
+        embedDiv.style.margin = '24px 0';
+        embedDiv.innerHTML = `<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/${post.trackId}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+        body.insertBefore(embedDiv, body.firstChild);
+        embedDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  };
+
   const playPost = () => {
-    if (!post.previewUrl) return;
-    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-    const playBtn = document.getElementById('hero-play-btn');
-    if (playBtn) playBtn.textContent = '▶ Playing in player bar ↑';
+    if (post.previewUrl) {
+      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+      const playBtn = document.getElementById('hero-play-btn');
+      if (playBtn) playBtn.textContent = '▶ Playing in player bar ↑';
+    } else {
+      scrollToEmbed();
+    }
   };
 
   const artWrap = document.getElementById('art-play-wrap');
-  if (artWrap && post.previewUrl) {
+  if (artWrap && (post.previewUrl || post.trackId)) {
     artWrap.addEventListener('click', (e) => {
       e.stopPropagation();
-      const current = Player.getCurrent();
-      if (current && current.id === post.id) {
-        Player.togglePlay(); // pause/resume if this post is active
-      } else {
-        playPost();
+      if (post.previewUrl) {
+        const current = Player.getCurrent();
+        if (current && current.id === post.id) { Player.togglePlay(); return; }
       }
+      playPost();
     });
   }
 
   const playBtn = document.getElementById('hero-play-btn');
-  if (playBtn && post.previewUrl) {
+  if (playBtn && (post.previewUrl || post.trackId)) {
     playBtn.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
   }
 
