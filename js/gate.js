@@ -29,7 +29,14 @@ const BTDGate = (() => {
   }
 
   function getTier() {
-    try { return localStorage.getItem(KEY_TIER) || 'free'; } catch(e) { return 'free'; }
+    try {
+      const t = localStorage.getItem(KEY_TIER);
+      if (t) return t;
+      // Fallback: infer from dashboard tokens if btd_tier not set
+      if (localStorage.getItem('btd_pro_token')) return 'pro';
+      if (localStorage.getItem('btd_hf_token')) return 'heard-first';
+      return 'free';
+    } catch(e) { return 'free'; }
   }
 
   function setTier(tier) {
@@ -668,6 +675,22 @@ const BTDGate = (() => {
   }
 
   function initSiteAuth() {
+    // Backfill btd_tier from dashboard tokens if missing
+    try {
+      if (!localStorage.getItem(KEY_TIER)) {
+        if (localStorage.getItem('btd_pro_token')) {
+          localStorage.setItem(KEY_TIER, 'pro');
+          const proEmail = localStorage.getItem('btd_pro_email');
+          if (proEmail && !localStorage.getItem(KEY_EMAIL)) localStorage.setItem(KEY_EMAIL, proEmail);
+        } else if (localStorage.getItem('btd_hf_token')) {
+          const hfTier = localStorage.getItem('btd_hf_tier') || 'heard-first';
+          localStorage.setItem(KEY_TIER, hfTier);
+          const hfEmail = localStorage.getItem('btd_hf_email');
+          if (hfEmail && !localStorage.getItem(KEY_EMAIL)) localStorage.setItem(KEY_EMAIL, hfEmail);
+        }
+      }
+    } catch(e) {}
+
     // Inject sidebar login block before sidebar-footer if not already in HTML
     const sidebar = document.getElementById('sidebar');
     if (sidebar && !document.getElementById('sidebar-login-block')) {
