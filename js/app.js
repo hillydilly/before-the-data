@@ -752,48 +752,28 @@ async function renderPost() {
     `;
   }
 
-  // Related Tracks
-  if (post.relatedIds && post.relatedIds.length > 0) {
-    sidebarHTML += '<section><h4>Related Tracks</h4>';
-    for (const rid of post.relatedIds.slice(0, 4)) {
-      const rel = await fetchPostById(rid);
-      if (rel) {
-        sidebarHTML += `
-          <a class="related-item" href="/${rel.id}">
-            <img src="${rel.artUrl}" alt="${rel.title}" loading="lazy">
-            <div>
-              <div class="rel-title">&ldquo;${rel.title}&rdquo;</div>
-              <div class="rel-artist">${rel.artist}</div>
-            </div>
-          </a>
-        `;
-      }
-    }
-    sidebarHTML += '</section>';
-  }
-  sidebar.innerHTML = sidebarHTML;
-
-  // ── Bottom nav: Next Post + Related Tracks ─────────────────────────────────
-  await renderPostFooter(post);
-
-  updatePostMeta(post);
-  updateJsonLd(post);
-}
-
-async function renderPostFooter(post) {
-  const container = document.getElementById('post-footer-nav');
-  if (!container) return;
-
-  // Fetch all posts to find next + related
+  // Next Post + Related Tracks — in sidebar, below Written By (Hillydilly style)
   const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
   const thisSlug = post.slug || post.id;
-
-  // Next post: the post immediately after this one chronologically
-  // (sorted desc, so "next" = older = higher index)
   const idx = allPosts.findIndex(p => (p.slug || p.id) === thisSlug);
   const nextPost = idx >= 0 && idx < allPosts.length - 1 ? allPosts[idx + 1] : null;
 
-  // Related tracks: same genre, excluding current post, shuffle + take 3
+  if (nextPost) {
+    sidebarHTML += `
+      <section class="sidebar-next-post">
+        <h4>Next Post</h4>
+        <a class="pfn-next-item" href="/${nextPost.slug || nextPost.id}">
+          <img src="${nextPost.artUrlSm || nextPost.artUrl}" alt="${nextPost.title}" loading="lazy">
+          <div class="pfn-next-text">
+            <div class="pfn-next-title">${nextPost.title}</div>
+            <div class="pfn-next-artist">${nextPost.artist}</div>
+          </div>
+        </a>
+      </section>
+    `;
+  }
+
+  // Related Tracks — by genre, 3 posts
   const postGenres = post.genres || (post.genre ? [post.genre] : []);
   const related = allPosts
     .filter(p => {
@@ -804,41 +784,29 @@ async function renderPostFooter(post) {
     .sort(() => Math.random() - 0.5)
     .slice(0, 3);
 
-  let html = '<div class="post-footer-nav">';
-
-  // Related Tracks (left column)
   if (related.length > 0) {
-    html += `<div class="pfn-related">
-      <div class="pfn-label">Related Tracks</div>`;
+    sidebarHTML += '<section class="sidebar-related"><h4>Related Tracks</h4>';
     for (const r of related) {
-      html += `<a class="pfn-related-item" href="/${r.slug || r.id}">
-        <img src="${r.artUrlSm || r.artUrl}" alt="${r.title}" loading="lazy">
-        <div class="pfn-related-text">
-          <div class="pfn-related-title">${r.title}</div>
-          <div class="pfn-related-artist">${r.artist}</div>
-        </div>
-      </a>`;
+      sidebarHTML += `
+        <a class="pfn-related-item" href="/${r.slug || r.id}">
+          <img src="${r.artUrlSm || r.artUrl}" alt="${r.title}" loading="lazy">
+          <div class="pfn-related-text">
+            <div class="pfn-related-title">${r.title}</div>
+            <div class="pfn-related-artist">${r.artist}</div>
+          </div>
+        </a>
+      `;
     }
-    html += `</div>`;
+    sidebarHTML += '</section>';
   }
 
-  // Next Post (right column)
-  if (nextPost) {
-    html += `<div class="pfn-next">
-      <div class="pfn-label">Next Post</div>
-      <a class="pfn-next-item" href="/${nextPost.slug || nextPost.id}">
-        <img src="${nextPost.artUrl}" alt="${nextPost.title}" loading="lazy">
-        <div class="pfn-next-text">
-          <div class="pfn-next-title">${nextPost.title}</div>
-          <div class="pfn-next-artist">${nextPost.artist}</div>
-        </div>
-      </a>
-    </div>`;
-  }
+  sidebar.innerHTML = sidebarHTML;
 
-  html += '</div>';
-  container.innerHTML = html;
+  updatePostMeta(post);
+  updateJsonLd(post);
 }
+
+
 
 // ─── SEO: Dynamic meta tags for post pages ───────────────────────────────────
 function setMeta(property, content) {
