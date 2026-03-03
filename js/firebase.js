@@ -277,12 +277,25 @@ function parsePostDoc(doc) {
 /* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
 async function fetchPostsFromFirebase() {
   const CACHE_KEY = 'btd_posts_cache';
-  const CACHE_TTL = 3 * 60 * 1000; // 3 min cache — balances freshness vs speed
+  const CACHE_TTL = 5 * 60 * 1000; // 5 min TTL
+
+  // Check for cache bust signal from Firebase (written by BTD agent after each import)
+  let bustTs = 0;
+  try {
+    const bustDoc = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_cache?key=${FIREBASE_CONFIG.apiKey}`
+    ).then(r=>r.json());
+    bustTs = parseInt(bustDoc.fields?.lastImport?.integerValue || 0);
+  } catch(e) {}
+
+  // Serve cache only if it's fresh AND post-dates the last import signal
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
     if (cached) {
       const { ts, posts } = JSON.parse(cached);
-      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) return posts;
+      if (Date.now() - ts < CACHE_TTL && posts?.length > 0 && ts > bustTs) {
+        return posts;
+      }
     }
   } catch(e) {}
   try {
