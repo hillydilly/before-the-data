@@ -40,7 +40,7 @@ export default async (req) => {
   <!-- Banner -->
   <tr>
     <td align="center" style="padding:0;line-height:0;font-size:0;">
-      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772201268/btd/btd-email-header-2x.png"
+      <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772327231/btd/btd-email-header-dark.png"
            alt="Before The Data" width="480"
            style="display:block;max-width:100%;border:0;">
     </td>
