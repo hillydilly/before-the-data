@@ -704,16 +704,7 @@ const BTDGate = (() => {
     }
     renderSidebarLogin();
 
-    // Inject mobile top bar if not already present
-    if (!document.getElementById('btd-mobile-topbar')) {
-      const bar = document.createElement('div');
-      bar.id = 'btd-mobile-topbar';
-      bar.innerHTML = `
-        <a class="mtb-brand" href="/">Before The Data</a>
-        <button class="mtb-account-btn" id="mtb-account-btn" aria-label="Account"></button>`;
-      document.body.insertBefore(bar, document.body.firstChild);
-    }
-    renderMobileTopBar();
+    // Mobile top bar intentionally disabled — account access via bottom nav account tab
   }
 
   function renderMobileTopBar() {
