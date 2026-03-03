@@ -275,6 +275,10 @@ const BTDGate = (() => {
         background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.6) 30%, rgba(255,255,255,0.95) 100%);
         pointer-events: none;
       }
+      #btd-blur-gate-backdrop {
+        position: fixed; inset: 0; z-index: 7999;
+        background: rgba(255,255,255,0.3);
+      }
       #btd-blur-gate-modal {
         position: fixed;
         top: 50%; left: 50%;
@@ -283,11 +287,13 @@ const BTDGate = (() => {
         width: 90%;
         max-width: 420px;
         background: #fff;
-        border: 1.5px solid #e0e0e0;
-        padding: 36px 32px;
+        padding: 36px 28px;
         text-align: center;
         box-shadow: 0 16px 48px rgba(0,0,0,0.18);
         box-sizing: border-box;
+      }
+      #btd-blur-gate-modal .ig-input {
+        width: 100%; box-sizing: border-box;
       }
     `;
     document.head.appendChild(style);
@@ -325,7 +331,12 @@ const BTDGate = (() => {
     overlay.id = 'btd-blur-gate-overlay';
     wrap.appendChild(overlay);
 
-    // Centered signup modal inside the wrap
+    // Backdrop (fixed, full screen, behind modal)
+    const backdrop = document.createElement('div');
+    backdrop.id = 'btd-blur-gate-backdrop';
+    document.body.appendChild(backdrop);
+
+    // Modal on document.body (fixed positioning breaks inside filtered parents on iOS)
     const modal = document.createElement('div');
     modal.id = 'btd-blur-gate-modal';
     modal.innerHTML = `
@@ -338,7 +349,7 @@ const BTDGate = (() => {
       </form>
       <p class="ig-fine">No spam. Unsubscribe anytime.</p>
     `;
-    wrap.appendChild(modal);
+    document.body.appendChild(modal);
 
     modal.querySelector('#btd-ig-form').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -355,6 +366,8 @@ const BTDGate = (() => {
       netlifySubscribe(emailVal);
 
       // Remove gate entirely
+      modal.remove();
+      backdrop.remove();
       gatedEls.forEach(el => { if (el) el.classList.remove('btd-content-hidden'); });
       wrap.replaceWith(...gatedEls.filter(Boolean));
       onUnlock();

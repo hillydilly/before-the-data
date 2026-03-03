@@ -723,6 +723,9 @@ ul { list-style: none; }
   #sidebar nav a[href='search.html'],
   #sidebar nav a[href='/search'],
   #sidebar nav a[href='search'] { display: none !important; }
+  /* Hide Submit Music on mobile — accessible via desktop sidebar + direct URL */
+  #sidebar nav a[href='/submit.html'],
+  #sidebar nav a[href='submit.html'] { display: none !important; }
 
   /* Archive — desktop sidebar only, not in mobile bottom nav */
   #sidebar nav a[href='/archive'],
