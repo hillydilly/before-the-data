@@ -206,6 +206,10 @@ ul { list-style: none; }
 }
 #sidebar .sidebar-footer a:hover { color: var(--tx-2); }
 
+/* Account tab — mobile bottom nav only, hidden on desktop */
+#btd-mobile-account-tab { display: none; }
+@media (max-width: 767px) { #btd-mobile-account-tab { display: flex; } }
+
 /* ── Mobile top bar ── */
 #btd-mobile-topbar {
   display: none;
