@@ -336,6 +336,7 @@ async function fetchPostById(id) {
   const underscoreId = cleanId.replace(/-/g, '_');
   const dashId = cleanId;
 
+  // 1. Try direct doc ID lookup (fast path)
   for (const tryId of [underscoreId, dashId]) {
     try {
       const res = await fetch(
@@ -347,7 +348,34 @@ async function fetchPostById(id) {
       }
     } catch(e) {}
   }
-  // Fallback: scan all posts (up to 500)
+
+  // 2. Query Firestore by slug field directly (handles renamed slugs like archive posts)
+  try {
+    const queryBody = {
+      structuredQuery: {
+        from: [{ collectionId: 'config' }],
+        where: {
+          fieldFilter: {
+            field: { fieldPath: 'slug' },
+            op: 'EQUAL',
+            value: { stringValue: cleanId }
+          }
+        },
+        limit: 1
+      }
+    };
+    const qRes = await fetch(
+      `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents:runQuery?key=${FIREBASE_CONFIG.apiKey}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(queryBody) }
+    );
+    if (qRes.ok) {
+      const results = await qRes.json();
+      const doc = results[0]?.document;
+      if (doc?.fields) return parsePostDoc(doc);
+    }
+  } catch(e) {}
+
+  // 3. Fallback: scan recent posts cache
   const all = await fetchPosts('publishedAt', 'desc', 500);
   return all.find(p => p.id === cleanId || p.slug === cleanId || p.id === id || p.slug === id) || DEMO_POSTS.find(p => p.id === id || p.slug === id) || null;
 }
