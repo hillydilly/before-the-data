@@ -903,6 +903,11 @@ const BTDGate = (() => {
 
   function showMobileAccountSheet() {
     let sheet = document.getElementById('btd-account-sheet');
+    // Toggle — second tap collapses the sheet
+    if (sheet && sheet.style.display !== 'none') {
+      sheet.style.display = 'none';
+      return;
+    }
     if (!sheet) {
       sheet = document.createElement('div');
       sheet.id = 'btd-account-sheet';
