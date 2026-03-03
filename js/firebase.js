@@ -261,6 +261,7 @@ function parsePostDoc(doc) {
     previewUrl: strVal(f.previewUrl),
     spotifyId: strVal(f.spotifyId) || strVal(f.trackId),
     trackId: strVal(f.trackId) || strVal(f.spotifyId),
+    youtubeId: strVal(f.youtubeId) || strVal(f.ytId),
     country: strVal(f.country),
     publishedAt: { seconds: strVal(f.publishedAt) ? Math.floor(new Date(strVal(f.publishedAt)).getTime() / 1000) : 0 },
     tags: arrVal(f.tags),
