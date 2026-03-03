@@ -977,7 +977,7 @@ const BTDGate = (() => {
   async function openPortal(e, email) {
     e.preventDefault();
     try {
-      const r = await fetch('/.netlify/functions/customer-portal', {
+      const r = await fetch('/api/customer-portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
