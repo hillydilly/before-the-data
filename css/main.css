@@ -395,8 +395,8 @@ ul { list-style: none; }
 .post-hero-bg {
   position: absolute; inset: -20px;
   background-size: cover; background-position: center;
-  filter: blur(30px) brightness(.7);
-  opacity: .4;
+  filter: blur(24px) brightness(.55);
+  opacity: .7;
 }
 .post-art-wrap {
   position: relative; z-index: 1;

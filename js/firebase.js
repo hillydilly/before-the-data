@@ -172,6 +172,24 @@ function countryFlag(code) {
 }
 
 /* --- Time ago --- */
+function formatPostDate(ts) {
+  if (!ts) return '';
+  let ms;
+  if (typeof ts === 'number') ms = ts * 1000;
+  else if (ts && typeof ts === 'object' && ts.seconds) ms = ts.seconds * 1000;
+  else if (typeof ts === 'string') ms = new Date(ts).getTime();
+  else if (ts instanceof Date) ms = ts.getTime();
+  else return '';
+  if (!ms || isNaN(ms)) return '';
+  const d = new Date(ms);
+  const diffDays = Math.floor((Date.now() - ms) / 86400000);
+  // Posts older than 30 days show full date
+  if (diffDays > 30) {
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+  return timeAgo(ts);
+}
+
 function timeAgo(ts) {
   if (!ts) return '';
   let ms;

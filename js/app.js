@@ -493,7 +493,7 @@ async function renderPost() {
     <div class="post-hero-meta">
       <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
       <div class="post-title">&ldquo;${post.title}&rdquo;</div>
-      <div class="post-date">Published ${timeAgo(post.publishedAt)}</div>
+      <div class="post-date">${formatPostDate(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
       <div class="post-stream-links">
         ${post.previewUrl ? `<button class="post-play-btn" id="hero-play-btn">▶ Play Preview</button>` : ''}
