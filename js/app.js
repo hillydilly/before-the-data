@@ -38,6 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       a.classList.add('active');
   });
 
+  // Site auth — sidebar login block + unified auth modal
+  if (typeof BTDGate !== 'undefined' && BTDGate.initSiteAuth) {
+    BTDGate.initSiteAuth();
+  }
+
   // Search gate — prompt email signup before allowing search
   if (typeof BTDGate !== 'undefined' && BTDGate.initSearchGate) {
     BTDGate.initSearchGate();

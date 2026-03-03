@@ -452,11 +452,12 @@ const BTDGate = (() => {
     if (getEmail()) return; // already signed up, no gate needed
 
     inputs.forEach(input => {
-      // Show a tooltip/prompt on focus instead of letting them type
       input.addEventListener('focus', function onFocus() {
-        if (getEmail()) return; // signed up mid-session
+        if (getEmail()) return;
         input.blur();
-        showSearchSignupPrompt(input);
+        // Use unified auth modal, refocus search on success
+        const origOpen = openAuthModal;
+        openAuthModal({ onSuccess: () => { setTimeout(() => input.focus(), 100); } });
       }, { once: false });
     });
   }
@@ -549,5 +550,135 @@ const BTDGate = (() => {
     el.addEventListener('click', e => { if (e.target === el) el.remove(); });
   }
 
-  return { initPostGate, initSearchGate, checkGate, isSubscribed };
+  // ── Site-wide auth: sidebar login block + auth modal ─────────────────────
+
+  function getTierLabel(tier) {
+    if (tier === 'pro') return 'Heard First Pro';
+    if (tier === 'heard-first') return 'Heard First';
+    return 'Free member';
+  }
+
+  function renderSidebarLogin() {
+    const block = document.getElementById('sidebar-login-block');
+    if (!block) return;
+    const email = getEmail();
+    const tier = getTier();
+    if (email) {
+      block.innerHTML = `
+        <div id="sidebar-account-info">
+          <strong>${email}</strong>
+          ${getTierLabel(tier)}
+          <br>
+          <button class="sidebar-logout" onclick="BTDGate.siteLogout()">Log out</button>
+        </div>`;
+    } else {
+      block.innerHTML = `
+        <button id="sidebar-login-btn" onclick="BTDGate.openAuthModal()">
+          <span class="login-icon">&#x2192;</span> Log in / Sign up
+        </button>`;
+    }
+  }
+
+  function openAuthModal(opts) {
+    let modal = document.getElementById('btd-auth-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'btd-auth-modal';
+      modal.innerHTML = `
+        <div class="am-card">
+          <p class="am-title" id="am-title">Sign in</p>
+          <p class="am-sub" id="am-sub">Enter your email to access the archive, search, and more.</p>
+          <input class="am-input" id="am-email-input" type="email" placeholder="Your email address" autocomplete="email">
+          <button class="am-btn" id="am-submit-btn">Continue &#x2192;</button>
+          <p class="am-note">New? We will create a free account. Already a Heard First member? You will be recognised automatically.</p>
+          <button class="am-dismiss" id="am-dismiss-btn">Maybe later</button>
+        </div>`;
+      document.body.appendChild(modal);
+
+      document.getElementById('am-dismiss-btn').addEventListener('click', () => {
+        modal.classList.remove('visible');
+      });
+      modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('visible'); });
+
+      document.getElementById('am-submit-btn').addEventListener('click', async () => {
+        const emailVal = document.getElementById('am-email-input').value.trim();
+        if (!emailVal || !emailVal.includes('@')) {
+          document.getElementById('am-email-input').style.borderColor = 'red';
+          return;
+        }
+        const btn = document.getElementById('am-submit-btn');
+        btn.textContent = 'Checking...';
+        btn.disabled = true;
+
+        // Check if existing subscriber in Firebase
+        const safeEmail = emailVal.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
+        let tier = 'free';
+        try {
+          const r = await fetch(`https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_sub_${safeEmail}?key=${FIREBASE_KEY}`);
+          if (r.ok) {
+            const d = await r.json();
+            if (d.fields?.tier?.stringValue) tier = d.fields.tier.stringValue;
+          }
+        } catch(e) {}
+
+        // Save to localStorage
+        setEmail(emailVal);
+        try { localStorage.setItem(KEY_TIER, tier); } catch(e) {}
+
+        // If new free user — call subscribe to send welcome email
+        if (tier === 'free') {
+          try {
+            await fetch('/.netlify/functions/subscribe', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: emailVal, source: 'site-login' }),
+            });
+          } catch(e) {}
+        }
+
+        // Show success
+        const card = modal.querySelector('.am-card');
+        card.innerHTML = `
+          <div class="am-success">
+            <p style="font-size:22px;margin:0 0 12px;">&#x2713;</p>
+            <p>${tier === 'pro' ? 'Welcome back, Pro member.' : tier === 'heard-first' ? 'Welcome back, Heard First member.' : 'You\'re in. Welcome to Before The Data.'}</p>
+          </div>`;
+        setTimeout(() => {
+          modal.classList.remove('visible');
+          renderSidebarLogin();
+        }, 1800);
+      });
+    }
+    modal.classList.add('visible');
+    setTimeout(() => document.getElementById('am-email-input')?.focus(), 50);
+  }
+
+  function siteLogout() {
+    try {
+      localStorage.removeItem(KEY_EMAIL);
+      localStorage.removeItem(KEY_TIER);
+      localStorage.removeItem('btd_pro_token');
+      localStorage.removeItem('btd_pro_email');
+      localStorage.removeItem('btd_hf_token');
+      localStorage.removeItem('btd_hf_email');
+      localStorage.removeItem('btd_hf_tier');
+    } catch(e) {}
+    renderSidebarLogin();
+  }
+
+  function initSiteAuth() {
+    // Inject sidebar login block before sidebar-footer if not already in HTML
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar && !document.getElementById('sidebar-login-block')) {
+      const footer = sidebar.querySelector('.sidebar-footer');
+      const block = document.createElement('div');
+      block.id = 'sidebar-login-block';
+      if (footer) sidebar.insertBefore(block, footer);
+      else sidebar.appendChild(block);
+    }
+    renderSidebarLogin();
+  }
+
+  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, checkGate, isSubscribed };
 })();
