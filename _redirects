@@ -2,6 +2,7 @@
 /heard-first            /heard-first.html               200
 /heard-first/pro        /heard-first/pro/index.html      200
 /heard-first/dashboard  /heard-first/dashboard/index.html 200
+/archive                /archive.html                    200
 
 # Pro shortcut redirect
 /pro                    /heard-first/pro                 301
