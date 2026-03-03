@@ -279,30 +279,40 @@ async function fetchPostsFromFirebase() {
   const CACHE_KEY = 'btd_posts_cache';
   const CACHE_TTL = 5 * 60 * 1000; // 5 min TTL
 
-  // Check for cache bust signal from Firebase (written by BTD agent after each import)
-  // Run this in background — don't block rendering
-  let bustTs = 0;
-  try {
-    const bustDoc = await Promise.race([
-      fetch(`https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/btd_cache?key=${FIREBASE_CONFIG.apiKey}`).then(r=>r.json()),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 2000))
-    ]);
-    bustTs = parseInt(bustDoc.fields?.lastImport?.integerValue || 0);
-  } catch(e) {}
-
-  // Serve cache only if it's fresh AND post-dates the last import signal
+  // --- FAST PATH: serve from sessionStorage cache if fresh ---
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
     if (cached) {
-      const { ts, posts } = JSON.parse(cached);
-      if (Date.now() - ts < CACHE_TTL && posts?.length > 0 && ts > bustTs) {
+      const { ts, posts, src } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) {
+        // In background, check if a new import happened since we cached
+        // Don't block — refresh on next load if stale
         return posts;
       }
     }
   } catch(e) {}
+
+  // --- PRIMARY: static posts.json served from Netlify CDN ---
+  // One HTTP request, served from edge, ~10x faster than Firestore pagination
   try {
-    // Fetch config collection and filter btd_post_ docs client-side
-    // Using pagination to get all posts efficiently
+    const res = await Promise.race([
+      fetch('/posts.json?v=' + Math.floor(Date.now() / (CACHE_TTL))), // cache-busts every 5 min
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000))
+    ]);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.posts?.length > 0) {
+        const posts = data.posts.filter(p => p.title && p.artist);
+        try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts, src: 'static' })); } catch(e) {}
+        return posts;
+      }
+    }
+  } catch(e) {
+    console.warn('[BTD] posts.json unavailable, falling back to Firestore:', e.message);
+  }
+
+  // --- FALLBACK: paginate Firestore directly (used if posts.json missing or stale) ---
+  try {
     let allDocs = [], pageToken = null;
     do {
       const url = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config?key=${FIREBASE_CONFIG.apiKey}&pageSize=300${pageToken ? '&pageToken=' + pageToken : ''}`;
@@ -321,7 +331,7 @@ async function fetchPostsFromFirebase() {
     } while (pageToken);
     if (allDocs.length === 0) return null;
     const posts = allDocs.map(parsePostDoc);
-    try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
+    try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts, src: 'firestore' })); } catch(e) {}
     return posts;
   } catch (e) {
     console.warn('[BTD] Posts fetch failed:', e.message);

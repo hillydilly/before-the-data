@@ -59,9 +59,7 @@ async function main() {
   let ok = 0, fail = 0;
 
   for (const post of posts) {
-    // Build full writeup with Spotify embed
-    const embedHtml = spotifyEmbed(post.trackId);
-    post.writeup = `<p>${post.writeup}</p>\n<div class="btd-tracks">\n${embedHtml}\n</div>`;
+    // writeup stored as-is; Spotify embed is injected client-side by app.js via trackId
 
     // Set defaults
     post.views = 0;
@@ -85,6 +83,17 @@ async function main() {
   }
 
   console.log(`\nDone: ${ok} written, ${fail} failed`);
+
+  // Rebuild static posts.json after every import so the site loads fast
+  if (ok > 0) {
+    console.log('\nRebuilding posts.json...');
+    const { execSync } = await import('child_process');
+    try {
+      execSync(`node ${new URL('./build-posts-json.mjs', import.meta.url).pathname}`, { stdio: 'inherit' });
+    } catch (e) {
+      console.error('⚠️  posts.json rebuild failed:', e.message);
+    }
+  }
 }
 
 main().catch(e => { console.error('Fatal:', e.message); process.exit(1); });
