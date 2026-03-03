@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>For Managers and A&R — Heard First Pro — Before The Data</title>
+  <meta name="description" content="The scouting edge the spreadsheet tools do not give you. Heard First Pro at $49.99/mo.">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    .fm-page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+    .fm-eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--tx-3);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+    .fm-headline {
+      font-family: var(--font-heading);
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--tx-1);
+      line-height: 1.05;
+      margin: 0 0 20px;
+    }
+    @media (max-width: 600px) {
+      .fm-headline { font-size: 32px; }
+    }
+    .fm-sub {
+      font-size: 18px;
+      color: var(--tx-2);
+      line-height: 1.6;
+      margin: 0 0 36px;
+      max-width: 580px;
+    }
+    .fm-cta-primary {
+      display: inline-block;
+      background: #000000;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      text-decoration: none;
+      margin-bottom: 56px;
+    }
+    .fm-cta-primary:hover { background: #222; }
+    .fm-divider {
+      border: none;
+      border-top: 1px solid var(--bd);
+      margin: 48px 0;
+    }
+    .fm-section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--tx-3);
+      font-weight: 600;
+      margin: 0 0 24px;
+    }
+    .fm-pain-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 8px;
+    }
+    .fm-pain-list li {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--tx-1);
+      padding: 14px 0;
+      border-bottom: 1px solid var(--bd);
+      font-family: var(--font-heading);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .fm-pain-list li span {
+      font-weight: 400;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--tx-3);
+      display: block;
+      margin-top: 4px;
+    }
+    .fm-features {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      margin-bottom: 8px;
+    }
+    .fm-feature {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 0 16px;
+      align-items: start;
+    }
+    .fm-feature-arrow {
+      font-size: 18px;
+      color: var(--tx-1);
+      line-height: 1.4;
+    }
+    .fm-feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tx-1);
+      margin: 0 0 6px;
+    }
+    .fm-feature-desc {
+      font-size: 14px;
+      color: var(--tx-2);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .fm-quote-block {
+      background: var(--bg-2);
+      border-left: 3px solid var(--acc);
+      padding: 24px 28px;
+      margin: 0;
+    }
+    .fm-quote-text {
+      font-size: 18px;
+      font-style: italic;
+      color: var(--tx-1);
+      line-height: 1.5;
+      margin: 0 0 12px;
+    }
+    .fm-quote-attr {
+      font-size: 12px;
+      color: var(--tx-3);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    .fm-pricing-block {
+      text-align: center;
+      padding: 48px 24px;
+      background: var(--bg-2);
+      border: 1px solid var(--bd);
+    }
+    .fm-price {
+      font-family: var(--font-heading);
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--tx-1);
+      line-height: 1;
+      margin: 0 0 8px;
+    }
+    .fm-price-sub {
+      font-size: 13px;
+      color: var(--tx-3);
+      margin: 0 0 28px;
+    }
+    .fm-price-perks {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px;
+      text-align: left;
+      display: inline-block;
+    }
+    .fm-price-perks li {
+      font-size: 14px;
+      color: var(--tx-2);
+      padding: 5px 0;
+    }
+    .fm-price-perks li::before {
+      content: "✓ ";
+      color: var(--tx-1);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout-wrapper">
+    <aside class="sidebar">
+      <a href="/" class="brand">
+        <span class="brand-name">Before The Data</span>
+      </a>
+      <nav>
+        <a href="/"><span class="nav-icon">◈</span> Discover</a>
+        <a href="/new-music.html"><span class="nav-icon">♪</span> New Music</a>
+        <a href="/popular.html"><span class="nav-icon">▲</span> Popular</a>
+        <a href="/search.html"><span class="nav-icon">⌕</span> Search</a>
+        <a href="/archive"><span class="nav-icon">◷</span> Archive</a>
+        <a href="/submit.html"><span class="nav-icon">📬</span> Submit Music</a>
+        <a href="/heard-first.html" class="nav-heard-first"><span class="nav-icon">★</span> Heard First</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="fm-page">
+
+        <!-- Hero -->
+        <p class="fm-eyebrow">Heard First Pro — For Managers and A&amp;R</p>
+        <h1 class="fm-headline">The scouting edge the spreadsheet tools do not give you.</h1>
+        <p class="fm-sub">19 years of discovering artists before they break. Now it is a dashboard. $49.99/mo.</p>
+        <a href="/heard-first" class="fm-cta-primary">Start Scouting &#x2192; $49.99/mo</a>
+
+        <hr class="fm-divider">
+
+        <!-- Pain points -->
+        <p class="fm-section-label">The alternative</p>
+        <ul class="fm-pain-list">
+          <li>Chartmetric Premium<span>$1,400/yr. Great data. Zero curation. You still have to find the artists yourself.</span></li>
+          <li>Soundcharts<span>$129/mo. Deep catalog tracking. Built for artists already on your radar, not finding new ones.</span></li>
+          <li>Viberate<span>$19.90/mo. Broad coverage. No editorial layer. No one is pre-filtering who is worth your time.</span></li>
+        </ul>
+
+        <hr class="fm-divider">
+
+        <!-- What makes this different -->
+        <p class="fm-section-label">What makes this different</p>
+        <div class="fm-features">
+          <div class="fm-feature">
+            <span class="fm-feature-arrow">&#x2192;</span>
+            <div>
+              <p class="fm-feature-title">Already curated</p>
+              <p class="fm-feature-desc">Chad Hillard has been discovering artists before they break since 2007. Lorde, Billie Eilish, Halsey, Daniel Caesar before anyone. Heard First Pro is that filter. Every artist on the dashboard has already been approved. You see the shortlist, not the noise.</p>
+            </div>
+          </div>
+          <div class="fm-feature">
+            <span class="fm-feature-arrow">&#x2192;</span>
+            <div>
+              <p class="fm-feature-title">Early signal, not lagging data</p>
+              <p class="fm-feature-desc">Artists hit this dashboard 7 days before they go public on Before The Data. By the time the post goes live, you have already had a week. When you see them here, they are still undiscovered.</p>
+            </div>
+          </div>
+          <div class="fm-feature">
+            <span class="fm-feature-arrow">&#x2192;</span>
+            <div>
+              <p class="fm-feature-title">Live data, not screenshots</p>
+              <p class="fm-feature-desc">Spotify streams, TikTok UGC video counts, Instagram following. Updated daily. Trend lines. Social score. Built for decisions, not reporting decks.</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="fm-divider">
+
+        <!-- Social proof -->
+        <figure class="fm-quote-block">
+          <p class="fm-quote-text">"Exactly what I needed for my roster pipeline. Found three artists worth watching in the first week."</p>
+          <figcaption class="fm-quote-attr">Indie manager, Austin TX</figcaption>
+        </figure>
+
+        <hr class="fm-divider">
+
+        <!-- Pricing -->
+        <div class="fm-pricing-block">
+          <p class="fm-eyebrow" style="margin-bottom:12px;">Heard First Pro</p>
+          <p class="fm-price">$49.99<span style="font-size:20px;font-weight:400;">/mo</span></p>
+          <p class="fm-price-sub">Cancel anytime. No contracts.</p>
+          <ul class="fm-price-perks">
+            <li>7-day exclusive access to every new find</li>
+            <li>Live scouting dashboard with daily data</li>
+            <li>Social score + song stream tracking</li>
+            <li>TikTok UGC video counts per track</li>
+            <li>Full archive access (2007 to now)</li>
+            <li>Search by city</li>
+            <li>Email alerts on every new approval</li>
+          </ul>
+          <a href="/heard-first" class="fm-cta-primary">Start Scouting &#x2192;</a>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/theme.js" defer></script>
+</body>
+</html>
