@@ -803,7 +803,8 @@ const BTDGate = (() => {
   }
 
   function injectMobileAccountTab() {
-    // Only on mobile (sidebar = bottom nav)
+    // Only inject on mobile viewports
+    if (window.innerWidth > 767) return;
     const nav = document.querySelector('#sidebar nav');
     if (!nav) return;
     if (document.getElementById('btd-mobile-account-tab')) return;
