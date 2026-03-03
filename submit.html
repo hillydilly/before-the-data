@@ -305,6 +305,7 @@
     try {
       capturedEmail = emailFromUrl
         || localStorage.getItem('btd_submit_email')
+        || localStorage.getItem('btd_email')
         || localStorage.getItem('btd_subscriber')
         || '';
       // btd_subscriber stores 'returning' for gate-only users — ignore that
@@ -423,18 +424,21 @@
 
       try {
         const id = email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-        await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}`, {
+        // Only write email + source — never overwrite tier for existing subscribers
+        await fetch(`${FIREBASE_BASE}/config/btd_sub_${id}?key=${FIREBASE_KEY}&updateMask.fieldPaths=email&updateMask.fieldPaths=source`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fields: {
             email: { stringValue: email },
-            subscribedAt: { stringValue: new Date().toISOString() },
             source: { stringValue: 'submit-gate' },
-            tier: { stringValue: 'free' }
           }})
         });
         capturedEmail = email;
-        try { localStorage.setItem('btd_submit_email', email); } catch(e) {}
+        try {
+          localStorage.setItem('btd_submit_email', email);
+          // Also sync to btd_email so other pages stay logged in
+          if (!localStorage.getItem('btd_email')) localStorage.setItem('btd_email', email);
+        } catch(e) {}
         showStep('step-form');
       } catch(err) {
         const errEl = document.getElementById('email-error');
