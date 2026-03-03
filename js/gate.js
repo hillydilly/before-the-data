@@ -667,7 +667,7 @@ const BTDGate = (() => {
           <strong>${email}</strong>
           ${getTierLabel(tier)}
           <br>
-          ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(email)}" style="color:var(--tx-3);font-size:10px;text-decoration:underline;">Manage subscription</a> &middot; ` : ''}
+          ${isPaidTier ? `<a href="#" onclick="BTDGate.openPortal(event,'${email.replace(/'/g,"\\'")}');" style="color:var(--tx-3);font-size:10px;text-decoration:underline;">Manage subscription</a> &middot; ` : ''}
           <button class="sidebar-logout" onclick="BTDGate.siteLogout()">Log out</button>
         </div>`;
     } else {
@@ -859,7 +859,7 @@ const BTDGate = (() => {
     sheet.innerHTML = `
       <div style="font-size:13px;font-weight:700;color:#111;margin-bottom:2px;">${email}</div>
       <div style="font-size:11px;color:#888;margin-bottom:16px;">${getTierLabel(tier)}</div>
-      ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(email)}" style="display:block;font-size:13px;color:#111;text-decoration:none;font-weight:600;padding:10px 0;border-top:1px solid #f0f0f0;">Manage subscription &rarr;</a>` : ''}
+      ${isPaidTier ? `<a href="#" onclick="BTDGate.openPortal(event,'${email.replace(/'/g,"\\'")}');" style="display:block;font-size:13px;color:#111;text-decoration:none;font-weight:600;padding:10px 0;border-top:1px solid #f0f0f0;">Manage subscription &rarr;</a>` : ''}
       <button onclick="BTDGate.siteLogout();document.getElementById('btd-account-sheet').style.display='none';BTDGate.renderMobileAccountTab();" style="display:block;width:100%;text-align:left;font-size:13px;color:#888;background:none;border:none;border-top:1px solid #f0f0f0;padding:10px 0;cursor:pointer;">Log out</button>
     `;
     sheet.style.display = 'block';
@@ -897,11 +897,27 @@ const BTDGate = (() => {
       menu.innerHTML = `
         <div class="mam-email">${getEmail()}</div>
         <div class="mam-tier">${getTierLabel(tier)}</div>
-        ${isPaidTier ? `<a href="/api/customer-portal?email=${encodeURIComponent(getEmail())}">Manage subscription</a>` : ''}
+        ${isPaidTier ? `<a href="#" onclick="BTDGate.openPortal(event,'${getEmail().replace(/'/g,"\\'")}');">Manage subscription</a>` : ''}
         <button onclick="BTDGate.siteLogout();document.getElementById('btd-mobile-account-menu').classList.remove('visible');BTDGate.renderMobileTopBar()">Log out</button>`;
       menu.classList.toggle('visible');
     });
   }
 
-  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, siteLogout, renderMobileAccountTab, checkGate, isSubscribed };
+  async function openPortal(e, email) {
+    e.preventDefault();
+    try {
+      const r = await fetch('/.netlify/functions/customer-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const d = await r.json();
+      if (d.url) { window.location.href = d.url; }
+      else { alert('Could not open billing portal. Please contact support.'); }
+    } catch(err) {
+      alert('Could not open billing portal. Please try again.');
+    }
+  }
+
+  return { initPostGate, initSearchGate, initSiteAuth, openAuthModal, openPortal, siteLogout, renderMobileAccountTab, checkGate, isSubscribed };
 })();
