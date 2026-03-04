@@ -580,7 +580,7 @@ async function renderPost() {
       <div class="post-date">${formatPostDate(post.publishedAt)}</div>
       <div class="post-country">${countryFlag(post.country)}</div>
       <div class="post-stream-links">
-        ${(post.previewUrl || post.trackId || post.youtubeId) ? `<button class="post-play-btn" id="hero-play-btn">▶ ${post.youtubeId && !post.trackId ? 'Watch on YouTube' : 'Play Preview'}</button>` : ''}
+        
         ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
         ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
       </div>
@@ -666,10 +666,6 @@ async function renderPost() {
     });
   }
 
-  const playBtn = document.getElementById('hero-play-btn');
-  if (playBtn && (post.previewUrl || post.trackId || post.youtubeId)) {
-    playBtn.addEventListener('click', (e) => { e.stopPropagation(); playPost(); });
-  }
 
   // Content gate — check access before rendering body/sidebar/tracklist
   if (typeof BTDGate !== 'undefined' && BTDGate.initPostGate) {
