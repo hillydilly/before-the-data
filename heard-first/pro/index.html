@@ -303,7 +303,7 @@ function fmtS(n) {
   if (Math.abs(n) >= 1e3) return (n/1e3).toFixed(1) + 'K';
   return n.toLocaleString();
 }
-function dFmt(n) { return (!n) ? '-' : (n >= 0 ? '+' : '') + fmtS(n); }
+function dFmt(n) { return (n === null || n === undefined) ? '-' : (n >= 0 ? '+' : '') + fmtS(n); }
 function dCls(n) { return n > 0 ? 'up' : n < 0 ? 'down' : ''; }
 function nl2br(s) { return s ? s.replace(/\n/g, '<br>') : ''; }
 function hVal(x) { return (typeof x === 'object' && x !== null) ? (x.v || 0) : (x || 0); }
@@ -370,12 +370,12 @@ function streamHistory(sm) {
   return out.slice(-14);
 }
 function deltas(h) {
-  if (!h || h.length < 2) return { t: 0, w: 0, m: 0 };
+  if (!h || h.length < 1) return { t: null, w: null, m: null };
   var l = hVal(h[h.length - 1]);
   return {
-    t: h.length >= 2 ? l - hVal(h[h.length - 2]) : 0,
-    w: h.length >= 7 ? l - hVal(h[h.length - 7]) : l - hVal(h[0]),
-    m: h.length >= 30 ? l - hVal(h[h.length - 30]) : l - hVal(h[0])
+    t: h.length >= 2 ? l - hVal(h[h.length - 2]) : null,
+    w: h.length >= 2 ? l - hVal(h[Math.max(0, h.length - 7)]) : null,
+    m: h.length >= 2 ? l - hVal(h[Math.max(0, h.length - 30)]) : null
   };
 }
 
@@ -765,10 +765,22 @@ function openModal(key) {
       '</div>' + chart(h) + pastMonths(h, 'instagram');
   } else if (key === 'ugc') {
     var tkU = 0, igU = 0;
-    if (a.sm) Object.values(a.sm).forEach(function(x) { tkU += (x.ug || 0); igU += (x.igu || 0); });
+    // Build combined UGC history by summing across all songs per date
+    var ugByDate = {};
+    if (a.sm) Object.values(a.sm).forEach(function(x) {
+      tkU += (x.ug || 0); igU += (x.igu || x.iug || 0);
+      ((x.h && x.h.ug) || []).forEach(function(e) {
+        var d = (typeof e === 'object' && e.d) ? e.d : null;
+        var v = hVal(e);
+        if (d) ugByDate[d] = (ugByDate[d] || 0) + v;
+      });
+    });
+    var ugHist = Object.keys(ugByDate).sort().map(function(d) { return { d: d, v: ugByDate[d] }; });
+    var ugD = deltas(ugHist);
     html += '<div class="mt">TikTok &amp; Instagram UGC</div><div class="md">Videos using artist sounds.</div>' +
-      mgrid(tkU + igU, {t:0,w:0,m:0}) +
-      '<div class="mbk"><div class="mst">Breakdown</div>' + bkrow('TikTok', '#000', tkU) + bkrow('Instagram Reels', '#E1306C', igU) + '</div>';
+      mgrid(tkU + igU, ugD) +
+      '<div class="mbk"><div class="mst">Breakdown</div>' + bkrow('TikTok', '#000', tkU) + bkrow('Instagram Reels', '#E1306C', igU) + '</div>' +
+      chart(ugHist);
   } else if (key === 'social') {
     var ss = (a.m && a.m.ss) || 0;
     var tpt = (a.m && a.m.tpt) || 0;
