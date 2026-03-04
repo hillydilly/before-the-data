@@ -40,6 +40,47 @@ async function fetchAppleMusicPreview(artist, title) {
   }
 }
 
+async function fetchYouTubePreview(artist, title, slug) {
+  // Fallback: yt-dlp first 30s → Cloudinary hosted mp3
+  const { execSync } = await import('child_process');
+  const { existsSync, unlinkSync } = await import('fs');
+  const tmpFull = `/tmp/btd-preview-${slug}.mp3`;
+  const tmpTrim = `/tmp/btd-preview-${slug}-30s.mp3`;
+  try {
+    const query = `${artist} ${title} official`;
+    execSync(`yt-dlp "ytsearch1:${query}" -x --audio-format mp3 --audio-quality 0 -o "${tmpFull}" --no-playlist -q`, { timeout: 60000 });
+    execSync(`ffmpeg -i "${tmpFull}" -ss 0 -t 30 -c:a libmp3lame -q:a 2 "${tmpTrim}" -y -loglevel quiet`, { timeout: 30000 });
+
+    const { createReadStream, readFileSync } = await import('fs');
+    const fileBuffer = readFileSync(tmpTrim);
+    const base64 = fileBuffer.toString('base64');
+    const ts = Math.floor(Date.now() / 1000);
+    const publicId = `btd/previews/${slug}-preview`;
+    const { createHash } = await import('crypto');
+    const sigStr = `public_id=${publicId}&timestamp=${ts}seOMwI2Hd2x_5fhbnn11c2o7SNU`;
+    const sig = createHash('sha256').update(sigStr).digest('hex');
+
+    const form = new FormData();
+    form.append('file', `data:audio/mp3;base64,${base64}`);
+    form.append('public_id', publicId);
+    form.append('timestamp', String(ts));
+    form.append('api_key', '313951951797545');
+    form.append('signature', sig);
+
+    const uploadRes = await fetch('https://api.cloudinary.com/v1_1/dd9nbystx/raw/upload', { method: 'POST', body: form });
+    const uploadData = await uploadRes.json();
+
+    // Cleanup
+    [tmpFull, tmpTrim].forEach(f => { try { unlinkSync(f); } catch (e) {} });
+
+    if (uploadData.secure_url) return uploadData.secure_url;
+    return null;
+  } catch (e) {
+    [tmpFull, tmpTrim].forEach(f => { try { unlinkSync(f); } catch (e) {} });
+    return null;
+  }
+}
+
 async function writePost(post) {
   const fields = {};
   for (const [k, v] of Object.entries(post)) {
@@ -79,7 +120,15 @@ async function main() {
     // Fetch Apple Music preview URL if not already set
     if (!post.previewUrl && post.artist && post.title) {
       post.previewUrl = await fetchAppleMusicPreview(post.artist, post.title);
-      if (post.previewUrl) console.log(`  🎵 Apple Music preview found for ${post.artist} — "${post.title}"`);
+      if (post.previewUrl) {
+        console.log(`  🎵 Apple Music preview: ${post.artist} — "${post.title}"`);
+      } else {
+        // Fallback: YouTube → yt-dlp → 30s trim → Cloudinary
+        console.log(`  🎵 No Apple Music preview, trying YouTube fallback for ${post.artist} — "${post.title}"...`);
+        post.previewUrl = await fetchYouTubePreview(post.artist, post.title, post.id || post.slug);
+        if (post.previewUrl) console.log(`  🎵 YouTube preview uploaded: ${post.previewUrl}`);
+        else console.log(`  ⚠️  No preview found for ${post.artist} — "${post.title}"`);
+      }
     }
 
     // Set defaults
