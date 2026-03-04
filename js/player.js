@@ -117,10 +117,35 @@ const Player = (() => {
     _playCurrentTrack();
   }
 
-  function _playCurrentTrack() {
+  async function _fetchAppleMusicPreview(artist, title) {
+    try {
+      const q = encodeURIComponent(`${artist} ${title}`);
+      const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5`);
+      const data = await res.json();
+      const match = (data.results || []).find(r =>
+        r.trackName?.toLowerCase() === title.toLowerCase() &&
+        r.artistName?.toLowerCase().includes((artist || '').toLowerCase().split(' ')[0])
+      ) || data.results?.[0];
+      return match?.previewUrl || null;
+    } catch (e) { return null; }
+  }
+
+  async function _playCurrentTrack() {
     const track = queue[currentIndex];
-    if (!track || !track.previewUrl) {
-      updateUI(track || { artist: '', title: 'No preview available', artUrl: '' });
+    if (!track) {
+      updateUI({ artist: '', title: 'No preview available', artUrl: '' });
+      isPlaying = false;
+      updatePlayButton();
+      saveState();
+      return;
+    }
+    // If no previewUrl stored, try fetching from Apple Music live
+    if (!track.previewUrl && track.artist && track.title) {
+      updateUI({ ...track, title: 'Loading...' });
+      track.previewUrl = await _fetchAppleMusicPreview(track.artist, track.title);
+    }
+    if (!track.previewUrl) {
+      updateUI({ ...track, title: `${track.title} — No preview available` });
       isPlaying = false;
       updatePlayButton();
       saveState();
