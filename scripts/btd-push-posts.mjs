@@ -25,6 +25,21 @@ function toField(v) {
   return { stringValue: String(v ?? '') };
 }
 
+async function fetchAppleMusicPreview(artist, title) {
+  try {
+    const q = encodeURIComponent(`${artist} ${title}`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5`);
+    const data = await res.json();
+    const match = (data.results || []).find(r =>
+      r.trackName?.toLowerCase() === title.toLowerCase() &&
+      r.artistName?.toLowerCase().includes(artist.toLowerCase().split(' ')[0])
+    ) || data.results?.[0];
+    return match?.previewUrl || null;
+  } catch (e) {
+    return null;
+  }
+}
+
 async function writePost(post) {
   const fields = {};
   for (const [k, v] of Object.entries(post)) {
@@ -60,6 +75,12 @@ async function main() {
 
   for (const post of posts) {
     // writeup stored as-is; Spotify embed is injected client-side by app.js via trackId
+
+    // Fetch Apple Music preview URL if not already set
+    if (!post.previewUrl && post.artist && post.title) {
+      post.previewUrl = await fetchAppleMusicPreview(post.artist, post.title);
+      if (post.previewUrl) console.log(`  🎵 Apple Music preview found for ${post.artist} — "${post.title}"`);
+    }
 
     // Set defaults
     post.views = 0;

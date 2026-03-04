@@ -638,9 +638,13 @@ async function renderPost() {
           _resolvedPreviewUrl = data.previewUrl;
           doPlay(_resolvedPreviewUrl);
         } else {
-          // Track exists on Spotify but has no preview — fall back to YouTube
+          // Track exists on Spotify but has no preview — fall back to YouTube, then Spotify embed
           if (post.youtubeId) { scrollToYouTube(); }
-          else if (btn) btn.textContent = '▶ No Preview Available';
+          else {
+            const embedEl = document.getElementById('post-spotify-embed');
+            if (embedEl) { embedEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); embedEl.style.outline = '2px solid #1DB954'; }
+            else if (btn) btn.textContent = '▶ Listen on Spotify';
+          }
         }
       } catch (e) {
         if (btn) btn.textContent = '▶ Play Preview';

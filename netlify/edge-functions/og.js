@@ -16,7 +16,7 @@ export default async (request, context) => {
 
   const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
   const PROJECT = 'ar-scouting-dashboard';
-  const docId = `btd_post_${slug}`;
+  const docId = `btd_post_${slug.replace(/-/g, '_')}`;
 
   try {
     // Hard timeout — never crash the page
