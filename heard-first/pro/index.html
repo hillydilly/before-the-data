@@ -769,10 +769,15 @@ function openModal(key) {
     var ugByDate = {};
     if (a.sm) Object.values(a.sm).forEach(function(x) {
       tkU += (x.ug || 0); igU += (x.igu || x.iug || 0);
+      // Dedup by date — keep only the LAST entry per date per song (handles double-writes)
+      var songByDate = {};
       ((x.h && x.h.ug) || []).forEach(function(e) {
         var d = (typeof e === 'object' && e.d) ? e.d : null;
         var v = hVal(e);
-        if (d) ugByDate[d] = (ugByDate[d] || 0) + v;
+        if (d) songByDate[d] = v; // last write wins
+      });
+      Object.keys(songByDate).forEach(function(d) {
+        ugByDate[d] = (ugByDate[d] || 0) + songByDate[d];
       });
     });
     var ugHist = Object.keys(ugByDate).sort().map(function(d) { return { d: d, v: ugByDate[d] }; });
