@@ -114,7 +114,7 @@ function createMusicCard(post) {
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
     <div class="card-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title)}&rdquo;</div>
-    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}${post.country ? ' <span class="card-flag">' + countryFlag(post.country) + '</span>' : ''}</div>
+    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
 
   `;
   // Click art area → play or pause if already playing this track
@@ -622,7 +622,7 @@ async function renderPost() {
     <div class="post-hero-meta">
       <div class="post-hero-card">
         <div class="post-title">&ldquo;${post.title}&rdquo;</div>
-        <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
+        <div class="post-artist-row"><a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>${post.country ? `<span class="post-flag">${countryFlag(post.country)}</span>` : ''}</div>
         <div class="post-date">Published <span class="post-date-rel">${formatPostDate(post.publishedAt)}</span></div>
         <div class="post-tags">
           ${normalizeGenres(post.genres, post.genre).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
