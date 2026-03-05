@@ -792,30 +792,89 @@ async function renderPost() {
     document.addEventListener('btd:playerStateChange', syncPip);
   }
 
-  // Comments section
+  // Comments section — signed-in members only
+  const postSlug = post.slug || post.id;
   const commentsWrap = document.createElement('div');
   commentsWrap.className = 'post-comments';
   commentsWrap.id = 'post-comments';
-  commentsWrap.innerHTML = `
-    <div class="comments-header">
-      <h4>Comments</h4>
-    </div>
-    <div id="disqus_thread"></div>
-    <script>
-      var disqus_config = function () {
-        this.page.url = 'https://beforethedata.com/${post.slug || post.id}';
-        this.page.identifier = '${post.slug || post.id}';
-        this.page.title = '${(post.artist || '').replace(/'/g,"\\'")} - "${(post.title || '').replace(/'/g,"\\'")}";
-      };
-      (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://beforethedata.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-      })();
-    <\/script>
-  `;
   body.appendChild(commentsWrap);
+
+  async function loadComments() {
+    const isSignedIn = typeof BTDGate !== 'undefined' && BTDGate.isSubscribed();
+    const COMMENTS_BASE = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/comments/${postSlug}/messages`;
+
+    // Fetch existing comments
+    let comments = [];
+    try {
+      const res = await fetch(`${COMMENTS_BASE}?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec&orderBy=createdAt`);
+      const data = await res.json();
+      comments = (data.documents || []).map(d => ({
+        name: d.fields?.name?.stringValue || 'Member',
+        text: d.fields?.text?.stringValue || '',
+        createdAt: d.fields?.createdAt?.timestampValue || '',
+      }));
+    } catch (_) {}
+
+    const commentsList = comments.map(c => `
+      <div class="comment-item">
+        <div class="comment-meta"><strong>${c.name}</strong> <span>${c.createdAt ? new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}</span></div>
+        <div class="comment-text">${c.text.replace(/</g,'&lt;')}</div>
+      </div>
+    `).join('') || '<div class="comment-empty">No comments yet. Be the first.</div>';
+
+    if (!isSignedIn) {
+      commentsWrap.innerHTML = `
+        <div class="comments-header"><h4>Comments</h4></div>
+        <div class="comments-list">${commentsList}</div>
+        <div class="comments-gate">
+          <p>Sign in to leave a comment.</p>
+          <button class="comments-signin-btn" onclick="BTDGate.openAuthModal()">Sign In</button>
+        </div>`;
+      return;
+    }
+
+    // Get user name from BTDGate localStorage
+    const userEmail = localStorage.getItem('btd_email') || '';
+    const userName = userEmail.split('@')[0] || 'Member';
+
+    commentsWrap.innerHTML = `
+      <div class="comments-header"><h4>Comments</h4></div>
+      <div class="comments-list" id="comments-list">${commentsList}</div>
+      <form class="comment-form" id="comment-form">
+        <textarea class="comment-input" id="comment-input" placeholder="Leave a comment…" rows="3" maxlength="1000"></textarea>
+        <button type="submit" class="comment-submit">Post Comment</button>
+      </form>`;
+
+    document.getElementById('comment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('comment-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const btn = commentsWrap.querySelector('.comment-submit');
+      btn.textContent = 'Posting...'; btn.disabled = true;
+      try {
+        await fetch(`${COMMENTS_BASE}?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields: {
+            name: { stringValue: userName },
+            email: { stringValue: userEmail },
+            text: { stringValue: text },
+            createdAt: { timestampValue: new Date().toISOString() },
+            postSlug: { stringValue: postSlug },
+          }})
+        });
+        input.value = '';
+        await loadComments();
+      } catch (_) {
+        btn.textContent = 'Error — try again';
+      } finally {
+        btn.textContent = 'Post Comment'; btn.disabled = false;
+      }
+    });
+  }
+
+  loadComments();
 
   // Tracklist — inline rows (no more Spotify iframes)
   const tracklist = document.getElementById('post-tracklist');
