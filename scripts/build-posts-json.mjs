@@ -98,6 +98,13 @@ async function main() {
 
   writeFileSync(OUT_PATH, JSON.stringify(output));
   console.log(`✅ posts.json written: ${posts.length} posts (${Math.round(JSON.stringify(output).length / 1024)}KB)`);
+
+  // Also build slim posts-live.json (btdPostLive only, for fast new-music page load)
+  const livePosts = posts.filter(p => p.btdPostLive === true);
+  const liveOutput = { generated: new Date().toISOString(), count: livePosts.length, posts: livePosts };
+  const liveOutPath = new URL('../posts-live.json', import.meta.url).pathname;
+  writeFileSync(liveOutPath, JSON.stringify(liveOutput));
+  console.log(`✅ posts-live.json written: ${livePosts.length} live posts (${Math.round(JSON.stringify(liveOutput).length / 1024)}KB)`);
 }
 
 main().catch(e => { console.error('Fatal:', e.message); process.exit(1); });

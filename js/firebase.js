@@ -296,7 +296,7 @@ async function fetchPostsFromFirebase() {
   // One HTTP request, served from edge, ~10x faster than Firestore pagination
   try {
     const res = await Promise.race([
-      fetch('/posts.json?v=' + Math.floor(Date.now() / (CACHE_TTL))), // cache-busts every 5 min
+      fetch('/posts.json'),
       new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000))
     ]);
     if (res.ok) {
@@ -337,6 +337,31 @@ async function fetchPostsFromFirebase() {
     console.warn('[BTD] Posts fetch failed:', e.message);
     return null;
   }
+}
+
+// Fast fetch — only btdPostLive posts from slim JSON (12KB vs 7.8MB)
+async function fetchLivePosts() {
+  const CACHE_KEY = 'btd_live_posts_cache';
+  const CACHE_TTL = 5 * 60 * 1000;
+  try {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { ts, posts } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) return posts;
+    }
+  } catch(e) {}
+  try {
+    const res = await fetch('/posts-live.json');
+    if (res.ok) {
+      const data = await res.json();
+      const posts = (data.posts || data).filter(p => p.title && p.artist);
+      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
+      return posts;
+    }
+  } catch(e) {}
+  // Fallback to full posts.json filtered to live
+  const all = await fetchPostsFromFirebase();
+  return (all || []).filter(p => p.btdPostLive);
 }
 
 async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limitCount = 25) {
