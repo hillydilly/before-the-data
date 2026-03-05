@@ -688,7 +688,7 @@ body[data-page="post"] #main {
   margin: 0;
   padding: 40px;
   display: flex; gap: 0;
-  align-items: stretch;
+  align-items: flex-end;
   background: var(--bg-2);
   overflow: hidden;
 }
@@ -739,7 +739,7 @@ body[data-page="post"] #main {
   flex: 1; min-width: 0;
   display: flex; align-items: stretch;
 }
-/* White card stretches full remaining width of hero */
+/* White card matches artwork height exactly */
 .post-hero-card {
   background: #fff;
   border-radius: 0;
@@ -747,7 +747,9 @@ body[data-page="post"] #main {
   display: flex; flex-direction: column; gap: 10px;
   justify-content: center;
   flex: 1; width: 100%;
+  height: 280px;
   box-shadow: none;
+  box-sizing: border-box;
 }
 .post-hero-card .post-title {
   font-family: var(--font-heading);
