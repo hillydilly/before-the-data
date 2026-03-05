@@ -675,29 +675,32 @@ async function renderPost() {
     // If we already have a preview URL, play it immediately
     if (_resolvedPreviewUrl) { doPlay(_resolvedPreviewUrl); return; }
 
-    // No previewUrl but has trackId — fetch from our proxy
-    if (post.trackId && !_fetchingPreview) {
+    // No previewUrl — fetch live from Apple Music
+    if (!_fetchingPreview) {
       _fetchingPreview = true;
-      const btn = document.getElementById('hero-play-btn');
-      if (btn) btn.textContent = '▶ Loading...';
+      const circle = document.getElementById('art-play-circle');
+      if (circle) circle.innerHTML = '…';
       try {
-        const res = await fetch(`/api/spotify-preview?trackId=${post.trackId}`);
+        const q = encodeURIComponent(`${post.artist} ${post.title}`);
+        const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5`);
         const data = await res.json();
-        if (data.previewUrl) {
-          _resolvedPreviewUrl = data.previewUrl;
+        const match = (data.results || []).find(r =>
+          r.previewUrl &&
+          r.trackName?.toLowerCase().includes((post.title || '').toLowerCase().slice(0, 10)) &&
+          r.artistName?.toLowerCase().includes((post.artist || '').toLowerCase().split(' ')[0].toLowerCase())
+        ) || data.results?.find(r => r.previewUrl);
+        if (match?.previewUrl) {
+          _resolvedPreviewUrl = match.previewUrl;
           doPlay(_resolvedPreviewUrl);
-        } else {
-          // Track exists on Spotify but has no preview — fall back to YouTube, then Spotify embed
-          if (post.youtubeId) { scrollToYouTube(); }
-          else {
-            const embedEl = document.getElementById('post-spotify-embed');
-            if (embedEl) { embedEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); embedEl.style.outline = '2px solid #1DB954'; }
-            else if (btn) btn.textContent = '▶ Listen on Spotify';
-          }
+        } else if (post.youtubeId) {
+          scrollToYouTube();
         }
       } catch (e) {
-        if (btn) btn.textContent = '▶ Play Preview';
-      } finally { _fetchingPreview = false; }
+        if (post.youtubeId) scrollToYouTube();
+      } finally {
+        _fetchingPreview = false;
+        updateArtOverlay();
+      }
       return;
     }
 
