@@ -634,11 +634,13 @@ ul { list-style: none; }
    POST DETAIL
    ============================================ */
 
-/* Grey page background on post pages — equal margins both sides, flush to top */
+/* Post page: grey body bg so nothing shows white behind sidebar/main */
+body[data-page="post"] {
+  background: var(--bg-2);
+}
 body[data-page="post"] #main {
   background: var(--bg-2);
   padding: 0 var(--sidebar-w) 60px 0 !important;
-  margin-top: var(--player-h) !important;
 }
 body[data-page="post"] #post-content {
   margin-top: 0 !important;
