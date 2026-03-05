@@ -251,38 +251,75 @@ function autoGenres(rawGenre, artist, title) {
   return [...new Set(genres)];
 }
 
-// ── CSV parser (handles quoted fields with commas) ────────────────────────────
+// ── CSV parser (handles quoted multiline fields correctly) ───────────────────
 function parseCSV(filePath) {
   const content = readFileSync(filePath, { encoding: 'utf-8', flag: 'r' });
-  const lines = content.split('\n');
-  const headers = parseCSVLine(lines[0]);
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    const vals = parseCSVLine(lines[i]);
+  const rows = parseCSVContent(content);
+  if (rows.length === 0) return [];
+  const headers = rows[0];
+  return rows.slice(1).map(vals => {
     const row = {};
-    headers.forEach((h, j) => row[h] = vals[j] || '');
-    rows.push(row);
-  }
-  return rows;
+    headers.forEach((h, j) => row[h.trim()] = (vals[j] || '').trim());
+    return row;
+  });
 }
 
-function parseCSVLine(line) {
-  const result = [];
-  let current = '';
+// Parses full CSV content respecting quoted multiline fields
+function parseCSVContent(content) {
+  const rows = [];
+  let row = [];
+  let field = '';
   let inQuotes = false;
-  for (let i = 0; i < line.length; i++) {
-    if (line[i] === '"') {
-      if (inQuotes && line[i+1] === '"') { current += '"'; i++; }
-      else inQuotes = !inQuotes;
-    } else if (line[i] === ',' && !inQuotes) {
-      result.push(current); current = '';
+  let i = 0;
+  while (i < content.length) {
+    const ch = content[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (content[i + 1] === '"') {
+          // Escaped double-quote
+          field += '"';
+          i += 2;
+        } else {
+          // End of quoted field
+          inQuotes = false;
+          i++;
+        }
+      } else {
+        field += ch;
+        i++;
+      }
     } else {
-      current += line[i];
+      if (ch === '"') {
+        inQuotes = true;
+        i++;
+      } else if (ch === ',') {
+        row.push(field);
+        field = '';
+        i++;
+      } else if (ch === '\r' && content[i + 1] === '\n') {
+        row.push(field);
+        field = '';
+        rows.push(row);
+        row = [];
+        i += 2;
+      } else if (ch === '\n') {
+        row.push(field);
+        field = '';
+        rows.push(row);
+        row = [];
+        i++;
+      } else {
+        field += ch;
+        i++;
+      }
     }
   }
-  result.push(current);
-  return result;
+  // Push final field/row if content doesn't end with newline
+  if (field || row.length > 0) {
+    row.push(field);
+    if (row.some(f => f !== '')) rows.push(row);
+  }
+  return rows;
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -389,6 +426,53 @@ async function main() {
         }
       } else {
         console.log('  Spotify: no match found');
+      }
+
+      // 1b. iTunes fallback for artwork if Spotify failed
+      if (!artUrl) {
+        try {
+          const itunesQ = encodeURIComponent(`${artist} ${title}`);
+          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${itunesQ}&media=music&limit=1`);
+          const itunesData = await itunesRes.json();
+          const itunesArt = itunesData.results?.[0]?.artworkUrl100?.replace('100x100bb', '600x600bb');
+          if (itunesArt) {
+            const cloudPublicId = `btd/posts/${slug}`;
+            artUrl = await uploadToCloudinary(itunesArt, cloudPublicId);
+            console.log(`  iTunes fallback art: ${artUrl ? 'uploaded' : 'FAILED'}`);
+          }
+        } catch (e) {
+          console.log('  iTunes fallback failed:', e.message);
+        }
+      }
+
+      // 1c. Google Images browser scrape fallback
+      if (!artUrl) {
+        try {
+          const query = encodeURIComponent(`${artist} ${title} album cover`);
+          const googleUrl = `https://www.google.com/search?q=${query}&tbm=isch&safe=off`;
+          const { chromium } = await import('/Users/clawdbot/.openclaw/workspace/scripts/spotify-browser/node_modules/playwright/index.js').catch(() => ({ chromium: null }));
+          if (chromium) {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage();
+            await page.goto(googleUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            // Get first image result src
+            const imgSrc = await page.evaluate(() => {
+              const imgs = document.querySelectorAll('img[src^="https"]');
+              for (const img of imgs) {
+                if (img.width > 100 && img.height > 100) return img.src;
+              }
+              return null;
+            });
+            await browser.close();
+            if (imgSrc) {
+              const cloudPublicId = `btd/posts/${slug}`;
+              artUrl = await uploadToCloudinary(imgSrc, cloudPublicId);
+              console.log(`  Google Images fallback art: ${artUrl ? 'uploaded' : 'FAILED'}`);
+            }
+          }
+        } catch (e) {
+          console.log('  Google Images fallback failed:', e.message);
+        }
       }
 
       // 2. Apple Music preview
