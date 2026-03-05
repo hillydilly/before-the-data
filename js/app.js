@@ -236,17 +236,32 @@ async function renderDiscover() {
     popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
   }
 
-  // Archive strip: only the play CIRCLE triggers playback, everything else navigates
+  // Archive strip: play overlay triggers playback, title/artist links navigate
   document.querySelectorAll('.as-card').forEach(card => {
     const slug = card.dataset.slug;
     if (!slug) return;
-    card.querySelector('.as-play-circle')?.addEventListener('click', async (e) => {
+    const overlay = card.querySelector('.as-play-overlay');
+    if (!overlay) return;
+    overlay.addEventListener('click', async (e) => {
       e.preventDefault(); e.stopPropagation();
-      const post = (Player._queue || []).find(p => (p.slug || p.id) === slug);
-      if (post) {
-        Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+      // Try queue first, then posts.json
+      let post = (Player._queue || []).find(p => (p.slug || p.id) === slug);
+      if (!post && window._postsCache) {
+        post = window._postsCache.find(p => (p.slug || p.id) === slug);
+      }
+      if (post && post.previewUrl) {
+        Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
       } else {
-        window.location.href = `/${slug}`;
+        // Fetch from posts.json on demand
+        try {
+          const data = await fetch('/posts.json').then(r => r.json());
+          const posts = data.posts || data;
+          window._postsCache = posts;
+          const p = posts.find(p => (p.slug || p.id) === slug);
+          if (p && p.previewUrl) {
+            Player.play({ id: p.id || slug, title: p.title, artist: p.artist, artUrl: p.artUrl, previewUrl: p.previewUrl });
+          }
+        } catch(err) { console.warn('Archive play failed', err); }
       }
     });
   });
