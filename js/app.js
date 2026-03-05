@@ -833,9 +833,9 @@ async function renderPost() {
       return;
     }
 
-    // Get user name from BTDGate localStorage
+    // Get user name + email
     const userEmail = localStorage.getItem('btd_email') || '';
-    const userName = userEmail.split('@')[0] || 'Member';
+    const userName = localStorage.getItem('btd_name') || userEmail.split('@')[0] || 'Member';
 
     commentsWrap.innerHTML = `
       <div class="comments-header"><h4>Comments</h4></div>

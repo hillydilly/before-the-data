@@ -10,6 +10,7 @@ const BTDGate = (() => {
   // localStorage keys
   const KEY_EMAIL        = 'btd_email';
   const KEY_TIER         = 'btd_tier';
+  const KEY_NAME         = 'btd_name';
   const KEY_DAILY        = 'btd_daily_reads';
 
   // Paid tiers that bypass all gates
@@ -389,6 +390,8 @@ const BTDGate = (() => {
         <h2 class="bgm-headline">${headline}</h2>
         <p class="bgm-sub">${subtext}</p>
         <form class="bgm-form" id="btd-ig-form">
+          <input type="text" class="bgm-input" id="btd-ig-name"
+            placeholder="Your name" required autocomplete="name">
           <input type="email" class="bgm-input" id="btd-ig-email"
             placeholder="your@email.com" required autocomplete="email">
           <button type="submit" class="bgm-submit">Continue &rarr;</button>
@@ -401,6 +404,7 @@ const BTDGate = (() => {
     modal.querySelector('#btd-ig-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const emailVal = modal.querySelector('#btd-ig-email').value.trim();
+      const nameVal = (modal.querySelector('#btd-ig-name')?.value || '').trim();
       if (!emailVal) return;
       const btn = modal.querySelector('.bgm-submit');
       btn.textContent = 'Checking...';
@@ -410,6 +414,7 @@ const BTDGate = (() => {
       const tier = existing ? existing.tier : 'free';
       setEmail(emailVal);
       setTier(tier);
+      if (nameVal) try { localStorage.setItem(KEY_NAME, nameVal); } catch(e) {}
       netlifySubscribe(emailVal);
 
       // Show brief success then reload so content unlocks cleanly
@@ -732,6 +737,7 @@ const BTDGate = (() => {
           <p class="am-title" id="am-title">Sign in</p>
           <p class="am-sub" id="am-sub">Enter your email to access the archive, search, and more.</p>
 
+          <input class="am-input" id="am-name-input" type="text" placeholder="Your name" autocomplete="name" style="margin-bottom:10px">
           <input class="am-input" id="am-email-input" type="email" placeholder="Your email address" autocomplete="email">
           <button class="am-btn" id="am-submit-btn">Continue &#x2192;</button>
           <p class="am-note">New? We will create a free account. Already a Heard First member? You will be recognised automatically.</p>
@@ -746,10 +752,12 @@ const BTDGate = (() => {
 
       document.getElementById('am-submit-btn').addEventListener('click', async () => {
         const emailVal = document.getElementById('am-email-input').value.trim();
+        const nameVal = (document.getElementById('am-name-input')?.value || '').trim();
         if (!emailVal || !emailVal.includes('@')) {
           document.getElementById('am-email-input').style.borderColor = 'red';
           return;
         }
+        if (nameVal) try { localStorage.setItem(KEY_NAME, nameVal); } catch(e) {}
         const btn = document.getElementById('am-submit-btn');
         btn.textContent = 'Checking...';
         btn.disabled = true;
@@ -809,7 +817,7 @@ const BTDGate = (() => {
       if (s) s.textContent = opts.subtext;
     }
     modal.classList.add('visible');
-    setTimeout(() => document.getElementById('am-email-input')?.focus(), 50);
+    setTimeout(() => document.getElementById('am-name-input')?.focus(), 50);
   }
 
   function siteLogout() {
