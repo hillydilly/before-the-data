@@ -127,8 +127,8 @@ function createMusicCard(post) {
     <a class="card-title" href="${postHref}" title="${post.title}">${isEP(post) ? truncateTitle(post.title) : `&ldquo;${truncateTitle(post.title)}&rdquo;`}</a>
     <a class="card-artist" href="${artistHref}" title="${post.artist}">${truncateTitle(post.artist, 30)}</a>
   `;
-  // Only the art/play-overlay triggers playback
-  card.querySelector('.play-overlay').addEventListener('click', (e) => {
+  // Only the play CIRCLE triggers playback, not the whole overlay
+  card.querySelector('.play-circle').addEventListener('click', (e) => {
     e.preventDefault(); e.stopPropagation();
     const current = Player.getCurrent();
     if (current && current.id === post.id) {
@@ -231,11 +231,11 @@ async function renderDiscover() {
     popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
   }
 
-  // Archive strip: play overlay triggers playback, art-link and title/artist navigate
+  // Archive strip: only the play CIRCLE triggers playback, everything else navigates
   document.querySelectorAll('.as-card').forEach(card => {
     const slug = card.dataset.slug;
     if (!slug) return;
-    card.querySelector('.as-play-overlay')?.addEventListener('click', async (e) => {
+    card.querySelector('.as-play-circle')?.addEventListener('click', async (e) => {
       e.preventDefault(); e.stopPropagation();
       const post = (Player._queue || []).find(p => (p.slug || p.id) === slug);
       if (post) {
