@@ -605,16 +605,54 @@ async function renderArtist() {
     `;
   }
 
-  // Posts grid
+  // Posts grid with list/grid toggle
   const postsEl = document.getElementById('artist-posts');
+  const postsHeader = document.getElementById('artist-posts-header');
+  const postsLabel = document.getElementById('artist-posts-label');
   if (postsEl) {
     if (posts.length === 0) {
       postsEl.innerHTML = '<div class="loading-msg">No posts found for this artist.</div>';
       return;
     }
-    postsEl.className = 'artist-posts music-grid list-view';
+    if (postsHeader) {
+      postsHeader.style.display = '';
+      if (postsLabel) postsLabel.textContent = `${posts.length} Post${posts.length !== 1 ? 's' : ''}`;
+    }
     Player.setQueue(posts);
-    posts.forEach(p => postsEl.appendChild(createListItem(p)));
+
+    let currentView = 'list';
+    function renderView(view) {
+      postsEl.innerHTML = '';
+      if (view === 'list') {
+        postsEl.className = 'artist-posts music-grid list-view';
+        posts.forEach(p => postsEl.appendChild(createListItem(p)));
+      } else {
+        postsEl.className = 'artist-posts music-grid';
+        posts.forEach(p => {
+          const card = createMusicCard(p);
+          const dateEl = document.createElement('div');
+          dateEl.className = 'card-date';
+          dateEl.textContent = timeAgo(p.publishedAt);
+          card.appendChild(dateEl);
+          postsEl.appendChild(card);
+        });
+      }
+    }
+
+    renderView(currentView);
+
+    document.getElementById('artist-view-list')?.addEventListener('click', () => {
+      currentView = 'list';
+      document.getElementById('artist-view-list')?.classList.add('active');
+      document.getElementById('artist-view-grid')?.classList.remove('active');
+      renderView('list');
+    });
+    document.getElementById('artist-view-grid')?.addEventListener('click', () => {
+      currentView = 'grid';
+      document.getElementById('artist-view-grid')?.classList.add('active');
+      document.getElementById('artist-view-list')?.classList.remove('active');
+      renderView('grid');
+    });
   }
 }
 
