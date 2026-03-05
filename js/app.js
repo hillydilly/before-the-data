@@ -136,14 +136,16 @@ function createMusicCard(post) {
       Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
     }
   });
-  // Click title or artist → navigate to post
+  // Click title → navigate to post page
   card.querySelector('.card-title').addEventListener('click', (e) => {
     e.stopPropagation();
     window.location.href = `/${post.slug || post.id}`;
   });
+  // Click artist name → navigate to artist page
   card.querySelector('.card-artist').addEventListener('click', (e) => {
     e.stopPropagation();
-    window.location.href = `/${post.slug || post.id}`;
+    const slug = (post.artist || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    window.location.href = `/artist/${slug}`;
   });
   return card;
 }
@@ -246,6 +248,21 @@ async function renderDiscover() {
     const popular = await fetchPosts('views', 'desc', 25);
     popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
   }
+
+  // Archive strip: play overlay triggers playback, art-link and title/artist navigate
+  document.querySelectorAll('.as-card').forEach(card => {
+    const slug = card.dataset.slug;
+    if (!slug) return;
+    card.querySelector('.as-play-overlay')?.addEventListener('click', async (e) => {
+      e.preventDefault(); e.stopPropagation();
+      const post = (Player._queue || []).find(p => (p.slug || p.id) === slug);
+      if (post) {
+        Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+      } else {
+        window.location.href = `/${slug}`;
+      }
+    });
+  });
 }
 
 /* --- New Music Page --- */
