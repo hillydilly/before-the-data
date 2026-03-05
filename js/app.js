@@ -236,34 +236,39 @@ async function renderDiscover() {
     popular.forEach((p, i) => chartList.appendChild(createChartRow(p, i + 1)));
   }
 
-  // Archive strip: play overlay triggers playback, title/artist links navigate
+  // Archive strip — same pattern as createMusicCard:
+  // play-overlay click → play, img click → navigate to post
   document.querySelectorAll('.as-card').forEach(card => {
     const slug = card.dataset.slug;
     if (!slug) return;
+    const postHref = `/${slug}`;
+
+    // Play overlay → play (exact same as New Music card)
     const overlay = card.querySelector('.as-play-overlay');
-    if (!overlay) return;
-    overlay.addEventListener('click', async (e) => {
-      e.preventDefault(); e.stopPropagation();
-      // Try queue first, then posts.json
-      let post = (Player._queue || []).find(p => (p.slug || p.id) === slug);
-      if (!post && window._postsCache) {
-        post = window._postsCache.find(p => (p.slug || p.id) === slug);
-      }
-      if (post && post.previewUrl) {
-        Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-      } else {
-        // Fetch from posts.json on demand
-        try {
-          const data = await fetch('/posts.json').then(r => r.json());
-          const posts = data.posts || data;
-          window._postsCache = posts;
-          const p = posts.find(p => (p.slug || p.id) === slug);
-          if (p && p.previewUrl) {
-            Player.play({ id: p.id || slug, title: p.title, artist: p.artist, artUrl: p.artUrl, previewUrl: p.previewUrl });
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const queue = Player._queue || [];
+        const post = queue.find(p => (p.slug || p.id) === slug);
+        if (post) {
+          const current = Player.getCurrent();
+          if (current && current.id === post.id) {
+            Player.togglePlay();
+          } else {
+            Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
           }
-        } catch(err) { console.warn('Archive play failed', err); }
-      }
-    });
+        }
+      });
+    }
+
+    // Art img click → go to post (same as New Music card)
+    const img = card.querySelector('.as-art img');
+    if (img) {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.location.href = postHref;
+      });
+    }
   });
 }
 
