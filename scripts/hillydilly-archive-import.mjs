@@ -117,25 +117,72 @@ async function getSpotifyToken() {
   return spotifyToken;
 }
 
+// Normalize strings for fuzzy matching
+function normStr(s) {
+  return (s || '').toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Score a Spotify track against expected artist + title
+function matchScore(track, artist, title) {
+  const tArtists = track.artists?.map(a => normStr(a.name)).join(' ') || '';
+  const tTitle = normStr(track.name);
+  const eArtist = normStr(artist);
+  const eTitle = normStr(title);
+
+  let score = 0;
+  // Artist match (required for good score)
+  const artistWords = eArtist.split(' ').filter(w => w.length > 1);
+  const artistHits = artistWords.filter(w => tArtists.includes(w)).length;
+  if (artistWords.length > 0) score += (artistHits / artistWords.length) * 50;
+
+  // Title match
+  const titleWords = eTitle.split(' ').filter(w => w.length > 1);
+  const titleHits = titleWords.filter(w => tTitle.includes(w)).length;
+  if (titleWords.length > 0) score += (titleHits / titleWords.length) * 50;
+
+  return score;
+}
+
 async function searchSpotify(artist, title) {
   try {
     const token = await getSpotifyToken();
-    const q = encodeURIComponent(`track:${title} artist:${artist}`);
-    const res = await fetch(`https://api.spotify.com/v1/search?q=${q}&type=track&limit=5`, {
+
+    // Strict search first: track + artist fields
+    const q1 = encodeURIComponent(`track:${title} artist:${artist}`);
+    const res1 = await fetch(`https://api.spotify.com/v1/search?q=${q1}&type=track&limit=10`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const d = await res.json();
-    const tracks = d.tracks?.items || [];
-    if (!tracks.length) {
-      // Fallback: less strict search
+    const d1 = await res1.json();
+    let candidates = d1.tracks?.items || [];
+
+    // Also try loose search for more candidates
+    if (candidates.length < 5) {
       const q2 = encodeURIComponent(`${artist} ${title}`);
-      const res2 = await fetch(`https://api.spotify.com/v1/search?q=${q2}&type=track&limit=5`, {
+      const res2 = await fetch(`https://api.spotify.com/v1/search?q=${q2}&type=track&limit=10`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const d2 = await res2.json();
-      return d2.tracks?.items?.[0] || null;
+      candidates = [...candidates, ...(d2.tracks?.items || [])];
     }
-    return tracks[0];
+
+    if (!candidates.length) return null;
+
+    // Score all candidates and pick best
+    const scored = candidates.map(t => ({ t, score: matchScore(t, artist, title) }));
+    scored.sort((a, b) => b.score - a.score);
+    const best = scored[0];
+
+    // Require minimum score threshold — if best match is too weak, don't use it
+    // This prevents wrong tracks from being stored
+    if (best.score < 40) {
+      console.log(`  Spotify: best match score ${best.score.toFixed(0)} below threshold — skipping`);
+      return null;
+    }
+
+    return best.t;
   } catch (e) {
     return null;
   }
@@ -201,13 +248,35 @@ async function uploadAudioToCloudinary(filePath, publicId) {
 async function fetchAppleMusicPreview(artist, title) {
   try {
     const q = encodeURIComponent(`${artist} ${title}`);
-    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=5`);
+    const res = await fetch(`https://itunes.apple.com/search?term=${q}&media=music&entity=song&limit=10`);
     const d = await res.json();
-    const match = (d.results || []).find(r =>
-      r.trackName?.toLowerCase() === title.toLowerCase() &&
-      r.artistName?.toLowerCase().includes(artist.toLowerCase().split(' ')[0].toLowerCase())
-    ) || d.results?.[0];
-    return match?.previewUrl || null;
+    const results = d.results || [];
+
+    // Score each result — must match both artist AND title reasonably well
+    const eArtist = normStr(artist);
+    const eTitle = normStr(title);
+
+    const scored = results.map(r => {
+      const rArtist = normStr(r.artistName || '');
+      const rTitle = normStr(r.trackName || '');
+      let score = 0;
+      const artistWords = eArtist.split(' ').filter(w => w.length > 1);
+      if (artistWords.length > 0) {
+        score += (artistWords.filter(w => rArtist.includes(w)).length / artistWords.length) * 50;
+      }
+      const titleWords = eTitle.split(' ').filter(w => w.length > 1);
+      if (titleWords.length > 0) {
+        score += (titleWords.filter(w => rTitle.includes(w)).length / titleWords.length) * 50;
+      }
+      return { r, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    const best = scored[0];
+
+    // Require minimum match quality
+    if (!best || best.score < 40) return null;
+    return best.r.previewUrl || null;
   } catch (e) {
     return null;
   }
@@ -232,23 +301,79 @@ async function fetchYouTubePreview(artist, title, slug) {
 }
 
 // ── Genre auto-assign ─────────────────────────────────────────────────────────
+// Canonical genre names — Title Case, no duplicates
+const GENRE_ALIASES = {
+  'hip-hop': 'Hip-Hop',
+  'hip hop': 'Hip-Hop',
+  'hiphop': 'Hip-Hop',
+  'rap': 'Rap',
+  'trap': 'Rap',
+  'r&b': 'R&B',
+  'rnb': 'R&B',
+  'soul': 'Soul',
+  'neo-soul': 'Neo-Soul',
+  'neosoul': 'Neo-Soul',
+  'electronic': 'Electronic',
+  'electro': 'Electronic',
+  'edm': 'Electronic',
+  'house': 'Electronic',
+  'techno': 'Electronic',
+  'synth': 'Electronic',
+  'dance': 'Electronic',
+  'pop': 'Pop',
+  'indie pop': 'Indie Pop',
+  'indipop': 'Indie Pop',
+  'indie rock': 'Indie Rock',
+  'indie': 'Indie',
+  'alternative': 'Alternative',
+  'alt': 'Alternative',
+  'alt-pop': 'Alt Pop',
+  'alt pop': 'Alt Pop',
+  'folk': 'Folk',
+  'indie folk': 'Indie Folk',
+  'country': 'Country',
+  'acoustic': 'Folk',
+  'rock': 'Rock',
+  'punk': 'Punk',
+  'jazz': 'Jazz',
+  'blues': 'Jazz',
+  'classical': 'Classical',
+  'orchestral': 'Classical',
+  'afrobeats': 'Afrobeats',
+  'afrobeat': 'Afrobeats',
+  'reggae': 'Reggae',
+  'latin': 'Latin',
+};
+
 function autoGenres(rawGenre, artist, title) {
   const g = (rawGenre || '').toLowerCase();
-  const t = (title || '').toLowerCase();
-  const a = (artist || '').toLowerCase();
-  const combined = `${g} ${t} ${a}`;
-  const genres = [];
-  if (combined.match(/hip.hop|rap|trap/)) genres.push('hip-hop');
-  if (combined.match(/r&b|rnb|soul/)) genres.push('r&b');
-  if (combined.match(/electro|synth|dance|edm|house|techno/)) genres.push('electronic');
-  if (combined.match(/pop/)) genres.push('pop');
-  if (combined.match(/indie/)) genres.push('indie');
-  if (combined.match(/folk|country|acoustic/)) genres.push('folk');
-  if (combined.match(/rock|alt/)) genres.push('rock');
-  if (combined.match(/jazz|blues/)) genres.push('jazz');
-  if (combined.match(/classical|orchestral/)) genres.push('classical');
-  if (!genres.length) genres.push('indie'); // default
-  return [...new Set(genres)];
+  const combined = g; // only use the stored genre field, not artist/title (too noisy)
+  const genres = new Set();
+
+  // Check raw genre field against known aliases first
+  for (const [alias, canonical] of Object.entries(GENRE_ALIASES)) {
+    if (combined.includes(alias)) genres.add(canonical);
+  }
+
+  // If nothing matched from genre field, do a looser content-based fallback
+  if (genres.size === 0) {
+    const t = (title || '').toLowerCase();
+    const a = (artist || '').toLowerCase();
+    const wide = `${g} ${t} ${a}`;
+    if (wide.match(/hip.hop/)) genres.add('Hip-Hop');
+    if (wide.match(/\brap\b|\btrap\b/)) genres.add('Rap');
+    if (wide.match(/r&b|rnb/)) genres.add('R&B');
+    if (wide.match(/electro|synth|\bedm\b|house|techno/)) genres.add('Electronic');
+    if (wide.match(/\bpop\b/)) genres.add('Pop');
+    if (wide.match(/indie/)) genres.add('Indie');
+    if (wide.match(/folk|acoustic/)) genres.add('Folk');
+    if (wide.match(/\brock\b/)) genres.add('Rock');
+    if (wide.match(/\balt\b|alternative/)) genres.add('Alternative');
+    if (wide.match(/jazz|blues/)) genres.add('Jazz');
+    if (genres.size === 0) genres.add('Indie'); // default
+  }
+
+  return [...genres];
 }
 
 // ── CSV parser (handles quoted multiline fields correctly) ───────────────────

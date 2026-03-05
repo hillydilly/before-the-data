@@ -8,10 +8,15 @@
     "render": "node scripts/render-reel.mjs"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "@remotion/cli": "4.0.257",
-    "remotion": "4.0.257",
+    "@remotion/three": "^4.0.257",
+    "@svg-maps/australia": "^2.0.0",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "remotion": "4.0.257",
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",

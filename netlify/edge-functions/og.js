@@ -5,9 +5,18 @@ export default async (request, context) => {
   const url = new URL(request.url);
   const path = url.pathname;
 
-  // Only handle post slugs (not assets, not root, not known pages)
-  const skip = ['/', '/new-music', '/popular', '/search', '/about', '/contact'];
-  if (skip.includes(path) || path.includes('.')) {
+  // Skip non-post paths: assets, HTML pages, API routes, root
+  const skip = [
+    '/', '/new-music', '/new-music.html', '/popular', '/popular.html',
+    '/search', '/search.html', '/about', '/about.html', '/contact', '/contact.html',
+    '/archive', '/archive.html', '/submit', '/submit.html', '/heard-first',
+    '/heard-first.html', '/pro', '/pro.html', '/admin', '/admin.html',
+    '/hillydilly', '/hillydilly.html', '/for-managers', '/for-managers.html',
+    '/privacy', '/privacy.html', '/terms', '/terms.html',
+  ];
+  if (skip.includes(path) || path.includes('.') || path.startsWith('/api/') ||
+      path.startsWith('/heard-first/') || path.startsWith('/artist/') ||
+      path.startsWith('/.netlify/')) {
     return context.next();
   }
 

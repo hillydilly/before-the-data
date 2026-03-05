@@ -1,6 +1,39 @@
 /* ============================================
    Before The Data — App / Page Logic
    ============================================ */
+// ── Genre normalization (canonical display names) ─────────────────────────────
+const GENRE_NORM = {
+  'hip-hop': 'Hip-Hop', 'hip hop': 'Hip-Hop', 'hiphop': 'Hip-Hop',
+  'rap': 'Rap', 'trap': 'Rap',
+  'r&b': 'R&B', 'rnb': 'R&B',
+  'soul': 'Soul', 'neo-soul': 'Neo-Soul', 'neosoul': 'Neo-Soul',
+  'electronic': 'Electronic', 'electro': 'Electronic', 'edm': 'Electronic',
+  'house': 'Electronic', 'techno': 'Electronic', 'dance': 'Electronic',
+  'pop': 'Pop', 'indie pop': 'Indie Pop', 'indie rock': 'Indie Rock',
+  'indie': 'Indie', 'indie folk': 'Indie Folk',
+  'alternative': 'Alternative', 'alt': 'Alternative',
+  'alt-pop': 'Alt Pop', 'alt pop': 'Alt Pop',
+  'folk': 'Folk', 'country': 'Country', 'acoustic': 'Folk',
+  'rock': 'Rock', 'punk': 'Punk',
+  'jazz': 'Jazz', 'blues': 'Jazz',
+  'classical': 'Classical', 'afrobeats': 'Afrobeats', 'afrobeat': 'Afrobeats',
+  'latin': 'Latin', 'reggae': 'Reggae',
+};
+function normalizeGenre(g) {
+  if (!g) return null;
+  const key = g.toLowerCase().trim();
+  return GENRE_NORM[key] || g; // return canonical if known, else pass through
+}
+function normalizeGenres(genres, fallbackGenre) {
+  const raw = genres && genres.length ? genres : (fallbackGenre ? [fallbackGenre] : []);
+  const seen = new Set();
+  return raw.map(normalizeGenre).filter(g => {
+    if (!g || seen.has(g)) return false;
+    seen.add(g);
+    return true;
+  });
+}
+
 function truncateTitle(title, maxLen) {
   maxLen = maxLen || 35;
   if (!title) return title;
@@ -221,7 +254,7 @@ function createListItem(post) {
       <a class="list-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
       <div class="list-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title, 50)}&rdquo;</div>
       ${writeupText ? `<div class="list-writeup">${writeupText}</div>` : ''}
-      <div class="list-genres">${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => '<a href="/new-music.html?genre=' + encodeURIComponent(g) + '" class="genre-pill" onclick="event.stopPropagation()">' + g + '</a>').join('')}</div>
+      <div class="list-genres">${normalizeGenres(post.genres, post.genre).map(g => '<a href="/new-music.html?genre=' + encodeURIComponent(g) + '" class="genre-pill" onclick="event.stopPropagation()">' + g + '</a>').join('')}</div>
       <div class="list-date">${timeAgo(post.publishedAt)}</div>
     </div>
   `;
@@ -282,7 +315,7 @@ async function renderNewMusic() {
 
   // Skeleton while fetching
   if (!grid.querySelector(".music-list-item:not(.skeleton-card)")) { grid.innerHTML = Array(8).fill(0).map(() => `<div class="music-list-item skeleton-card" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;"><div style="width:52px;height:52px;border-radius:6px;background:#f0f0f0;flex-shrink:0;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="flex:1;"><div style="height:13px;background:#f0f0f0;border-radius:4px;width:60%;margin-bottom:7px;animation:btd-pulse 1.4s ease-in-out infinite;"></div><div style="height:11px;background:#f0f0f0;border-radius:4px;width:40%;animation:btd-pulse 1.4s ease-in-out infinite;"></div></div></div>`).join(""); }
-  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 999999);
 
   const urlGenre = new URLSearchParams(window.location.search).get('genre');
   const urlYear = new URLSearchParams(window.location.search).get('year');
@@ -304,7 +337,7 @@ async function renderNewMusic() {
   const pageHeader = document.querySelector('.page-header') || grid.parentElement;
   const existingBar = document.getElementById('genre-filter-bar');
   if (!existingBar && pageHeader) {
-    const genres = [...new Set(allPosts.flatMap(p => p.genres && p.genres.length ? p.genres : (p.genre ? [p.genre] : [])))].sort();
+    const genres = [...new Set(allPosts.flatMap(p => normalizeGenres(p.genres, p.genre)))].sort();
     const currentYear = new Date().getFullYear();
     const years = [];
     for (let y = currentYear; y >= 2007; y--) years.push(y);
@@ -417,7 +450,7 @@ async function renderNewMusic() {
     currentView = view;
     _setView(view);
     let posts = allPosts;
-    if (activeGenre) posts = posts.filter(p => (p.genres || [p.genre]).includes(activeGenre));
+    if (activeGenre) posts = posts.filter(p => normalizeGenres(p.genres, p.genre).includes(activeGenre));
     if (activeYear) posts = posts.filter(p => {
       if (!p.publishedAt) return false;
       // publishedAt is stored as { seconds } object from Firebase timestamp
@@ -512,7 +545,7 @@ async function renderArtist() {
   const slug = pathParts[1] || pathParts[0] || '';
   if (!slug) return;
 
-  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 999999);
   // Match by artistSlug
   const posts = allPosts.filter(p => artistSlug(p.artist || '') === slug || (p.artist || '').split(',').some(a => artistSlug(a.trim()) === slug));
 
@@ -568,10 +601,14 @@ async function renderPost() {
 
   // Hero
   const hero = document.getElementById('post-hero');
+  const hasPlayable = !!(post.previewUrl || post.trackId || post.youtubeId);
   hero.innerHTML = `
     <div class="post-hero-bg" style="background-image:url('${post.artUrl}')"></div>
     <div class="post-art-wrap" id="art-play-wrap">
       <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
+      ${hasPlayable ? `<div class="post-art-overlay" id="post-art-overlay">
+        <div class="art-play-circle" id="art-play-circle">&#9654;</div>
+      </div>` : ''}
     </div>
     <div class="post-hero-meta">
       <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
@@ -590,7 +627,7 @@ async function renderPost() {
         ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
       </div>
       <div class="post-tags">
-        ${(post.genres && post.genres.length ? post.genres : (post.genre ? [post.genre] : [])).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href='/new-music.html?genre=${encodeURIComponent(g)}'">${g}</a>`).join('')}
+        ${normalizeGenres(post.genres, post.genre).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href='/new-music.html?genre=${encodeURIComponent(g)}'">${g}</a>`).join('')}
         ${(post.tags || []).filter(t => {
           const skip = ['artist-discovery','new-music','new-release','featured','editorial','scouting'];
           if (skip.includes(t.toLowerCase())) return false;
@@ -615,10 +652,17 @@ async function renderPost() {
     }
   };
 
+  const updateArtOverlay = () => {
+    const circle = document.getElementById('art-play-circle');
+    if (!circle) return;
+    const current = Player.getCurrent();
+    const isThisPlaying = current && current.id === post.id && Player.isPlaying();
+    circle.innerHTML = isThisPlaying ? '&#9646;&thinsp;&#9646;' : '&#9654;';
+  };
+
   const doPlay = (previewUrl) => {
     Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl });
-    const btn = document.getElementById('hero-play-btn');
-    if (btn) btn.textContent = '▶ Playing...';
+    setTimeout(updateArtOverlay, 100);
   };
 
   const playPost = async () => {
@@ -660,10 +704,16 @@ async function renderPost() {
     artWrap.addEventListener('click', (e) => {
       e.stopPropagation();
       const current = Player.getCurrent();
-      if (_resolvedPreviewUrl && current && current.id === post.id) { Player.togglePlay(); return; }
+      if (_resolvedPreviewUrl && current && current.id === post.id) {
+        Player.togglePlay();
+        setTimeout(updateArtOverlay, 50);
+        return;
+      }
       playPost();
     });
   }
+  // Keep overlay in sync when player state changes externally
+  document.addEventListener('btd:playerStateChange', updateArtOverlay);
 
 
   // Content gate — check access before rendering body/sidebar/tracklist
@@ -752,7 +802,7 @@ async function renderPost() {
   }
 
   // Next Post + Related Tracks — in sidebar, below Written By (Hillydilly style)
-  const allPosts = await fetchPosts('publishedAt', 'desc', 2000);
+  const allPosts = await fetchPosts('publishedAt', 'desc', 999999);
   const thisSlug = post.slug || post.id;
   const idx = allPosts.findIndex(p => (p.slug || p.id) === thisSlug);
   const nextPost = idx >= 0 && idx < allPosts.length - 1 ? allPosts[idx + 1] : null;

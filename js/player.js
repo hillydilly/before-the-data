@@ -81,6 +81,8 @@ const Player = (() => {
         btn.innerHTML = '&#9646;&thinsp;&#9646;';
       });
     }
+    // Dispatch event so post page overlay can sync
+    document.dispatchEvent(new CustomEvent('btd:playerStateChange'));
   }
 
   // Audio events
@@ -215,5 +217,5 @@ const Player = (() => {
   // Init
   document.addEventListener('DOMContentLoaded', restoreState);
 
-  return { play, togglePlay, next, prev, setQueue, getQueue: () => queue, getCurrent: () => queue[currentIndex] };
+  return { play, togglePlay, next, prev, setQueue, getQueue: () => queue, getCurrent: () => queue[currentIndex], isPlaying: () => isPlaying };
 })();

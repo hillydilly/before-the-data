@@ -37,6 +37,10 @@
   path = "/post/*"
   function = "og"
 
+[[edge_functions]]
+  path = "/*"
+  function = "og"
+
 [[headers]]
   for = "/*.html"
   [headers.values]
