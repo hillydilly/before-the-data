@@ -572,7 +572,6 @@ async function renderPost() {
     <div class="post-hero-bg" style="background-image:url('${post.artUrl}')"></div>
     <div class="post-art-wrap" id="art-play-wrap">
       <img class="post-hero-art" src="${post.artUrl}" alt="${post.title}">
-      <div class="post-art-overlay"><div class="art-play-circle">&#9654;</div></div>
     </div>
     <div class="post-hero-meta">
       <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
