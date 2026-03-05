@@ -1029,7 +1029,7 @@ body[data-page="post"] #main {
   #main {
     margin-left: 0;
     margin-top: 0;
-    padding: calc(var(--player-h) + 12px) 16px 80px;
+    padding: calc(var(--player-h) + 70px) 16px 80px;
   }
   .section-header { margin-bottom: 14px; padding-top: 0; }
   .music-scroll { gap: 12px; }
@@ -1585,12 +1585,13 @@ body[data-page="post"] #main {
 @media (max-width: 700px) {
   #mobile-search-bar {
     display: block;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: var(--player-h);
+    left: 0;
+    right: 0;
     z-index: 90;
     background: var(--bg);
-    padding: 12px 0;
-    margin: 0 0 12px;
+    padding: 10px 16px;
     border-bottom: 1px solid var(--bd);
   }
   #mobile-search-input {
