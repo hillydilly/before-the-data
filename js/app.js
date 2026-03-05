@@ -742,7 +742,7 @@ async function renderPost() {
     const trackRow = document.createElement('div');
     trackRow.className = 'post-inline-player';
     trackRow.id = 'post-inline-player';
-    const sourceLabel = post.previewUrl ? 'APPLE MUSIC' : (post.youtubeId ? 'YOUTUBE' : 'SPOTIFY');
+    const sourceLabel = post.youtubeId && !post.previewUrl && !post.trackId ? 'YOUTUBE' : 'APPLE MUSIC';
     const appleHref = `https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}`;
     trackRow.innerHTML = `
       <div class="pip-art-wrap">
@@ -775,7 +775,7 @@ async function renderPost() {
     trackRow.querySelector('.pip-art-wrap').addEventListener('click', (e) => {
       e.stopPropagation();
       const cur = Player.getCurrent();
-      if (_resolvedPreviewUrl && cur && cur.id === post.id) {
+      if (cur && cur.id === post.id) {
         Player.togglePlay();
         setTimeout(syncPip, 50);
       } else {
