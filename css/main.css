@@ -630,10 +630,10 @@ ul { list-style: none; }
    POST DETAIL
    ============================================ */
 
-/* Grey page background on post pages — equal margins both sides */
+/* Grey page background on post pages — equal margins both sides, flush to top */
 body[data-page="post"] #main {
   background: var(--bg-2);
-  padding: 0 var(--sidebar-w) 60px 0;
+  padding: 0 var(--sidebar-w) 60px 0 !important;
 }
 
 /* The post card — fills content area, flush to top */
