@@ -128,40 +128,26 @@ ul { list-style: none; }
   width: 0%; transition: width .3s linear; border-radius: 2px;
 }
 
-/* Right zone — ends at post card right edge, shade extends to page edge */
+/* Right zone — just volume icon, no panel, no shade */
 #player-bar .player-right {
-  display: flex; align-items: center; justify-content: flex-end; gap: 4px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  padding: 0 20px;
-  background: var(--bg-2);
+  padding: 0 12px;
+  background: transparent;
   height: 100%;
-  border-left: 1px solid var(--bd);
   position: relative;
-  width: calc(var(--sidebar-w) + 60px); /* progress area right margin */
 }
-/* Shade strip extends into the sidebar area to the right */
-#player-bar .player-right-shade {
-  display: block;
-  width: var(--sidebar-w);
-  height: 100%;
-  background: var(--bg-2);
-  flex-shrink: 0;
-}
+#player-bar .player-right-shade { display: none; }
 
-#player-bar .player-right .volume-btn,
-#player-bar .player-right .search-icon-btn {
+#player-bar .player-right .volume-btn {
   color: var(--tx-3);
   display: flex; align-items: center; justify-content: center;
   width: 40px; height: 40px; border-radius: 50%;
   transition: background .15s, color .15s; flex-shrink: 0;
   position: relative;
 }
-#player-bar .player-right .volume-btn svg,
-#player-bar .player-right .search-icon-btn svg {
-  width: 24px; height: 24px;
-}
-#player-bar .player-right .volume-btn:hover,
-#player-bar .player-right .search-icon-btn:hover { background: var(--bd); color: var(--tx-2); }
+#player-bar .player-right .volume-btn svg { width: 24px; height: 24px; }
+#player-bar .player-right .volume-btn:hover { background: var(--bg-2); color: var(--tx-2); }
 
 /* Volume popup — drops DOWN below the bar */
 .volume-popup {

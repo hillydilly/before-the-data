@@ -20,7 +20,7 @@ const Player = (() => {
   const volumeSlider = document.getElementById('volume-slider');
   const volumePopup = document.getElementById('volume-popup');
   const volumeBtn = bar?.querySelector('.volume-btn');
-  const searchIconBtn = bar?.querySelector('.search-icon-btn');
+
   const progressBar = bar?.querySelector('.player-progress');
 
   // Restore state from sessionStorage
@@ -312,77 +312,7 @@ const Player = (() => {
       }
     }
 
-    // Search icon toggles input visibility
-    const searchInput = document.getElementById('player-search-input');
-    const searchResults = document.getElementById('player-search-results');
-    if (searchIconBtn && searchInput) {
-      searchIconBtn.addEventListener('click', () => {
-        const wrap = searchInput.closest('.player-search-wrap');
-        const isOpen = wrap?.classList.toggle('search-open');
-        if (isOpen) { searchInput.focus(); }
-        else { searchResults?.classList.remove('open'); searchInput.value = ''; }
       });
-    }
-    if (!searchInput || !searchResults) return;
-
-    let debounceTimer;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(debounceTimer);
-      const q = searchInput.value.trim();
-      if (!q) { searchResults.classList.remove('open'); searchResults.innerHTML = ''; return; }
-      debounceTimer = setTimeout(async () => {
-        let allPosts = queue;
-        const ql = q.toLowerCase();
-        const matches = allPosts
-          .filter(p => (p.title || '').toLowerCase().includes(ql) || (p.artist || '').toLowerCase().includes(ql))
-          .slice(0, 8);
-
-        if (!matches.length) {
-          searchResults.innerHTML = '<div style="padding:12px;font-size:13px;color:var(--tx-3)">No results</div>';
-          searchResults.classList.add('open');
-          return;
-        }
-
-        searchResults.innerHTML = matches.map(p => `
-          <div class="player-search-result" data-id="${p.id}" data-slug="${p.slug || p.id}">
-            <img src="${p.artUrl || ''}" alt="${p.title || ''}" loading="lazy">
-            <div class="psr-info">
-              <div class="psr-title">&ldquo;${p.title}&rdquo;</div>
-              <div class="psr-artist">${p.artist}</div>
-            </div>
-          </div>
-        `).join('');
-        searchResults.classList.add('open');
-
-        searchResults.querySelectorAll('.player-search-result').forEach(el => {
-          el.addEventListener('click', () => {
-            const slug = el.dataset.slug;
-            const post = matches.find(p => (p.slug || p.id) === slug);
-            if (post) {
-              // Play the track
-              Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-              // Navigate to post page
-              window.location.href = '/' + slug;
-            }
-            searchResults.classList.remove('open');
-            searchInput.value = '';
-          });
-        });
-      }, 250);
-    });
-
-    // Close on outside click
-    document.addEventListener('click', e => {
-      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        searchResults.classList.remove('open');
-      }
-    });
-
-    // Close on Escape
-    searchInput.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { searchResults.classList.remove('open'); searchInput.blur(); }
-    });
-  });
 
   return { play, togglePlay, next, prev, setQueue, getQueue: () => queue, getCurrent: () => queue[currentIndex], isPlaying: () => isPlaying };
 })();
