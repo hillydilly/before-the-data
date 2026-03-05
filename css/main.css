@@ -630,10 +630,11 @@ ul { list-style: none; }
    POST DETAIL
    ============================================ */
 
-/* Grey page background on post pages — card pops off it */
+/* Grey page background on post pages — card flush to top nav */
 body[data-page="post"] #main {
   background: var(--bg-2);
-  padding: 0 24px 60px;
+  padding: 0;
+  margin-top: var(--player-h);
 }
 
 /* The post card — white box, flush to top, wider */
