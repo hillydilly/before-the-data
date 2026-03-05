@@ -683,8 +683,8 @@ body[data-page="post"] #main {
 .post-hero-bg {
   position: absolute; inset: -20px;
   background-size: cover; background-position: center;
-  filter: blur(24px) brightness(.75);
-  opacity: .85;
+  filter: blur(28px) brightness(.9);
+  opacity: .9;
 }
 .post-art-wrap {
   position: relative; z-index: 1;
@@ -739,13 +739,14 @@ body[data-page="post"] #main {
 }
 .post-hero-card .post-title {
   font-family: var(--font-heading);
-  font-size: 22px; font-weight: 700;
+  font-size: 42px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .5px;
-  color: #111; line-height: 1.2;
+  color: #111; line-height: 1.1;
 }
 .post-hero-card .post-artist {
-  font-size: 15px; font-weight: 600; color: #333;
-  text-decoration: none;
+  font-size: 28px; font-weight: 700; color: #333;
+  text-decoration: none; text-transform: uppercase;
+  letter-spacing: .5px;
 }
 .post-hero-card .post-artist:hover { color: #000; }
 .post-hero-card .post-date {
