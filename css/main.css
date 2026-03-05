@@ -65,23 +65,25 @@ ul { list-style: none; }
 
 /* Controls — start right of the sidebar divider */
 #player-bar .player-controls {
-  display: flex; align-items: center; gap: 2px;
+  display: flex; align-items: center; gap: 4px;
   flex-shrink: 0;
   padding: 0 12px 0 16px;
 }
 #player-bar .player-controls button {
-  width: 30px; height: 30px;
+  width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
   color: var(--tx-2);
   border-radius: 50%;
   transition: background .15s, color .15s;
 }
+#player-bar .player-controls button svg { width: 20px; height: 20px; }
 #player-bar .player-controls button:hover { background: var(--bg-2); }
 #player-bar .player-controls .play-btn {
-  width: 32px; height: 32px;
+  width: 44px; height: 44px;
   background: transparent; color: var(--tx);
-  border-radius: 50%; font-size: 15px; padding-left: 2px;
+  border-radius: 50%; font-size: 20px; padding-left: 3px;
 }
+#player-bar .player-controls .play-btn svg { width: 22px; height: 22px; }
 #player-bar .player-controls .play-btn:hover { background: var(--bg-2); }
 
 /* Center — art + title + progress */

@@ -80,7 +80,7 @@ const Player = (() => {
         appleLink.textContent = '\u2014';
       }
     }
-    if (sourceEl && sourceEl.tagName !== 'A') sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '—');
+    if (sourceEl && sourceEl.tagName !== 'A') sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '');
   }
 
   function updatePlayButton() {
