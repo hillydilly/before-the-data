@@ -5,3 +5,12 @@ remotion/node_modules/
 *.mp4
 *.mov
 remotion/public/frames/
+
+# Scripts with hardcoded credentials — never commit these
+scripts/btd-post-pipeline.mjs
+
+# Audio files in remotion public (large binary assets)
+remotion/public/*.mp3
+remotion/public/narr-*/*.mp3
+remotion/public/narration/*.mp3
+remotion/public/sfx/*.mp3
