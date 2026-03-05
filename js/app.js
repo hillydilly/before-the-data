@@ -243,20 +243,25 @@ async function renderDiscover() {
     if (!slug) return;
     const postHref = `/${slug}`;
 
-    // Play overlay → play (exact same as New Music card)
+    // Play overlay → play; read track data from DOM + queue
     const overlay = card.querySelector('.as-play-overlay');
     if (overlay) {
       overlay.addEventListener('click', (e) => {
         e.preventDefault(); e.stopPropagation();
+        // Read what we can from the DOM directly
+        const artUrl = card.querySelector('.as-art img')?.src || '';
+        const title = card.querySelector('.as-song')?.textContent?.replace(/[""]/g, '').trim() || '';
+        const artist = card.querySelector('.as-artist')?.textContent?.trim() || '';
+        // Try queue for previewUrl
         const queue = Player._queue || [];
-        const post = queue.find(p => (p.slug || p.id) === slug);
-        if (post) {
-          const current = Player.getCurrent();
-          if (current && current.id === post.id) {
-            Player.togglePlay();
-          } else {
-            Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
-          }
+        const queued = queue.find(p => (p.slug || p.id) === slug);
+        const previewUrl = queued?.previewUrl || '';
+        const id = queued?.id || slug;
+        const current = Player.getCurrent();
+        if (current && current.id === id) {
+          Player.togglePlay();
+        } else {
+          Player.play({ id, title, artist, artUrl, previewUrl });
         }
       });
     }
