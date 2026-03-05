@@ -634,6 +634,14 @@ ul { list-style: none; }
 body[data-page="post"] #main {
   background: var(--bg-2);
   padding: 0 var(--sidebar-w) 60px 0 !important;
+  margin-top: var(--player-h) !important;
+}
+body[data-page="post"] #post-content {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+body[data-page="post"] .post-hero {
+  margin-top: 0 !important;
 }
 
 /* The post card — fills content area, flush to top */
@@ -911,6 +919,14 @@ body[data-page="post"] #main {
 .loading-msg {
   text-align: center; padding: 60px 0;
   color: var(--tx-3); font-size: 14px;
+}
+/* Post hero has dark placeholder while Firebase loads — no white flash */
+.post-hero {
+  min-height: 280px;
+  background: #1a1a1a;
+}
+.post-hero .loading-msg {
+  color: rgba(255,255,255,.4);
 }
 
 /* ============================================
