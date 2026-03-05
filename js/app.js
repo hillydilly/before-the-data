@@ -161,7 +161,12 @@ function createChartRow(post, rank) {
   `;
   row.querySelector('.chart-art-wrap').addEventListener('click', (e) => {
     e.stopPropagation();
-    Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    const current = Player.getCurrent();
+    if (current && current.id === post.id) {
+      Player.togglePlay();
+    } else {
+      Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+    }
   });
   row.addEventListener('click', () => {
     window.location.href = `/${post.slug || post.id}`;
@@ -188,7 +193,12 @@ function createChartRowFromTrack(track) {
   if (track.previewUrl) {
     row.querySelector('.chart-art-wrap').addEventListener('click', (e) => {
       e.stopPropagation();
-      Player.play({ id: track.spotifyId, title: track.title, artist: track.artist, artUrl: track.artUrl || thumb, previewUrl: track.previewUrl });
+      const current = Player.getCurrent();
+      if (current && current.id === track.spotifyId) {
+        Player.togglePlay();
+      } else {
+        Player.play({ id: track.spotifyId, title: track.title, artist: track.artist, artUrl: track.artUrl || thumb, previewUrl: track.previewUrl });
+      }
     });
   } else {
     row.querySelector('.chart-art-overlay').style.opacity = '0';
