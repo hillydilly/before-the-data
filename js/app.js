@@ -170,34 +170,26 @@ function createChartRowFromTrack(track) {
   const thumb = track.artUrlSm || track.artUrl || (track.ytId ? `https://img.youtube.com/vi/${track.ytId}/hqdefault.jpg` : '');
   row.innerHTML = `
     <div class="chart-rank">#${track.rank}</div>
-    <button class="chart-play" title="Play" data-playing-id="${track.spotifyId}">&#9654;</button>
-    <img class="chart-art" src="${thumb}" alt="${track.title}" loading="lazy">
+    <div class="chart-art-wrap" data-playing-id="${track.spotifyId}">
+      <img class="chart-art" src="${thumb}" alt="${track.title}" loading="lazy">
+      <div class="chart-art-overlay"><div class="chart-play-circle">&#9654;</div></div>
+    </div>
     <div class="chart-info">
       <div class="chart-artist">${track.artist}${track.explicit ? ' <span class="explicit">E</span>' : ''}</div>
       <div class="chart-title">&ldquo;${track.title}&rdquo;</div>
     </div>
-
   `;
-  // Disable play button if no preview available
-  if (!track.previewUrl) {
-    row.querySelector('.chart-play').disabled = true;
-    row.querySelector('.chart-play').title = 'No preview available';
-    row.querySelector('.chart-play').style.opacity = '0.3';
-  }
 
-  const playFn = (e) => {
-    if (e) e.stopPropagation();
-    if (!track.previewUrl) return; // no preview — do nothing
-    Player.play({
-      id: track.spotifyId,
-      title: track.title,
-      artist: track.artist,
-      artUrl: track.artUrl || thumb,
-      previewUrl: track.previewUrl
+  if (track.previewUrl) {
+    row.querySelector('.chart-art-wrap').addEventListener('click', (e) => {
+      e.stopPropagation();
+      Player.play({ id: track.spotifyId, title: track.title, artist: track.artist, artUrl: track.artUrl || thumb, previewUrl: track.previewUrl });
     });
-  };
-  row.querySelector('.chart-play').addEventListener('click', playFn);
-  row.addEventListener('click', playFn);
+  } else {
+    row.querySelector('.chart-art-overlay').style.opacity = '0';
+    row.querySelector('.chart-art-wrap').style.cursor = 'default';
+  }
+  row.addEventListener('click', () => { if (track.previewUrl) Player.play({ id: track.spotifyId, title: track.title, artist: track.artist, artUrl: track.artUrl || thumb, previewUrl: track.previewUrl }); });
   return row;
 }
 
