@@ -45,10 +45,10 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
-    /* Archive banner — mobile only, full-width strip */
+    /* Archive banner — visible on all screen sizes */
     #search-archive-hint a:hover { text-decoration: underline; }
     #archive-strip {
-      display: none;
+      display: block;
       margin: 24px 0 0;
     }
     .archive-strip-header {
@@ -85,16 +85,19 @@
     .archive-strip-scroll a {
       flex-shrink: 0; text-decoration: none; width: 140px;
     }
+    @media (min-width: 768px) {
+      .archive-strip-scroll a { width: 160px; }
+    }
     .archive-strip-scroll img {
-      width: 140px;
-      height: 140px;
-      border-radius: 4px;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 6px;
       object-fit: cover;
       display: block;
-      opacity: 0.9;
-      transition: transform .2s;
+      opacity: 0.95;
+      transition: transform .2s, opacity .2s;
     }
-    .archive-strip-scroll a:hover img { transform: scale(1.03); }
+    .archive-strip-scroll a:hover img { transform: scale(1.03); opacity: 1; }
     .archive-strip-scroll .as-label {
       margin-top: 6px;
     }
@@ -106,9 +109,7 @@
       font-size: 11px; color: var(--tx-3);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    @media (max-width: 767px) {
-      #archive-strip { display: block; }
-    }
+    /* archive-strip always visible — no mobile-only override needed */
     .mobile-discover-footer {
       display: none;
     }
