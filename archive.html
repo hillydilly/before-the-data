@@ -656,7 +656,7 @@
               <span class="archive-card-year-badge">${year}</span>
             </div>
             <a class="archive-card-title" href="${postHref}" style="text-decoration:none;color:inherit;display:block">${displayTitle}</a>
-            <a class="archive-card-artist" href="/artist/${postartist-||-}">${post.artist || ''}</a>
+            <a class="archive-card-artist" href="/artist/${(post.artist||'').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')}">${post.artist || ''}</a>
           `;
           // Play overlay → play (toggle if already current)
           card.querySelector('.archive-card-play-overlay').addEventListener('click', async (e) => {
