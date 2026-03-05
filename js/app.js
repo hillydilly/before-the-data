@@ -127,8 +127,8 @@ function createMusicCard(post) {
     <a class="card-title" href="${postHref}" title="${post.title}">${isEP(post) ? truncateTitle(post.title) : `&ldquo;${truncateTitle(post.title)}&rdquo;`}</a>
     <a class="card-artist" href="${artistHref}" title="${post.artist}">${truncateTitle(post.artist, 30)}</a>
   `;
-  // Only the play CIRCLE triggers playback, not the whole overlay
-  card.querySelector('.play-circle').addEventListener('click', (e) => {
+  // Play overlay → play the track
+  card.querySelector('.play-overlay').addEventListener('click', (e) => {
     e.preventDefault(); e.stopPropagation();
     const current = Player.getCurrent();
     if (current && current.id === post.id) {
@@ -136,6 +136,11 @@ function createMusicCard(post) {
     } else {
       Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
     }
+  });
+  // Clicking the art image (not the overlay) → go to post
+  card.querySelector('.card-art img').addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.location.href = postHref;
   });
   return card;
 }
