@@ -632,8 +632,9 @@ async function renderPost() {
     <div class="post-hero-meta">
       <div class="post-hero-card">
         <div class="post-title">&ldquo;${post.title}&rdquo;</div>
-        <div class="post-artist-row"><a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>${post.country ? `<span class="post-flag">${countryFlag(post.country)}</span>` : ''}</div>
+        <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
         <div class="post-date">Published <span class="post-date-rel">${formatPostDate(post.publishedAt)}</span></div>
+        ${post.country ? `<div class="post-flag">${countryFlag(post.country)}</div>` : ''}
         <div class="post-tags">
           ${normalizeGenres(post.genres, post.genre).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
         </div>
