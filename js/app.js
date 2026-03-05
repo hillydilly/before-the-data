@@ -799,6 +799,8 @@ async function renderPost() {
     // Fetch existing comments via runQuery filtering by postSlug
     let comments = [];
     try {
+      // Query by postSlug only (no orderBy to avoid needing a composite index)
+      // Sort client-side by createdAt
       const queryRes = await fetch(
         `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents:runQuery?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec`,
         {
@@ -806,22 +808,19 @@ async function renderPost() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ structuredQuery: {
             from: [{ collectionId: 'config' }],
-            where: { compositeFilter: { op: 'AND', filters: [
-              { fieldFilter: { field: { fieldPath: 'type' }, op: 'EQUAL', value: { stringValue: 'comment' } } },
-              { fieldFilter: { field: { fieldPath: 'postSlug' }, op: 'EQUAL', value: { stringValue: postSlug } } },
-            ]}},
-            orderBy: [{ field: { fieldPath: 'createdAt' }, direction: 'ASCENDING' }],
+            where: { fieldFilter: { field: { fieldPath: 'postSlug' }, op: 'EQUAL', value: { stringValue: postSlug } } },
           }})
         }
       );
       const queryData = await queryRes.json();
       comments = (queryData || [])
-        .filter(r => r.document)
+        .filter(r => r.document && r.document.fields?.type?.stringValue === 'comment')
         .map(r => ({
           name: r.document.fields?.name?.stringValue || 'Member',
           text: r.document.fields?.text?.stringValue || '',
           createdAt: r.document.fields?.createdAt?.timestampValue || '',
-        }));
+        }))
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     } catch (_) {}
 
     const commentsList = comments.map(c => `
