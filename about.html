@@ -138,22 +138,20 @@
 
   <!-- PLAYER BAR -->
   <div id="player-bar">
-    <div class="player-brand">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--acc)"><rect x="2" y="6" width="3" height="12" rx="1.5"/><rect x="7" y="3" width="3" height="18" rx="1.5"/><rect x="12" y="7" width="3" height="10" rx="1.5"/><rect x="17" y="4" width="3" height="16" rx="1.5"/></svg>
-    </div>
+    <a class="player-brand" href="/">Before The Data</a>
     <div class="player-controls">
       <button class="prev-btn" title="Previous">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
       </button>
       <button class="play-btn" title="Play">&#9654;</button>
       <button class="next-btn" title="Next">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 6-4.5v9L8.5 12zM16 6h2v12h-2z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2z"/></svg>
       </button>
     </div>
     <div class="player-center">
       <img class="player-art" src="" alt="" id="player-bar-art">
       <div class="player-info">
-        <div class="player-title" id="player-title-text">Before The Data</div>
+        <div class="player-title" id="player-title-text">Select a track</div>
         <a class="player-source" id="player-apple-link" href="#" target="_blank">APPLE MUSIC</a>
       </div>
       <div class="player-progress-wrap">
@@ -162,14 +160,16 @@
     </div>
     <div class="player-right">
       <button class="volume-btn" title="Volume">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <div class="volume-popup" id="volume-popup">
+          <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.05" value="0.8" orient="vertical">
+        </div>
       </button>
-      <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.8">
       <div class="player-search-wrap">
         <button class="search-icon-btn" title="Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         </button>
-        <input type="text" class="player-search-input" id="player-search-input" placeholder="Search artists, songs…" autocomplete="off">
+        <input type="text" class="player-search-input" id="player-search-input" placeholder="Search…" autocomplete="off">
         <div class="player-search-results" id="player-search-results"></div>
       </div>
     </div>

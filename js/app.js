@@ -602,6 +602,9 @@ async function renderPost() {
     return;
   }
 
+  // Fire event so player bar can load track info
+  document.dispatchEvent(new CustomEvent('btd:postLoaded', { detail: post }));
+
   // Increment views
   incrementViews(post.id);
 

@@ -46,26 +46,33 @@ ul { list-style: none; }
   background: var(--bg);
   border-bottom: 1px solid var(--bd);
   display: flex; align-items: center;
-  padding: 0 16px;
+  padding: 0;
   z-index: 1000;
-  gap: 0;
 }
 
-/* Brand mark — far left */
+/* Brand — sits inside the sidebar width, left of the divider */
 .player-brand {
-  display: flex; align-items: center;
-  padding-right: 20px;
+  width: var(--sidebar-w);
   flex-shrink: 0;
+  display: flex; align-items: center;
+  padding: 0 24px;
+  border-right: 1px solid var(--bd);
+  height: 100%;
+  font-family: var(--font-heading);
+  font-size: 15px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--tx-1);
+  text-decoration: none;
 }
 
-/* Transport controls */
+/* Controls — start right of the sidebar divider */
 #player-bar .player-controls {
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 2px;
   flex-shrink: 0;
-  padding-right: 16px;
+  padding: 0 12px 0 16px;
 }
 #player-bar .player-controls button {
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   display: flex; align-items: center; justify-content: center;
   color: var(--tx-2);
   border-radius: 50%;
@@ -73,31 +80,27 @@ ul { list-style: none; }
 }
 #player-bar .player-controls button:hover { background: var(--bg-2); }
 #player-bar .player-controls .play-btn {
-  width: 34px; height: 34px;
-  background: transparent;
-  color: var(--tx);
-  border-radius: 50%;
-  font-size: 16px;
-  padding-left: 2px;
+  width: 32px; height: 32px;
+  background: transparent; color: var(--tx);
+  border-radius: 50%; font-size: 15px; padding-left: 2px;
 }
-#player-bar .player-controls .play-btn:hover { background: var(--bg-2); color: var(--tx); }
+#player-bar .player-controls .play-btn:hover { background: var(--bg-2); }
 
-/* Center zone — art + info + progress */
+/* Center — art + title + progress */
 .player-center {
   display: flex; align-items: center; gap: 10px;
-  flex: 1; min-width: 0;
+  flex: 1; min-width: 0; padding-right: 16px;
 }
 .player-center .player-art {
-  width: 34px; height: 34px;
-  border-radius: 3px;
-  object-fit: cover;
-  background: var(--bg-2);
-  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 3px; object-fit: cover;
+  background: var(--bg-2); flex-shrink: 0;
+  display: none; /* hidden until a track loads */
 }
+.player-center .player-art.has-art { display: block; }
 #player-bar .player-info {
   display: flex; flex-direction: column; gap: 1px;
-  min-width: 0; flex-shrink: 0;
-  max-width: 280px;
+  min-width: 0; flex-shrink: 0; max-width: 260px;
 }
 #player-bar .player-info .player-title {
   font-size: 13px; font-weight: 500; color: var(--tx);
@@ -110,46 +113,60 @@ ul { list-style: none; }
   text-decoration: none; font-weight: 500;
 }
 #player-bar .player-info a.player-source:hover { color: var(--acc); }
-
-/* Progress bar inside center zone */
 .player-progress-wrap {
-  flex: 1; min-width: 0;
-  display: flex; align-items: center;
+  flex: 1; min-width: 0; display: flex; align-items: center;
 }
 #player-bar .player-progress {
   width: 100%; height: 3px;
-  background: var(--bd); border-radius: 2px;
-  cursor: pointer;
+  background: var(--bd); border-radius: 2px; cursor: pointer;
 }
 #player-bar .player-progress-fill {
   height: 100%; background: var(--tx-3);
-  width: 0%; transition: width .3s linear;
-  border-radius: 2px;
+  width: 0%; transition: width .3s linear; border-radius: 2px;
 }
 
-/* Right zone — volume + search */
+/* Right zone — volume popup + search */
 #player-bar .player-right {
-  display: flex; align-items: center; gap: 8px;
-  flex-shrink: 0; padding-left: 16px;
+  display: flex; align-items: center; gap: 4px;
+  flex-shrink: 0; padding-right: 16px;
 }
 #player-bar .player-right .volume-btn,
 #player-bar .player-right .search-icon-btn {
   color: var(--tx-3);
   display: flex; align-items: center; justify-content: center;
   width: 30px; height: 30px; border-radius: 50%;
-  transition: background .15s, color .15s;
-  flex-shrink: 0;
+  transition: background .15s, color .15s; flex-shrink: 0;
+  position: relative;
 }
 #player-bar .player-right .volume-btn:hover,
 #player-bar .player-right .search-icon-btn:hover { background: var(--bg-2); color: var(--tx-2); }
-#player-bar .player-right .volume-slider {
-  width: 72px; height: 3px;
-  -webkit-appearance: none; appearance: none;
-  background: var(--bd); border-radius: 2px; outline: none;
-  cursor: pointer;
+
+/* Volume popup — vertical slider above button */
+.volume-popup {
+  position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  padding: 12px 10px;
+  display: none; flex-direction: column; align-items: center; gap: 8px;
+  z-index: 2000;
+  width: 36px;
 }
-#player-bar .player-right .volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 11px; height: 11px;
+.volume-popup.open { display: flex; }
+.volume-popup .volume-label {
+  font-size: 10px; color: var(--tx-3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.volume-slider {
+  -webkit-appearance: slider-vertical; appearance: slider-vertical;
+  writing-mode: vertical-lr; direction: rtl;
+  width: 4px; height: 72px;
+  background: var(--bd); border-radius: 2px; outline: none; cursor: pointer;
+}
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
   background: var(--tx-2); border-radius: 50%; cursor: pointer;
 }
 /* Player bar search — hidden until search icon clicked */
@@ -617,16 +634,16 @@ ul { list-style: none; }
 /* Grey page background on post pages — card pops off it */
 body[data-page="post"] #main {
   background: var(--bg-2);
-  padding: 32px 32px 60px;
+  padding: 0 24px 60px;
 }
 
-/* The post card — white box containing everything */
+/* The post card — white box, flush to top, wider */
 #post-content {
   background: var(--bg);
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   box-shadow: 0 2px 16px rgba(0,0,0,.08);
   overflow: hidden;
-  max-width: 960px;
+  max-width: 100%;
   margin: 0 auto;
 }
 

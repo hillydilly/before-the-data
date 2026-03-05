@@ -17,7 +17,9 @@ const Player = (() => {
   const prevBtn = bar?.querySelector('.prev-btn');
   const nextBtn = bar?.querySelector('.next-btn');
   const progressFill = bar?.querySelector('.player-progress-fill');
-  const volumeSlider = bar?.querySelector('.volume-slider');
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumePopup = document.getElementById('volume-popup');
+  const volumeBtn = bar?.querySelector('.volume-btn');
   const searchIconBtn = bar?.querySelector('.search-icon-btn');
   const progressBar = bar?.querySelector('.player-progress');
 
@@ -55,8 +57,12 @@ const Player = (() => {
     if (artEl) {
       artEl.src = track.artUrl || '';
       artEl.alt = track.title || '';
+      // Show art only when a real track is loaded
+      if (track.artUrl) { artEl.classList.add('has-art'); }
+      else { artEl.classList.remove('has-art'); }
     }
-    if (titleEl) titleEl.textContent = `${track.artist} \u2014 \u201c${track.title}\u201d`;
+    // No em dash — use hyphen
+    if (titleEl) titleEl.textContent = `${track.artist} - "${track.title}"`;
     // Update Apple Music link
     const appleLink = document.getElementById('player-apple-link');
     if (appleLink) {
@@ -232,6 +238,16 @@ const Player = (() => {
       saveState();
     });
   }
+  // Volume popup toggle
+  if (volumeBtn && volumePopup) {
+    volumeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      volumePopup.classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!volumeBtn.contains(e.target)) volumePopup.classList.remove('open');
+    });
+  }
 
   // ── Progress bar click to seek ─────────────────────────────────────────────
   if (progressBar) {
@@ -269,6 +285,32 @@ const Player = (() => {
   document.addEventListener('DOMContentLoaded', () => {
     restoreState();
     _loadQueueFromPostsJson();
+
+    // Auto-load current post on post pages, latest post on other pages
+    // Only if player is currently idle (no track loaded from sessionStorage)
+    const currentTrack = queue[currentIndex];
+    if (!currentTrack || !currentTrack.previewUrl) {
+      const page = document.body.dataset.page;
+      if (page === 'post') {
+        // Post page: player.js runs before app.js fully loads the post,
+        // so we listen for the custom event app.js fires after loading
+        document.addEventListener('btd:postLoaded', (e) => {
+          const post = e.detail;
+          if (post && !Player.getCurrent()) {
+            Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl || null });
+          }
+        }, { once: true });
+      } else {
+        // Other pages: load latest post from posts.json once queue is ready
+        setTimeout(async () => {
+          if (queue.length > 0 && !Player.getCurrent()) {
+            const latest = queue[0];
+            updateUI(latest);
+            // Don't auto-play — just load the track info so bar shows something
+          }
+        }, 1500);
+      }
+    }
 
     // Search icon toggles input visibility
     const searchInput = document.getElementById('player-search-input');
