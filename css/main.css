@@ -633,17 +633,17 @@ ul { list-style: none; }
 /* Grey page background on post pages — card flush to top nav */
 body[data-page="post"] #main {
   background: var(--bg-2);
-  padding: 0;
+  padding: 0 32px 60px;
   margin-top: var(--player-h);
 }
 
-/* The post card — white box, flush to top, wider */
+/* The post card — inset from edges like HD, flush to top */
 #post-content {
   background: var(--bg);
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 2px 16px rgba(0,0,0,.08);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 1px 8px rgba(0,0,0,.1);
   overflow: hidden;
-  max-width: 100%;
+  max-width: 1060px;
   margin: 0 auto;
 }
 
