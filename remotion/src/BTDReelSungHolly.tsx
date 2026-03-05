@@ -67,7 +67,7 @@ export const BTDReelSungHolly: React.FC = () => {
   const postType = 'discovery';
 
   const copy = {
-    hookLines: ['This voice', 'is about', 'to be', 'everywhere.'] as string[],
+    hookLines: ['This might be', 'the prettiest song', 'you hear', 'all week.'] as string[],
     hookEmphasis: 3,
     beat2Kicker: 'Introducing',
     beat3Overlay: 'Before The Data presents',
@@ -524,28 +524,29 @@ export const BTDReelSungHolly: React.FC = () => {
       {/* CAPTIONS                                     */}
       {/* ============================================ */}
       {(() => {
-        // Voice timeline: beat1 starts at frame 65 (2.175s)
-        // beat1: 65-124 (1.975s), beat2: 130-259 (4.297s)
-        // beat3: 200-383 (6.109s at frame 200 = 6.667s)
-        // beat4: 505-685 (6.016s), cta: 691-735 (1.465s)
+        // Voice timeline (from actual clip durations):
+        // Beat1: 0-75f  | Beat2: 81-152f | Beat3: 158-330f
+        // Beat4: 505-726f | CTA: 732-772f
         const captions: Array<{ text: string; start: number; end: number }> = [
-          // Beat 1: "This voice is about to be everywhere."
-          { text: 'This voice is about to be everywhere.', start: 67, end: 120 },
-          // Beat 2: "Sung Holly. Singer-songwriter. One hundred thousand on Instagram already."
-          { text: 'Sung Holly.', start: 132, end: 170 },
-          { text: 'Singer-songwriter.', start: 170, end: 210 },
-          { text: '100 thousand on Instagram already.', start: 210, end: 258 },
-          // Beat 3: "The kind of voice that makes you stop mid-scroll. Soft but it lingers. Sounds like Phoebe Bridgers found a warmer room."
-          { text: 'The kind of voice that makes you stop mid-scroll.', start: 202, end: 270 },
-          { text: 'Soft but it lingers.', start: 270, end: 310 },
-          { text: 'Sounds like Phoebe Bridgers', start: 310, end: 345 },
-          { text: 'found a warmer room.', start: 345, end: 382 },
-          // Beat 4: "Twelve thousand monthly listeners on Spotify. Seventy-five thousand on TikTok. Simple is her new single."
-          { text: '12 thousand monthly listeners on Spotify.', start: 507, end: 565 },
-          { text: '75 thousand on TikTok.', start: 565, end: 615 },
-          { text: 'Simple is her new single.', start: 615, end: 682 },
+          // Beat 1: "This might be the prettiest song you hear all week."
+          { text: 'This might be the prettiest song', start: 2, end: 50 },
+          { text: 'you hear all week.', start: 50, end: 74 },
+          // Beat 2: "Sung Holly. Singer, songwriter. One to watch."
+          { text: 'Sung Holly.', start: 83, end: 110 },
+          { text: 'Singer, songwriter.', start: 110, end: 135 },
+          { text: 'One to watch.', start: 135, end: 151 },
+          // Beat 3: "Already working with Rostam from Vampire Weekend. The sound is warm, layered, and impossible to skip."
+          { text: 'Already working with Rostam', start: 160, end: 210 },
+          { text: 'from Vampire Weekend.', start: 210, end: 252 },
+          { text: 'The sound is warm, layered,', start: 252, end: 296 },
+          { text: 'and impossible to skip.', start: 296, end: 329 },
+          // Beat 4: "Thirteen thousand monthly listeners on Spotify. Seventy five K on TikTok. Hundred K on Instagram. Still early."
+          { text: '13K monthly listeners on Spotify.', start: 507, end: 572 },
+          { text: '75K on TikTok.', start: 572, end: 618 },
+          { text: '100K on Instagram.', start: 618, end: 672 },
+          { text: 'Still early.', start: 672, end: 725 },
           // CTA: "Go stream Simple right now."
-          { text: 'Go stream Simple right now.', start: 692, end: 738 },
+          { text: 'Go stream Simple right now.', start: 733, end: 771 },
         ];
 
         const active = captions.find(c => frame >= c.start && frame <= c.end);

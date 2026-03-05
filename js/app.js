@@ -620,29 +620,19 @@ async function renderPost() {
       </div>` : ''}
     </div>
     <div class="post-hero-meta">
-      <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}"><span onclick="event.stopPropagation()">${post.artist}</span></a>
-      <div class="post-title">&ldquo;${post.title}&rdquo;</div>
-      <div class="post-date">${formatPostDate(post.publishedAt)}</div>
-      <div class="post-country">${countryFlag(post.country)}</div>
-      <div class="post-stream-links">
-        
-        ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
-        ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
-      </div>
-      <div class="post-socials">
-        ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank" class="social-pill">Instagram</a>` : ''}
-        ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank" class="social-pill">TikTok</a>` : ''}
-        ${post.socialLinks?.twitter ? `<a href="${post.socialLinks.twitter}" target="_blank" class="social-pill">Twitter</a>` : ''}
-        ${post.socialLinks?.web ? `<a href="${post.socialLinks.web}" target="_blank" class="social-pill">Website</a>` : ''}
-      </div>
-      <div class="post-tags">
-        ${normalizeGenres(post.genres, post.genre).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill" onclick="event.stopPropagation();window.location.href='/new-music.html?genre=${encodeURIComponent(g)}'">${g}</a>`).join('')}
-        ${(post.tags || []).filter(t => {
-          const skip = ['artist-discovery','new-music','new-release','featured','editorial','scouting'];
-          if (skip.includes(t.toLowerCase())) return false;
-          const gl = (post.genres || []).map(g => g.toLowerCase());
-          return !gl.includes(t.toLowerCase());
-        }).map(t => `<span>${t}</span>`).join('')}
+      <div class="post-hero-card">
+        <div class="post-title">&ldquo;${post.title}&rdquo;</div>
+        <a class="post-artist" href="/artist/${artistSlug(post.artist || '')}">${post.artist}</a>
+        <div class="post-date">Published <span class="post-date-rel">${formatPostDate(post.publishedAt)}</span></div>
+        <div class="post-tags">
+          ${normalizeGenres(post.genres, post.genre).map(g => `<a href="/new-music.html?genre=${encodeURIComponent(g)}" class="genre-pill">${g}</a>`).join('')}
+        </div>
+        <div class="post-stream-links">
+          ${post.socialLinks?.spotify ? `<a href="${post.socialLinks.spotify}" target="_blank" class="stream-pill spotify-pill">Spotify</a>` : ''}
+          ${post.socialLinks?.appleMusic || post.previewUrl ? `<a href="https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}" target="_blank" class="stream-pill apple-pill">Apple Music</a>` : ''}
+          ${post.socialLinks?.instagram ? `<a href="${post.socialLinks.instagram}" target="_blank" class="stream-pill">Instagram</a>` : ''}
+          ${post.socialLinks?.tiktok ? `<a href="${post.socialLinks.tiktok}" target="_blank" class="stream-pill">TikTok</a>` : ''}
+        </div>
       </div>
     </div>
   `;
@@ -801,18 +791,37 @@ async function renderPost() {
 
   async function loadComments() {
     const isSignedIn = typeof BTDGate !== 'undefined' && BTDGate.isSubscribed();
-    const COMMENTS_BASE = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/comments/${postSlug}/messages`;
+    // Comments stored in config collection as btd_comment_{slug}_{ts} docs
+    // Using config collection since it has open write access via API key
+    const FIREBASE_BASE = `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config`;
+    const COMMENTS_BASE = FIREBASE_BASE;
 
-    // Fetch existing comments
+    // Fetch existing comments via runQuery filtering by postSlug
     let comments = [];
     try {
-      const res = await fetch(`${COMMENTS_BASE}?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec&orderBy=createdAt`);
-      const data = await res.json();
-      comments = (data.documents || []).map(d => ({
-        name: d.fields?.name?.stringValue || 'Member',
-        text: d.fields?.text?.stringValue || '',
-        createdAt: d.fields?.createdAt?.timestampValue || '',
-      }));
+      const queryRes = await fetch(
+        `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents:runQuery?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ structuredQuery: {
+            from: [{ collectionId: 'config' }],
+            where: { compositeFilter: { op: 'AND', filters: [
+              { fieldFilter: { field: { fieldPath: 'type' }, op: 'EQUAL', value: { stringValue: 'comment' } } },
+              { fieldFilter: { field: { fieldPath: 'postSlug' }, op: 'EQUAL', value: { stringValue: postSlug } } },
+            ]}},
+            orderBy: [{ field: { fieldPath: 'createdAt' }, direction: 'ASCENDING' }],
+          }})
+        }
+      );
+      const queryData = await queryRes.json();
+      comments = (queryData || [])
+        .filter(r => r.document)
+        .map(r => ({
+          name: r.document.fields?.name?.stringValue || 'Member',
+          text: r.document.fields?.text?.stringValue || '',
+          createdAt: r.document.fields?.createdAt?.timestampValue || '',
+        }));
     } catch (_) {}
 
     const commentsList = comments.map(c => `
@@ -853,17 +862,23 @@ async function renderPost() {
       const btn = commentsWrap.querySelector('.comment-submit');
       btn.textContent = 'Posting...'; btn.disabled = true;
       try {
-        await fetch(`${COMMENTS_BASE}?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fields: {
-            name: { stringValue: userName },
-            email: { stringValue: userEmail },
-            text: { stringValue: text },
-            createdAt: { timestampValue: new Date().toISOString() },
-            postSlug: { stringValue: postSlug },
-          }})
-        });
+        const ts = Date.now();
+        const docId = `btd_comment_${postSlug.replace(/[^a-z0-9]/gi,'_')}_${ts}`;
+        await fetch(
+          `https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents/config/${docId}?key=AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fields: {
+              type: { stringValue: 'comment' },
+              name: { stringValue: userName },
+              email: { stringValue: userEmail },
+              text: { stringValue: text },
+              createdAt: { timestampValue: new Date().toISOString() },
+              postSlug: { stringValue: postSlug },
+            }})
+          }
+        );
         input.value = '';
         await loadComments();
       } catch (_) {
