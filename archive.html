@@ -552,6 +552,9 @@
       let allPosts = null;
       let loading = false;
 
+      // Preload posts.json immediately so play overlays work without waiting for year click
+      fetchPostsFromFirebase().then(posts => { allPosts = posts || []; }).catch(() => { allPosts = []; });
+
       function getPostYear(post) {
         if (!post.publishedAt) return null;
         let ms;
@@ -699,17 +702,15 @@
       const postHref = '/' + slug;
       const artSrc = card.querySelector('img')?.src || '';
 
-      // Play overlay → play via queue or posts.json
+      // Play overlay → find in allPosts (preloaded from posts.json)
       const overlay = card.querySelector('.archive-card-play-overlay');
       if (overlay) {
         overlay.addEventListener('click', (e) => {
           e.preventDefault(); e.stopPropagation();
-          const queue = (typeof Player !== 'undefined' && Player._queue) || [];
-          const post = queue.find(p => (p.slug || p.id) === slug);
-          if (post && post.previewUrl) {
-            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl });
-          } else if (post && post.youtubeId) {
-            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: '', youtubeId: post.youtubeId });
+          const posts = allPosts || [];
+          const post = posts.find(p => (p.slug || p.id) === slug);
+          if (post) {
+            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl || '', youtubeId: post.youtubeId || '' });
           }
         });
       }
