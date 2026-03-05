@@ -529,6 +529,7 @@ ul { list-style: none; }
   cursor: pointer;
 }
 .music-card .card-artist:hover { text-decoration: underline; }
+.card-flag { font-size: 12px; margin-left: 4px; vertical-align: middle; }
 
 /* ============================================
    CHARTS / POPULAR LIST

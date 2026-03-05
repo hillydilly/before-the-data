@@ -114,7 +114,7 @@ function createMusicCard(post) {
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
     <div class="card-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title)}&rdquo;</div>
-    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
+    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}${post.country ? ' <span class="card-flag">' + countryFlag(post.country) + '</span>' : ''}</div>
 
   `;
   // Click art area → play or pause if already playing this track
