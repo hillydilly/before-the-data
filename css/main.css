@@ -1057,35 +1057,44 @@ body[data-page="post"] #main {
   .music-card { flex: 0 0 140px; }
   .music-card .card-art { width: 140px; height: 140px; }
 
-  #player-bar .player-right .volume-slider { display: none; }
+  /* Mobile player bar — hide desktop-only elements, clean layout */
+  #player-bar .player-brand { display: none; }
+  #player-bar .player-right { width: auto; padding: 0 8px; }
+  #player-bar .player-right .volume-btn { display: none; }
   #player-bar .player-info .player-source { display: none; }
 
-  /* Mobile player bar — clean, tight, uniform */
   #player-bar {
     padding: 0 12px;
-    gap: 10px;
-  }
-  #player-bar .player-art {
-    width: 36px; height: 36px;
-  }
-  #player-bar .player-controls {
     gap: 8px;
   }
+  #player-bar .player-controls {
+    padding: 0 4px 0 0;
+    gap: 4px;
+  }
   #player-bar .player-controls button {
-    width: 28px; height: 28px;
+    width: 32px; height: 32px;
     font-size: 14px;
     background: none;
     border: none;
   }
   #player-bar .player-controls .play-btn {
-    width: 36px; height: 36px;
-    font-size: 13px;
+    width: 38px; height: 38px;
+    font-size: 16px;
   }
   #player-bar .player-controls svg {
-    width: 14px; height: 14px;
+    width: 15px; height: 15px;
+  }
+  #player-bar .player-art {
+    width: 34px; height: 34px;
+  }
+  #player-bar .player-info {
+    max-width: 150px;
   }
   #player-bar .player-info .player-title {
     font-size: 12px;
+  }
+  .player-progress-wrap {
+    padding: 0 8px;
   }
 }
 
