@@ -552,13 +552,13 @@ ul { list-style: none; }
 .chart-play { display: none; }
 .chart-art-wrap {
   position: relative; flex-shrink: 0;
-  width: 96px; height: 96px;
+  width: 48px; height: 48px;
   border-radius: 4px; overflow: hidden;
   background: var(--bg-2);
   cursor: pointer;
 }
 .chart-art {
-  width: 96px; height: 96px;
+  width: 48px; height: 48px;
   border-radius: 4px; object-fit: cover;
   display: block;
 }
@@ -571,10 +571,10 @@ ul { list-style: none; }
 .chart-row:hover .chart-art-overlay,
 .chart-art-wrap.is-playing .chart-art-overlay { opacity: 1; }
 .chart-art-overlay .chart-play-circle {
-  width: 36px; height: 36px;
+  width: 24px; height: 24px;
   background: rgba(255,255,255,.9); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; color: #000; padding-left: 2px;
+  font-size: 11px; color: #000; padding-left: 1px;
 }
 .chart-info { flex: 1; min-width: 0; }
 .chart-info .chart-artist {
