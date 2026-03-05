@@ -634,20 +634,22 @@ ul { list-style: none; }
    POST DETAIL
    ============================================ */
 
-/* Post page: grey body bg so nothing shows white behind sidebar/main */
+/* Post page: grey body, hero flush to player bar */
 body[data-page="post"] {
   background: var(--bg-2);
 }
 body[data-page="post"] #main {
   background: var(--bg-2);
+  margin-top: 0 !important;
   padding: 0 var(--sidebar-w) 60px 0 !important;
-}
-body[data-page="post"] #post-content {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-body[data-page="post"] .post-hero {
-  margin-top: 0 !important;
+  position: fixed !important;
+  top: var(--player-h) !important;
+  left: var(--sidebar-w) !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  overflow-y: auto !important;
+  width: auto !important;
+  min-height: unset !important;
 }
 
 /* The post card — fills content area, flush to top */
@@ -669,8 +671,8 @@ body[data-page="post"] .post-hero {
 .post-hero-bg {
   position: absolute; inset: -20px;
   background-size: cover; background-position: center;
-  filter: blur(24px) brightness(.55);
-  opacity: .7;
+  filter: blur(24px) brightness(.75);
+  opacity: .85;
 }
 .post-art-wrap {
   position: relative; z-index: 1;
