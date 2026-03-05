@@ -10,14 +10,16 @@ const Player = (() => {
 
   // DOM refs
   const bar = document.getElementById('player-bar');
-  const artEl = bar?.querySelector('.player-art');
-  const titleEl = bar?.querySelector('.player-title');
-  const sourceEl = bar?.querySelector('.player-source');
+  const artEl = document.getElementById('player-bar-art');
+  const titleEl = document.getElementById('player-title-text');
+  const sourceEl = document.getElementById('player-apple-link');
   const playBtn = bar?.querySelector('.play-btn');
   const prevBtn = bar?.querySelector('.prev-btn');
   const nextBtn = bar?.querySelector('.next-btn');
   const progressFill = bar?.querySelector('.player-progress-fill');
   const volumeSlider = bar?.querySelector('.volume-slider');
+  const searchIconBtn = bar?.querySelector('.search-icon-btn');
+  const progressBar = bar?.querySelector('.player-progress');
 
   // Restore state from sessionStorage
   function restoreState() {
@@ -231,12 +233,54 @@ const Player = (() => {
     });
   }
 
+  // ── Progress bar click to seek ─────────────────────────────────────────────
+  if (progressBar) {
+    progressBar.addEventListener('click', (e) => {
+      if (!audio.duration) return;
+      const rect = progressBar.getBoundingClientRect();
+      const pct = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = pct * audio.duration;
+    });
+  }
+
+  // ── Load full posts.json into queue for prev/next navigation ───────────────
+  async function _loadQueueFromPostsJson() {
+    if (queue.length > 10) return; // already populated
+    try {
+      const res = await fetch('/posts.json');
+      const posts = await res.json();
+      const playable = posts
+        .filter(p => p.previewUrl)
+        .map(p => ({ id: p.slug || p.id, slug: p.slug || p.id, title: p.title, artist: p.artist, artUrl: p.artUrl, previewUrl: p.previewUrl }));
+      if (playable.length > 0 && queue.length <= 1) {
+        // Merge: keep current track at front, add rest
+        const cur = queue[currentIndex];
+        queue = playable;
+        if (cur) {
+          const idx = queue.findIndex(t => t.id === cur.id);
+          currentIndex = idx >= 0 ? idx : 0;
+        }
+        saveState();
+      }
+    } catch (_) {}
+  }
+
   // ── Player bar search ──────────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     restoreState();
+    _loadQueueFromPostsJson();
 
+    // Search icon toggles input visibility
     const searchInput = document.getElementById('player-search-input');
     const searchResults = document.getElementById('player-search-results');
+    if (searchIconBtn && searchInput) {
+      searchIconBtn.addEventListener('click', () => {
+        const wrap = searchInput.closest('.player-search-wrap');
+        const isOpen = wrap?.classList.toggle('search-open');
+        if (isOpen) { searchInput.focus(); }
+        else { searchResults?.classList.remove('open'); searchInput.value = ''; }
+      });
+    }
     if (!searchInput || !searchResults) return;
 
     let debounceTimer;
@@ -245,12 +289,7 @@ const Player = (() => {
       const q = searchInput.value.trim();
       if (!q) { searchResults.classList.remove('open'); searchResults.innerHTML = ''; return; }
       debounceTimer = setTimeout(async () => {
-        // Search from queue first, then fall back to fetching all posts
         let allPosts = queue;
-        if (allPosts.length < 20 && typeof fetchPostsFromFirebase === 'function') {
-          const fetched = await fetchPostsFromFirebase().catch(() => null);
-          if (fetched) allPosts = fetched;
-        }
         const ql = q.toLowerCase();
         const matches = allPosts
           .filter(p => (p.title || '').toLowerCase().includes(ql) || (p.artist || '').toLowerCase().includes(ql))
