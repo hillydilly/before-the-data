@@ -15,3 +15,4 @@ remotion/public/narr-*/*.mp3
 remotion/public/narration/*.mp3
 remotion/public/sfx/*.mp3
 .vercel
+remotion/narration/
