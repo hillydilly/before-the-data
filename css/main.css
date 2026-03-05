@@ -495,14 +495,14 @@ ul { list-style: none; }
   width: 100%; height: 100%; object-fit: cover;
   transition: transform .2s;
 }
-.music-card:hover .card-art img { transform: scale(1.05); }
+.music-card .card-art:hover img { transform: scale(1.05); }
 .music-card .card-art .play-overlay {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,.3);
   opacity: 0; transition: opacity .2s;
 }
-.music-card:hover .card-art .play-overlay { opacity: 1; }
+.music-card .card-art:hover .play-overlay { opacity: 1; }
 /* Keep overlay visible + show pause when this card is actively playing */
 .music-card .card-art.is-playing .play-overlay { opacity: 1; }
 .play-overlay .play-circle {
