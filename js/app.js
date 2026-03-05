@@ -217,10 +217,16 @@ async function renderDiscover() {
     fetchCharts()
   ]);
 
-  // Render new music
+  // Render new music (max 10)
   scrollContainer.innerHTML = '';
   Player.setQueue(latest);
-  latest.forEach(p => scrollContainer.appendChild(createMusicCard(p)));
+  latest.slice(0, 10).forEach(p => scrollContainer.appendChild(createMusicCard(p)));
+  // View more link
+  const nmMore = document.createElement('a');
+  nmMore.href = '/new-music.html';
+  nmMore.className = 'scroll-view-more';
+  nmMore.innerHTML = 'View all &rarr;';
+  scrollContainer.appendChild(nmMore);
 
   // Render charts (or fallback to popular)
   chartList.innerHTML = '';
@@ -731,45 +737,89 @@ async function renderPost() {
   const body = document.getElementById('post-body');
   body.innerHTML = post.writeup || '<p>No writeup available.</p>';
 
-  // Embed — Spotify if trackId, YouTube as fallback if youtubeId
-  if (post.trackId) {
-    const embedWrap = document.createElement('div');
-    embedWrap.id = 'post-spotify-embed';
-    embedWrap.className = 'post-spotify-embed';
-    embedWrap.innerHTML = `<iframe src="https://open.spotify.com/embed/track/${post.trackId}?utm_source=generator&theme=0"
-      width="100%" height="152" frameborder="0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy" style="border-radius:12px"></iframe>`;
-    body.appendChild(embedWrap);
-  } else if (post.youtubeId) {
-    const embedWrap = document.createElement('div');
-    embedWrap.id = 'post-youtube-embed';
-    embedWrap.className = 'post-youtube-embed';
-    embedWrap.innerHTML = `<iframe width="100%" height="200" style="border-radius:8px"
-      src="https://www.youtube.com/embed/${post.youtubeId}?rel=0"
-      frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowfullscreen loading="lazy"></iframe>`;
-    body.appendChild(embedWrap);
+  // Inline track player row (replaces Spotify/YouTube iframes)
+  if (post.previewUrl || post.trackId || post.youtubeId) {
+    const trackRow = document.createElement('div');
+    trackRow.className = 'post-inline-player';
+    trackRow.id = 'post-inline-player';
+    const sourceLabel = post.previewUrl ? 'APPLE MUSIC' : (post.youtubeId ? 'YOUTUBE' : 'SPOTIFY');
+    const appleHref = `https://music.apple.com/search?term=${encodeURIComponent((post.artist||'')+' '+(post.title||''))}`;
+    trackRow.innerHTML = `
+      <div class="pip-art-wrap">
+        <img class="pip-art" src="${post.artUrl}" alt="${post.title}">
+        <div class="pip-play-overlay">
+          <div class="pip-play-btn" id="pip-play-btn">&#9654;</div>
+        </div>
+      </div>
+      <div class="pip-info">
+        <div class="pip-title">&ldquo;${post.title}&rdquo;</div>
+        <div class="pip-artist">${post.artist}</div>
+        <a class="pip-source" href="${appleHref}" target="_blank">${sourceLabel}</a>
+      </div>
+    `;
+    body.appendChild(trackRow);
+
+    // Wire play button
+    const pipBtn = trackRow.querySelector('#pip-play-btn');
+    const syncPip = () => {
+      const cur = Player.getCurrent();
+      const playing = Player.isPlaying();
+      if (cur && cur.id === post.id) {
+        pipBtn.innerHTML = playing ? '&#9646;&thinsp;&#9646;' : '&#9654;';
+        trackRow.classList.toggle('pip-playing', playing);
+      } else {
+        pipBtn.innerHTML = '&#9654;';
+        trackRow.classList.remove('pip-playing');
+      }
+    };
+    trackRow.querySelector('.pip-art-wrap').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cur = Player.getCurrent();
+      if (_resolvedPreviewUrl && cur && cur.id === post.id) {
+        Player.togglePlay();
+        setTimeout(syncPip, 50);
+      } else {
+        playPost();
+        setTimeout(syncPip, 200);
+      }
+    });
+    document.addEventListener('btd:playerStateChange', syncPip);
   }
 
-  // Tracklist — Spotify embeds for additional tracks
+  // Comments section
+  const commentsWrap = document.createElement('div');
+  commentsWrap.className = 'post-comments';
+  commentsWrap.id = 'post-comments';
+  commentsWrap.innerHTML = `
+    <div class="comments-header">
+      <h4>Comments</h4>
+    </div>
+    <div id="disqus_thread"></div>
+    <script>
+      var disqus_config = function () {
+        this.page.url = 'https://beforethedata.com/${post.slug || post.id}';
+        this.page.identifier = '${post.slug || post.id}';
+        this.page.title = '${(post.artist || '').replace(/'/g,"\\'")} - "${(post.title || '').replace(/'/g,"\\'")}";
+      };
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://beforethedata.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    <\/script>
+  `;
+  body.appendChild(commentsWrap);
+
+  // Tracklist — inline rows (no more Spotify iframes)
   const tracklist = document.getElementById('post-tracklist');
   if (post.tracks && post.tracks.length > 0) {
-    const trackItems = post.tracks.map(t => {
-      if (t.spotifyId) {
-        return `<div class="track-embed">
-          <iframe src="https://open.spotify.com/embed/track/${t.spotifyId}?utm_source=generator&theme=0"
-            width="100%" height="80" frameborder="0"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"></iframe>
-        </div>`;
-      }
-      // Fallback: plain row if no Spotify ID
-      return `<div class="track-row">
+    const trackItems = post.tracks.map(t => `
+      <div class="track-row">
         <div class="track-name">&ldquo;${t.title}&rdquo;</div>
         <div class="track-artist-name">${t.artist}</div>
-      </div>`;
-    }).join('');
+      </div>
+    `).join('');
     tracklist.innerHTML = `<h3>Tracklist</h3>${trackItems}`;
   }
 

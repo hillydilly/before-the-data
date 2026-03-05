@@ -55,7 +55,24 @@ const Player = (() => {
       artEl.alt = track.title || '';
     }
     if (titleEl) titleEl.textContent = `${track.artist} \u2014 \u201c${track.title}\u201d`;
-    if (sourceEl) sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '—');
+    // Update Apple Music link
+    const appleLink = document.getElementById('player-apple-link');
+    if (appleLink) {
+      if (track.previewUrl) {
+        const q = encodeURIComponent(`${track.artist || ''} ${track.title || ''}`);
+        appleLink.href = `https://music.apple.com/search?term=${q}`;
+        appleLink.textContent = 'APPLE MUSIC';
+        appleLink.style.display = '';
+      } else if (track.ytId) {
+        appleLink.href = `https://www.youtube.com/watch?v=${track.ytId}`;
+        appleLink.textContent = 'YOUTUBE';
+        appleLink.style.display = '';
+      } else {
+        appleLink.href = '#';
+        appleLink.textContent = '\u2014';
+      }
+    }
+    if (sourceEl && sourceEl.tagName !== 'A') sourceEl.textContent = track.previewUrl ? 'APPLE MUSIC' : (track.ytId ? 'YOUTUBE' : '—');
   }
 
   function updatePlayButton() {
@@ -214,8 +231,77 @@ const Player = (() => {
     });
   }
 
-  // Init
-  document.addEventListener('DOMContentLoaded', restoreState);
+  // ── Player bar search ──────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', () => {
+    restoreState();
+
+    const searchInput = document.getElementById('player-search-input');
+    const searchResults = document.getElementById('player-search-results');
+    if (!searchInput || !searchResults) return;
+
+    let debounceTimer;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const q = searchInput.value.trim();
+      if (!q) { searchResults.classList.remove('open'); searchResults.innerHTML = ''; return; }
+      debounceTimer = setTimeout(async () => {
+        // Search from queue first, then fall back to fetching all posts
+        let allPosts = queue;
+        if (allPosts.length < 20 && typeof fetchPostsFromFirebase === 'function') {
+          const fetched = await fetchPostsFromFirebase().catch(() => null);
+          if (fetched) allPosts = fetched;
+        }
+        const ql = q.toLowerCase();
+        const matches = allPosts
+          .filter(p => (p.title || '').toLowerCase().includes(ql) || (p.artist || '').toLowerCase().includes(ql))
+          .slice(0, 8);
+
+        if (!matches.length) {
+          searchResults.innerHTML = '<div style="padding:12px;font-size:13px;color:var(--tx-3)">No results</div>';
+          searchResults.classList.add('open');
+          return;
+        }
+
+        searchResults.innerHTML = matches.map(p => `
+          <div class="player-search-result" data-id="${p.id}" data-slug="${p.slug || p.id}">
+            <img src="${p.artUrl || ''}" alt="${p.title || ''}" loading="lazy">
+            <div class="psr-info">
+              <div class="psr-title">&ldquo;${p.title}&rdquo;</div>
+              <div class="psr-artist">${p.artist}</div>
+            </div>
+          </div>
+        `).join('');
+        searchResults.classList.add('open');
+
+        searchResults.querySelectorAll('.player-search-result').forEach(el => {
+          el.addEventListener('click', () => {
+            const slug = el.dataset.slug;
+            const post = matches.find(p => (p.slug || p.id) === slug);
+            if (post) {
+              // Play the track
+              Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
+              // Navigate to post page
+              window.location.href = '/' + slug;
+            }
+            searchResults.classList.remove('open');
+            searchInput.value = '';
+          });
+        });
+      }, 250);
+    });
+
+    // Close on outside click
+    document.addEventListener('click', e => {
+      if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        searchResults.classList.remove('open');
+      }
+    });
+
+    // Close on Escape
+    searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { searchResults.classList.remove('open'); searchInput.blur(); }
+    });
+  });
 
   return { play, togglePlay, next, prev, setQueue, getQueue: () => queue, getCurrent: () => queue[currentIndex], isPlaying: () => isPlaying };
 })();

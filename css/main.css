@@ -93,9 +93,12 @@ ul { list-style: none; }
   font-size: 13px; font-weight: 500;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-#player-bar .player-info .player-source {
+#player-bar .player-info .player-source,
+#player-bar .player-info a.player-source {
   font-size: 11px; color: var(--tx-3); text-transform: uppercase; letter-spacing: .5px;
+  text-decoration: none;
 }
+#player-bar .player-info a.player-source:hover { color: var(--acc); }
 #player-bar .player-progress {
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px; background: var(--bd);
@@ -123,6 +126,64 @@ ul { list-style: none; }
   -webkit-appearance: none; width: 12px; height: 12px;
   background: var(--acc); border-radius: 50%; cursor: pointer;
 }
+/* Player bar search */
+.player-search-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.player-search-input {
+  width: 160px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--bd);
+  border-radius: 15px;
+  font-size: 12px;
+  background: var(--bg-2);
+  color: var(--tx-1);
+  outline: none;
+  transition: border-color .15s, width .2s;
+}
+.player-search-input:focus {
+  border-color: var(--acc);
+  width: 220px;
+}
+.player-search-input::placeholder { color: var(--tx-3); }
+.player-search-results {
+  position: absolute; top: 36px; right: 0;
+  width: 280px;
+  background: var(--bg);
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  z-index: 2000;
+  max-height: 360px;
+  overflow-y: auto;
+  display: none;
+}
+.player-search-results.open { display: block; }
+.player-search-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background .1s;
+}
+.player-search-result:hover { background: var(--bg-2); }
+.player-search-result img {
+  width: 36px; height: 36px; border-radius: 4px; object-fit: cover; flex-shrink: 0;
+}
+.player-search-result .psr-info { min-width: 0; }
+.player-search-result .psr-title {
+  font-size: 13px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.player-search-result .psr-artist {
+  font-size: 11px; color: var(--tx-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* Hide search on small screens */
+@media (max-width: 767px) {
+  .player-search-wrap { display: none; }
+}
 
 /* ============================================
    SIDEBAR
@@ -139,15 +200,14 @@ ul { list-style: none; }
 }
 #sidebar .sidebar-brand {
   padding: 0 24px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 12px;
-}
-#sidebar .sidebar-brand img {
-  width: 36px; height: 36px; object-fit: contain;
+  display: flex; align-items: center;
+  text-decoration: none;
 }
 #sidebar .sidebar-brand .brand-name {
   font-family: var(--font-heading);
-  font-size: 16px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px;
+  font-size: 18px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--tx-1);
 }
 #sidebar .sidebar-user {
   padding: 12px 24px 16px;
@@ -347,6 +407,21 @@ ul { list-style: none; }
   scrollbar-width: none;
 }
 .music-scroll::-webkit-scrollbar { display: none; }
+.scroll-view-more {
+  flex: 0 0 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tx-3);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0 8px;
+  transition: color .15s;
+}
+.scroll-view-more:hover { color: var(--tx-1); }
 
 .music-card {
   flex: 0 0 170px;
@@ -510,9 +585,26 @@ ul { list-style: none; }
 /* ============================================
    POST DETAIL
    ============================================ */
+
+/* Grey page background on post pages — card pops off it */
+body[data-page="post"] #main {
+  background: var(--bg-2);
+  padding: 32px 32px 60px;
+}
+
+/* The post card — white box containing everything */
+#post-content {
+  background: var(--bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,.08);
+  overflow: hidden;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
 .post-hero {
   position: relative;
-  margin: -32px -40px 0;
+  margin: 0;
   padding: 40px;
   display: flex; gap: 32px;
   background: var(--bg-2);
@@ -611,13 +703,79 @@ ul { list-style: none; }
 }
 
 .post-body-wrap {
-  display: flex; gap: 40px; margin-top: 32px;
+  display: flex; gap: 40px; margin-top: 0;
+  padding: 32px 40px 40px;
 }
 .post-body {
   flex: 1; min-width: 0;
   font-size: 16px; line-height: 1.75; color: var(--tx-2);
 }
 .post-body p { margin-bottom: 16px; }
+
+/* ── Inline track player row (replaces Spotify embed) ── */
+.post-inline-player {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 28px;
+  padding: 16px;
+  background: var(--bg-2);
+  border-radius: 8px;
+  border: 1px solid var(--bd);
+}
+.pip-art-wrap {
+  position: relative; flex-shrink: 0;
+  width: 72px; height: 72px;
+  border-radius: 6px; overflow: hidden; cursor: pointer;
+}
+.pip-art {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .2s;
+}
+.pip-art-wrap:hover .pip-art { transform: scale(1.05); }
+.pip-play-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .15s;
+  border-radius: 6px;
+}
+.pip-art-wrap:hover .pip-play-overlay,
+.post-inline-player.pip-playing .pip-play-overlay { opacity: 1; }
+.pip-play-btn {
+  width: 36px; height: 36px;
+  background: #fff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #000; padding-left: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+  transition: transform .15s;
+  cursor: pointer;
+}
+.pip-art-wrap:hover .pip-play-btn { transform: scale(1.08); }
+.pip-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pip-title {
+  font-size: 15px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--tx-1);
+}
+.pip-artist { font-size: 13px; color: var(--tx-2); }
+.pip-source {
+  font-size: 11px; color: var(--tx-3);
+  text-transform: uppercase; letter-spacing: .5px;
+  text-decoration: none; margin-top: 2px;
+}
+.pip-source:hover { color: var(--acc); }
+
+/* ── Comments ── */
+.post-comments {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--bd);
+}
+.comments-header h4 {
+  font-family: var(--font-heading);
+  font-size: 14px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--tx-3); margin-bottom: 16px;
+}
 
 .post-spotify-embed {
   margin-top: 24px;

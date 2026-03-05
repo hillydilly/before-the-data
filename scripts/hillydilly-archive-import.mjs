@@ -25,8 +25,7 @@ const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-
 const CLOUDINARY_CLOUD  = 'dd9nbystx';
 const CLOUDINARY_KEY    = '313951951797545';
 const CLOUDINARY_SECRET = 'seOMwI2Hd2x_5fhbnn11c2o7SNU';
-const SPOTIFY_CLIENT_ID     = 'f7dac43e65584124ac11bc702431d26d';
-const SPOTIFY_CLIENT_SECRET = '0a4ec9c84f114f81a80b0508e006299e';
+// NO SPOTIFY API — Spotify blocks AI/automation aggressively. Use Apple Music + YouTube only.
 
 const POSTS_CSV  = '/Users/clawdbot/Downloads/api_wp_wp_posts_20200416_1355PDT.csv';
 const TRACKS_CSV = '/Users/clawdbot/Downloads/api_tracks_tracks_proper_20200416_1354PDT.csv';
@@ -97,25 +96,7 @@ async function docExists(docId) {
   return !!d.fields;
 }
 
-// ── Spotify ───────────────────────────────────────────────────────────────────
-let spotifyToken = null;
-let spotifyTokenExpiry = 0;
-
-async function getSpotifyToken() {
-  if (spotifyToken && Date.now() < spotifyTokenExpiry) return spotifyToken;
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'Basic ' + Buffer.from(`${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`).toString('base64'),
-    },
-    body: 'grant_type=client_credentials',
-  });
-  const d = await res.json();
-  spotifyToken = d.access_token;
-  spotifyTokenExpiry = Date.now() + (d.expires_in - 60) * 1000;
-  return spotifyToken;
-}
+// Spotify API removed — blocked AI/automation. Use Apple Music + YouTube only.
 
 // Normalize strings for fuzzy matching
 function normStr(s) {
@@ -146,47 +127,7 @@ function matchScore(track, artist, title) {
   return score;
 }
 
-async function searchSpotify(artist, title) {
-  try {
-    const token = await getSpotifyToken();
-
-    // Strict search first: track + artist fields
-    const q1 = encodeURIComponent(`track:${title} artist:${artist}`);
-    const res1 = await fetch(`https://api.spotify.com/v1/search?q=${q1}&type=track&limit=10`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const d1 = await res1.json();
-    let candidates = d1.tracks?.items || [];
-
-    // Also try loose search for more candidates
-    if (candidates.length < 5) {
-      const q2 = encodeURIComponent(`${artist} ${title}`);
-      const res2 = await fetch(`https://api.spotify.com/v1/search?q=${q2}&type=track&limit=10`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const d2 = await res2.json();
-      candidates = [...candidates, ...(d2.tracks?.items || [])];
-    }
-
-    if (!candidates.length) return null;
-
-    // Score all candidates and pick best
-    const scored = candidates.map(t => ({ t, score: matchScore(t, artist, title) }));
-    scored.sort((a, b) => b.score - a.score);
-    const best = scored[0];
-
-    // Require minimum score threshold — if best match is too weak, don't use it
-    // This prevents wrong tracks from being stored
-    if (best.score < 40) {
-      console.log(`  Spotify: best match score ${best.score.toFixed(0)} below threshold — skipping`);
-      return null;
-    }
-
-    return best.t;
-  } catch (e) {
-    return null;
-  }
-}
+// Spotify search removed. Apple Music is primary source for artwork + preview.
 
 // ── Cloudinary ────────────────────────────────────────────────────────────────
 async function uploadToCloudinary(imageUrl, publicId) {
@@ -537,75 +478,51 @@ async function main() {
     }
 
     try {
-      // 1. Spotify search
-      let trackId = null;
+      // 1. Apple Music — primary source for both artwork AND preview
       let artUrl = null;
-      const spotifyTrack = await searchSpotify(artist, title);
-      if (spotifyTrack) {
-        trackId = spotifyTrack.id;
-        const imgUrl = spotifyTrack.album?.images?.[0]?.url;
-        if (imgUrl) {
-          const cloudPublicId = `btd/posts/${slug}`;
-          artUrl = await uploadToCloudinary(imgUrl, cloudPublicId);
-          console.log(`  Spotify: ${trackId} | art: ${artUrl ? 'uploaded' : 'FAILED'}`);
-        }
-      } else {
-        console.log('  Spotify: no match found');
-      }
+      let previewUrl = null;
 
-      // 1b. iTunes fallback for artwork if Spotify failed
-      if (!artUrl) {
-        try {
-          const itunesQ = encodeURIComponent(`${artist} ${title}`);
-          const itunesRes = await fetch(`https://itunes.apple.com/search?term=${itunesQ}&media=music&limit=1`);
-          const itunesData = await itunesRes.json();
-          const itunesArt = itunesData.results?.[0]?.artworkUrl100?.replace('100x100bb', '600x600bb');
+      try {
+        const itunesQ = encodeURIComponent(`${artist} ${title}`);
+        const itunesRes = await fetch(`https://itunes.apple.com/search?term=${itunesQ}&media=music&entity=song&limit=10`);
+        const itunesData = await itunesRes.json();
+        const results = itunesData.results || [];
+
+        // Score results — need artist + title to match
+        const eArtist = normStr(artist);
+        const eTitle = normStr(title);
+        const scored = results.map(r => {
+          const rArtist = normStr(r.artistName || '');
+          const rTitle = normStr(r.trackName || '');
+          let score = 0;
+          const aw = eArtist.split(' ').filter(w => w.length > 1);
+          if (aw.length > 0) score += (aw.filter(w => rArtist.includes(w)).length / aw.length) * 50;
+          const tw = eTitle.split(' ').filter(w => w.length > 1);
+          if (tw.length > 0) score += (tw.filter(w => rTitle.includes(w)).length / tw.length) * 50;
+          return { r, score };
+        });
+        scored.sort((a, b) => b.score - a.score);
+        const best = scored[0];
+
+        if (best && best.score >= 40) {
+          const itunesArt = best.r.artworkUrl100?.replace('100x100bb', '600x600bb');
           if (itunesArt) {
             const cloudPublicId = `btd/posts/${slug}`;
             artUrl = await uploadToCloudinary(itunesArt, cloudPublicId);
-            console.log(`  iTunes fallback art: ${artUrl ? 'uploaded' : 'FAILED'}`);
+            console.log(`  Apple Music art: ${artUrl ? 'uploaded' : 'FAILED'} (score: ${Math.round(best.score)})`);
           }
-        } catch (e) {
-          console.log('  iTunes fallback failed:', e.message);
+          previewUrl = best.r.previewUrl || null;
+          if (previewUrl) console.log(`  Apple Music preview: found`);
+        } else {
+          console.log(`  Apple Music: no confident match (best score: ${best ? Math.round(best.score) : 0})`);
         }
+      } catch (e) {
+        console.log('  Apple Music lookup failed:', e.message);
       }
 
-      // 1c. Google Images browser scrape fallback
-      if (!artUrl) {
-        try {
-          const query = encodeURIComponent(`${artist} ${title} album cover`);
-          const googleUrl = `https://www.google.com/search?q=${query}&tbm=isch&safe=off`;
-          const { chromium } = await import('/Users/clawdbot/.openclaw/workspace/scripts/spotify-browser/node_modules/playwright/index.js').catch(() => ({ chromium: null }));
-          if (chromium) {
-            const browser = await chromium.launch({ headless: true });
-            const page = await browser.newPage();
-            await page.goto(googleUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            // Get first image result src
-            const imgSrc = await page.evaluate(() => {
-              const imgs = document.querySelectorAll('img[src^="https"]');
-              for (const img of imgs) {
-                if (img.width > 100 && img.height > 100) return img.src;
-              }
-              return null;
-            });
-            await browser.close();
-            if (imgSrc) {
-              const cloudPublicId = `btd/posts/${slug}`;
-              artUrl = await uploadToCloudinary(imgSrc, cloudPublicId);
-              console.log(`  Google Images fallback art: ${artUrl ? 'uploaded' : 'FAILED'}`);
-            }
-          }
-        } catch (e) {
-          console.log('  Google Images fallback failed:', e.message);
-        }
-      }
-
-      // 2. Apple Music preview
-      let previewUrl = await fetchAppleMusicPreview(artist, title);
-      if (previewUrl) {
-        console.log('  Apple Music preview: found');
-      } else {
-        console.log('  Apple Music preview: not found, trying YouTube...');
+      // 2. YouTube fallback for preview if Apple Music had none
+      if (!previewUrl) {
+        console.log('  No Apple Music preview — trying YouTube...');
         previewUrl = await fetchYouTubePreview(artist, title, slug);
         if (previewUrl) console.log(`  YouTube preview: uploaded`);
         else console.log('  Preview: NONE found');
@@ -627,13 +544,13 @@ async function main() {
         writtenBy_name: authorInfo.name,
         writtenBy_location: authorInfo.location,
       };
-      if (trackId)   fields.trackId = trackId;
+      // No Spotify trackId stored — Apple Music + YouTube only
       if (artUrl)    fields.artUrl = artUrl;
       if (previewUrl) fields.previewUrl = previewUrl;
 
       // Build proper writtenBy nested field via raw patch
       const patchUrl = `${FIREBASE_BASE}/${docId}?key=${FIREBASE_KEY}&` +
-        ['slug','artist','title','writeup','publishedAt','isArchive','btdPostLive','genres','trackId','artUrl','previewUrl','writtenBy']
+        ['slug','artist','title','writeup','publishedAt','isArchive','btdPostLive','genres','artUrl','previewUrl','writtenBy']
         .map(f => `updateMask.fieldPaths=${encodeURIComponent(f)}`).join('&');
 
       const body = {
@@ -650,7 +567,6 @@ async function main() {
             name: { stringValue: authorInfo.name },
             ...(authorInfo.location ? { location: { stringValue: authorInfo.location } } : {}),
           }}},
-          ...(trackId   ? { trackId:    { stringValue: trackId } } : {}),
           ...(artUrl    ? { artUrl:     { stringValue: artUrl } } : {}),
           ...(previewUrl ? { previewUrl: { stringValue: previewUrl } } : {}),
         }

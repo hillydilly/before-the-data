@@ -769,7 +769,7 @@
 <body data-page="pro">
 
   <div id="player-bar">
-    <img class="player-art" src="/assets/brand/logo-black.jpg" alt="">
+    <img class="player-art" src="assets/brand/logo-black.jpg" alt="" id="player-bar-art">
     <div class="player-controls">
       <button class="prev-btn" title="Previous"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 2h1.5v5.4L13 2.2v11.6L4.5 8.6V14H3z"/></svg></button>
       <button class="play-btn" title="Play">&#9654;</button>
@@ -777,18 +777,20 @@
     </div>
     <div class="player-info">
       <div class="player-title">Select a track to play</div>
-      <div class="player-source">SPOTIFY</div>
+      <a class="player-source" id="player-apple-link" href="#" target="_blank">APPLE MUSIC</a>
     </div>
     <div class="player-right">
       <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="0.8">
+      <div class="player-search-wrap">
+        <input type="text" class="player-search-input" id="player-search-input" placeholder="Search…" autocomplete="off">
+        <div class="player-search-results" id="player-search-results"></div>
+      </div>
     </div>
     <div class="player-progress"><div class="player-progress-fill"></div></div>
   </div>
 
   <aside id="sidebar">
-    <a href="/" class="sidebar-brand">
-      <img src="/assets/brand/logo-black.jpg" alt="BTD">
-      <span class="brand-name">Before The Data</span>
+    <a href="/" class="sidebar-brand"><span class="brand-name">Before The Data</span>
     </a>
     <nav>
       <a href="/"><span class="nav-icon">&#9672;</span> Discover</a>
