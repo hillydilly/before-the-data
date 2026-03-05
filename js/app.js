@@ -624,39 +624,14 @@ async function renderArtist() {
       if (postsLabel) postsLabel.textContent = `${posts.length} Post${posts.length !== 1 ? 's' : ''}`;
     }
     Player.setQueue(posts);
-
-    let currentView = 'list';
-    function renderView(view) {
-      postsEl.innerHTML = '';
-      if (view === 'list') {
-        postsEl.className = 'artist-posts music-grid list-view';
-        posts.forEach(p => postsEl.appendChild(createListItem(p)));
-      } else {
-        postsEl.className = 'artist-posts music-grid';
-        posts.forEach(p => {
-          const card = createMusicCard(p);
-          const dateEl = document.createElement('div');
-          dateEl.className = 'card-date';
-          dateEl.textContent = timeAgo(p.publishedAt);
-          card.appendChild(dateEl);
-          postsEl.appendChild(card);
-        });
-      }
-    }
-
-    renderView(currentView);
-
-    document.getElementById('artist-view-list')?.addEventListener('click', () => {
-      currentView = 'list';
-      document.getElementById('artist-view-list')?.classList.add('active');
-      document.getElementById('artist-view-grid')?.classList.remove('active');
-      renderView('list');
-    });
-    document.getElementById('artist-view-grid')?.addEventListener('click', () => {
-      currentView = 'grid';
-      document.getElementById('artist-view-grid')?.classList.add('active');
-      document.getElementById('artist-view-list')?.classList.remove('active');
-      renderView('grid');
+    postsEl.className = 'artist-posts music-grid';
+    posts.forEach(p => {
+      const card = createMusicCard(p);
+      const dateEl = document.createElement('div');
+      dateEl.className = 'card-date';
+      dateEl.textContent = timeAgo(p.publishedAt);
+      card.appendChild(dateEl);
+      postsEl.appendChild(card);
     });
   }
 }

@@ -1414,7 +1414,7 @@ body[data-page="post"] #main {
 /* ── Artist Pages ─────────────────────────────────────────────── */
 .artist-hero {
   padding: 0;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 .artist-hero-inner {
   display: flex;
