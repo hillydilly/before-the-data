@@ -1030,7 +1030,7 @@ body[data-page="post"] #main {
     margin-left: 0;
     padding: 16px 16px 80px;
   }
-  .section-header { margin-bottom: 14px; }
+  .section-header { margin-bottom: 14px; padding-top: 12px; }
   .music-scroll { gap: 12px; }
 
   .post-hero { flex-direction: column; padding: 24px 16px; margin: -24px -16px 0; }
@@ -1573,11 +1573,11 @@ body[data-page="post"] #main {
 
 /* ── Mobile sticky search bar ──────────────────────────────────── */
 #mobile-search-bar {
-  display: none; /* hidden on desktop */
+  display: none; /* hidden everywhere */
 }
 @media (max-width: 700px) {
   #mobile-search-bar {
-    display: block;
+    display: none;
     position: sticky;
     top: 0;
     z-index: 90;
