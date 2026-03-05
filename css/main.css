@@ -1029,7 +1029,11 @@ body[data-page="post"] #main {
   #main {
     margin-left: 0;
     margin-top: 0;
-    padding: calc(var(--player-h) + 70px) 16px 80px;
+    padding: calc(var(--player-h) + 12px) 16px 80px;
+  }
+  /* Discover page only: extra padding for fixed search bar (~58px tall) */
+  body[data-page="discover"] #main {
+    padding-top: calc(var(--player-h) + 70px);
   }
   .section-header { margin-bottom: 14px; padding-top: 0; }
   .music-scroll { gap: 12px; }

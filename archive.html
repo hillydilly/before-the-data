@@ -244,9 +244,18 @@
 
     /* ── Mobile ─────────────────────────────────────────────────── */
     @media (max-width: 767px) {
-      .archive-header h1 {
-        font-size: 36px;
+      .archive-header {
+        padding-top: 0;
+        margin-bottom: 16px;
       }
+      .archive-header h1 {
+        font-size: 28px;
+        margin-bottom: 4px;
+      }
+      .archive-header .archive-subtitle {
+        font-size: 13px;
+      }
+    }
       .greatest-finds-grid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
         gap: 16px;
