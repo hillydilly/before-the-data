@@ -131,6 +131,23 @@
     .archive-card:hover .archive-card-art img {
       transform: scale(1.05);
     }
+    .archive-card-play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.35);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .archive-card-art:hover .archive-card-play-overlay { opacity: 1; }
+    .archive-card.is-playing .archive-card-play-overlay { opacity: 1; }
+    .archive-card-play-circle {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,.9); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: #000; padding-left: 3px;
+    }
     .archive-card-art {
       position: relative;
       width: 100%;
@@ -310,165 +327,181 @@
       <div class="greatest-finds-grid">
 
         <!-- 1. Lorde -->
-        <a class="archive-card" href="/lorde-the-love-club">
+        <div class="archive-card" data-slug="lorde-the-love-club">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772552078/btd/archive/lorde-love-club.jpg" alt="Lorde" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">"The Love Club"</div>
           <div class="archive-card-artist">Lorde</div>
-        </a>
+        </div>
 
         <!-- 2. Billie Eilish -->
-        <a class="archive-card" href="/billie-eilish-ocean-eyes-fingers-crossed">
+        <div class="archive-card" data-slug="billie-eilish-ocean-eyes-fingers-crossed">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573040/btd/archive/billie-eilish-ocean-eyes.png" alt="Billie Eilish" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2015</span>
           </div>
           <div class="archive-card-title">"Ocean Eyes"</div>
           <div class="archive-card-artist">Billie Eilish</div>
-        </a>
+        </div>
 
-        <a class="archive-card" href="/lany-walk-away">
+        <div class="archive-card" data-slug="lany-walk-away">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772572817/btd/archive/lany-walk-away.png" alt="LANY" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2014</span>
           </div>
           <div class="archive-card-title">"Walk Away"</div>
           <div class="archive-card-artist">LANY</div>
-        </a>
+        </div>
 
         <!-- 3. Halsey -->
-        <a class="archive-card" href="/halsey-room-93">
+        <div class="archive-card" data-slug="halsey-room-93">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573044/btd/archive/halsey-room-93.png" alt="Halsey" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2014</span>
           </div>
           <div class="archive-card-title">"Room 93"</div>
           <div class="archive-card-artist">Halsey</div>
-        </a>
+        </div>
 
         <!-- 4. Dominic Fike -->
-        <a class="archive-card" href="/dominic-fike-dont-forget-about-me">
+        <div class="archive-card" data-slug="dominic-fike-dont-forget-about-me">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772576148/btd/archive/dominic-fike.png" alt="Dominic Fike" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2018</span>
           </div>
           <div class="archive-card-title">"Don't Forget About Me"</div>
           <div class="archive-card-artist">Dominic Fike</div>
-        </a>
+        </div>
 
         <!-- 5. Tom Misch -->
-        <a class="archive-card" href="/tom-misch-eems-to-slide">
+        <div class="archive-card" data-slug="tom-misch-eems-to-slide">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573142/btd/archive/tom-misch-eems-to-slide.png" alt="Tom Misch" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2014</span>
           </div>
           <div class="archive-card-title">"Eems to Slide"</div>
           <div class="archive-card-artist">Tom Misch & Laura Misch</div>
-        </a>
+        </div>
 
         <!-- 6. Doja Cat -->
-        <a class="archive-card" href="/doja-cat-so-high">
+        <div class="archive-card" data-slug="doja-cat-so-high">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772575328/btd/archive/doja-cat-so-high.png" alt="Doja Cat" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">"So High"</div>
           <div class="archive-card-artist">Doja Cat</div>
-        </a>
+        </div>
 
         <!-- 7. Jakubi / Kygo Remix -->
-        <a class="archive-card" href="/jakubi-cant-afford-it-all-kygo-remix">
+        <div class="archive-card" data-slug="jakubi-cant-afford-it-all-kygo-remix">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573047/btd/archive/kygo-artist.png" alt="Jakubi" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">"Can't Afford It All"</div>
           <div class="archive-card-artist">Jakubi (Kygo Remix)</div>
-        </a>
+        </div>
 
         <!-- 8. Milky Chance -->
-        <a class="archive-card" href="/milky-chance-stolen-dance">
+        <div class="archive-card" data-slug="milky-chance-stolen-dance">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772563099/btd/archive/milky-chance-stolen-dance.jpg" alt="Milky Chance" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">"Stolen Dance"</div>
           <div class="archive-card-artist">Milky Chance</div>
-        </a>
+        </div>
 
         <!-- 9. Astronomyy -->
-        <a class="archive-card" href="/astronomyy-dont-need-u">
+        <div class="archive-card" data-slug="astronomyy-dont-need-u">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772572854/btd/archive/astronomyy-dont-need-u.png" alt="Astronomyy" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">"Don't Need U"</div>
           <div class="archive-card-artist">Astronomyy</div>
-        </a>
+        </div>
 
         <!-- 10. Låpsley -->
-        <a class="archive-card" href="/lapsley-monday-ep">
+        <div class="archive-card" data-slug="lapsley-monday-ep">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573108/btd/archive/lapsley-monday-ep.png" alt="Låpsley" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2013</span>
           </div>
           <div class="archive-card-title">Monday EP</div>
           <div class="archive-card-artist">Låpsley</div>
-        </a>
+        </div>
 
         <!-- 11. LANY -->
 
         <!-- 13. Chelsea Cutler -->
-        <a class="archive-card" href="/chelsea-cutler-an-introduction">
+        <div class="archive-card" data-slug="chelsea-cutler-an-introduction">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573042/btd/archive/chelsea-cutler-an-introduction.png" alt="Chelsea Cutler" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2015</span>
           </div>
           <div class="archive-card-title">"An Introduction"</div>
           <div class="archive-card-artist">Chelsea Cutler</div>
-        </a>
+        </div>
 
         <!-- 14. healy -->
-        <a class="archive-card" href="/healy-an-introduction">
+        <div class="archive-card" data-slug="healy-an-introduction">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573046/btd/archive/healy-an-introduction.png" alt="healy" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2015</span>
           </div>
           <div class="archive-card-title">"An Introduction"</div>
           <div class="archive-card-artist">healy</div>
-        </a>
+        </div>
 
         <!-- 15. NEIKED -->
-        <a class="archive-card" href="/neiked-sexual">
+        <div class="archive-card" data-slug="neiked-sexual">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772563101/btd/archive/neiked-sexual.jpg" alt="NEIKED" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2016</span>
           </div>
           <div class="archive-card-title">"Sexual"</div>
           <div class="archive-card-artist">NEIKED</div>
-        </a>
+        </div>
 
         <!-- 16. Macklemore -->
-        <a class="archive-card" href="/macklemore-the-unplanned-mixtape">
+        <div class="archive-card" data-slug="macklemore-the-unplanned-mixtape">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772575281/btd/archive/macklemore-unplanned-mixtape.jpg" alt="Macklemore" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2009</span>
           </div>
           <div class="archive-card-title">"The Town"</div>
           <div class="archive-card-artist">Macklemore</div>
-        </a>
+        </div>
 
         <!-- 9. Daniel Caesar -->
-        <a class="archive-card" href="/daniel-caesar-birds-of-paradise-ep">
+        <div class="archive-card" data-slug="daniel-caesar-birds-of-paradise-ep">
           <div class="archive-card-art">
             <img src="https://res.cloudinary.com/dd9nbystx/image/upload/v1772573043/btd/archive/daniel-caesar-birds.png" alt="Daniel Caesar" loading="lazy">
+            <div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>
             <span class="archive-card-year-badge">2014</span>
           </div>
           <div class="archive-card-title">Scream</div>
           <div class="archive-card-artist">Daniel Caesar</div>
-        </a>
+        </div>
 
 
 
@@ -568,18 +601,35 @@
         }
 
         yearPosts.forEach(post => {
-          const card = document.createElement('a');
+          const card = document.createElement('div');
           card.className = 'archive-card';
-          card.href = '/' + (post.slug || post.id);
+          const postHref = '/' + (post.slug || post.id);
           const artSrc = post.artUrl || post.artUrlSm || 'https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill/ar-scouting-dashboard/placeholder.jpg';
+          const isEPPost = (post.type && /ep|lp|mixtape/i.test(post.type)) || /\b(ep|mixtape|lp)\b/i.test(post.title || '');
+          const displayTitle = isEPPost ? (post.title || '') : `"${post.title || ''}"`;
           card.innerHTML = `
             <div class="archive-card-art">
-              <img src="${artSrc}" alt="${post.artist || ''}" loading="lazy">
+              <img src="${artSrc}" alt="${post.artist || ''}" loading="lazy" style="cursor:pointer">
+              <div class="archive-card-play-overlay">
+                <div class="archive-card-play-circle">&#9654;</div>
+              </div>
               <span class="archive-card-year-badge">${year}</span>
             </div>
-            <div class="archive-card-title">"${post.title || ''}"</div>
+            <a class="archive-card-title" href="${postHref}" style="text-decoration:none;color:inherit;display:block">${displayTitle}</a>
             <div class="archive-card-artist">${post.artist || ''}</div>
           `;
+          // Play overlay → play
+          card.querySelector('.archive-card-play-overlay').addEventListener('click', (e) => {
+            e.preventDefault(); e.stopPropagation();
+            if (post.previewUrl) {
+              Player.play({ id: post.id || post.slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl });
+            }
+          });
+          // Art img → navigate to post
+          card.querySelector('.archive-card-art img').addEventListener('click', (e) => {
+            e.stopPropagation();
+            window.location.href = postHref;
+          });
           grid.appendChild(card);
         });
       }
@@ -639,6 +689,40 @@
         }
       } catch (e) {}
     })();
+  </script>
+
+  <script>
+    // Wire play overlays on Greatest Finds static cards
+    document.querySelectorAll('#archive-greatest-finds .archive-card').forEach(card => {
+      const slug = card.dataset.slug;
+      if (!slug) return;
+      const postHref = '/' + slug;
+      const artSrc = card.querySelector('img')?.src || '';
+
+      // Play overlay → play via queue or posts.json
+      const overlay = card.querySelector('.archive-card-play-overlay');
+      if (overlay) {
+        overlay.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          const queue = (typeof Player !== 'undefined' && Player._queue) || [];
+          const post = queue.find(p => (p.slug || p.id) === slug);
+          if (post && post.previewUrl) {
+            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl });
+          } else if (post && post.youtubeId) {
+            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: '', youtubeId: post.youtubeId });
+          }
+        });
+      }
+
+      // Art img → navigate
+      const img = card.querySelector('.archive-card-art img');
+      if (img) {
+        img.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.location.href = postHref;
+        });
+      }
+    });
   </script>
 
   <!-- Mobile Heard First sticky CTA -->
