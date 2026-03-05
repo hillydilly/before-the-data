@@ -715,11 +715,9 @@
         renderYearGrid(year, allPosts);
       }
 
-      // Pill click handler
-      bar.addEventListener('click', e => {
-        const pill = e.target.closest('.archive-pill');
-        if (!pill) return;
-        selectYear(pill.dataset.year);
+      // Pill click handler — wire each pill directly
+      bar.querySelectorAll('.archive-pill').forEach(pill => {
+        pill.addEventListener('click', () => selectYear(pill.dataset.year));
       });
 
     })();
