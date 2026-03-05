@@ -128,11 +128,12 @@ ul { list-style: none; }
   width: 0%; transition: width .3s linear; border-radius: 2px;
 }
 
-/* Right zone — volume icon aligned to post right edge */
+/* Right zone — volume icon, stops at post right edge */
 #player-bar .player-right {
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  width: calc(var(--sidebar-w) + 1px);
+  width: 56px;
+  margin-right: var(--sidebar-w);
   padding: 0;
   background: transparent;
   height: 100%;
