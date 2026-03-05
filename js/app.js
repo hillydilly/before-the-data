@@ -117,35 +117,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 function createMusicCard(post) {
   const card = document.createElement('div');
   card.className = 'music-card';
+  const postHref = `/${post.slug || post.id}`;
+  const artistHref = `/artist/${(post.artist || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
   card.innerHTML = `
     <div class="card-art" data-playing-id="${post.id}">
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
-    <div class="card-title" title="${post.title}">${isEP(post) ? truncateTitle(post.title) : `&ldquo;${truncateTitle(post.title)}&rdquo;`}</div>
-    <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
-
+    <a class="card-title" href="${postHref}" title="${post.title}">${isEP(post) ? truncateTitle(post.title) : `&ldquo;${truncateTitle(post.title)}&rdquo;`}</a>
+    <a class="card-artist" href="${artistHref}" title="${post.artist}">${truncateTitle(post.artist, 30)}</a>
   `;
-  // Click art area → play or pause if already playing this track
-  card.querySelector('.card-art').addEventListener('click', (e) => {
-    e.stopPropagation();
+  // Only the art/play-overlay triggers playback
+  card.querySelector('.play-overlay').addEventListener('click', (e) => {
+    e.preventDefault(); e.stopPropagation();
     const current = Player.getCurrent();
     if (current && current.id === post.id) {
-      Player.togglePlay(); // pause/resume if this card is active
+      Player.togglePlay();
     } else {
       Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
     }
-  });
-  // Click title → navigate to post page
-  card.querySelector('.card-title').addEventListener('click', (e) => {
-    e.stopPropagation();
-    window.location.href = `/${post.slug || post.id}`;
-  });
-  // Click artist name → navigate to artist page
-  card.querySelector('.card-artist').addEventListener('click', (e) => {
-    e.stopPropagation();
-    const slug = (post.artist || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    window.location.href = `/artist/${slug}`;
   });
   return card;
 }
