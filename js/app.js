@@ -972,7 +972,10 @@ async function renderPost() {
   const sidebar = document.getElementById('post-sidebar');
   let sidebarHTML = '';
 
-  // Written By
+  // Written By — default to Chad if missing
+  if (!post.writtenBy || !post.writtenBy.name) {
+    post.writtenBy = { name: 'Chad Hillard', location: 'Nashville, TN' };
+  }
   if (post.writtenBy && post.writtenBy.name && post.writtenBy.name !== 'undefined') {
     // Known author photos — add more as we import the archive
     const AUTHOR_PHOTOS = {
