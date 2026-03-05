@@ -1051,6 +1051,12 @@ body[data-page="post"] #main {
   }
 
 
+  /* Post page: override fixed layout for mobile — sidebar is at bottom not left */
+  body[data-page="post"] #main {
+    left: 0 !important;
+    padding: 0 0 80px 0 !important;
+  }
+
   .post-body-wrap { flex-direction: column; }
   .post-sidebar { width: 100%; }
 
