@@ -38,7 +38,17 @@
     .archive-header .archive-subtitle {
       font-size: 15px;
       color: var(--tx-3);
+      margin: 0 0 4px;
+    }
+    .archive-header .archive-count {
+      font-size: 13px;
+      color: var(--tx-3);
       margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .archive-header .archive-count span {
+      font-weight: 700;
+      color: var(--tx-1);
     }
 
     /* ── Year pill row ───────────────────────────────────────────── */
@@ -262,6 +272,7 @@
     <div class="archive-header">
       <h1>Archive</h1>
       <p class="archive-subtitle">19 years of music discovery. Every artist. Every find.</p>
+      <p class="archive-count" id="archive-total-count"></p>
     </div>
 
     <!-- Year pill selector (desktop) -->
@@ -593,6 +604,20 @@
         selectYear(pill.dataset.year);
       });
 
+    })();
+
+    // Live post count
+    (async () => {
+      try {
+        const res = await fetch('/posts.json?v=' + Math.floor(Date.now() / 300000));
+        if (!res.ok) return;
+        const data = await res.json();
+        const total = data.posts?.filter(p => p.title && p.artist).length || data.count || 0;
+        const el = document.getElementById('archive-total-count');
+        if (el && total > 0) {
+          el.innerHTML = `<span>${total.toLocaleString()}</span> posts and counting`;
+        }
+      } catch (e) {}
     })();
   </script>
 
