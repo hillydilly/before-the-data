@@ -190,6 +190,11 @@
     #archive-year-results.visible {
       display: block;
     }
+    .archive-year-count {
+      font-size: 14px; font-weight: 400; color: var(--tx-3);
+      margin-left: 10px; letter-spacing: 0;
+      text-transform: none;
+    }
     .archive-year-heading {
       font-family: var(--font-heading);
       font-size: 28px;
@@ -548,11 +553,12 @@
         document.getElementById('archive-greatest-finds').style.display = 'none';
         results.classList.add('visible');
 
-        heading.textContent = year;
         grid.innerHTML = '';
         empty.style.display = 'none';
 
         const yearPosts = posts.filter(p => getPostYear(p) === parseInt(year));
+        const postWord = yearPosts.length === 1 ? 'post' : 'posts';
+        heading.innerHTML = `${year} <span class="archive-year-count">${yearPosts.length.toLocaleString()} ${postWord}</span>`;
 
         if (yearPosts.length === 0) {
           empty.textContent = 'No posts from ' + year + ' yet. Back catalog import in progress.';
@@ -591,7 +597,7 @@
 
         document.getElementById('archive-greatest-finds').style.display = 'none';
         results.classList.add('visible');
-        heading.textContent = year;
+        heading.textContent = year; // count added by renderYearGrid
         grid.innerHTML = '<div class="archive-loading">Loading...</div>';
         empty.style.display = 'none';
 
