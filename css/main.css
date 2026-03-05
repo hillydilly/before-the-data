@@ -625,12 +625,13 @@ body[data-page="post"] #main {
   overflow: hidden;
   cursor: pointer;
 }
-.post-art-wrap:hover .post-art-overlay { opacity: 1; }
+.post-art-wrap:hover .post-art-overlay,
+.post-art-wrap.is-playing .post-art-overlay { opacity: 1; }
 .post-art-overlay {
   position: absolute; inset: 0;
   background: rgba(0,0,0,.45);
   display: flex; align-items: center; justify-content: center;
-  opacity: 1;
+  opacity: 0;
   transition: opacity .2s ease;
   border-radius: 8px;
 }
