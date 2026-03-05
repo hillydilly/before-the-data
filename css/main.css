@@ -432,7 +432,7 @@ ul { list-style: none; }
   margin-left: var(--sidebar-w);
   margin-top: var(--player-h);
   min-height: calc(100vh - var(--player-h));
-  padding: 32px 40px 60px;
+  padding: 0 40px 60px;
 }
 
 /* --- Section Headers --- */
@@ -440,7 +440,7 @@ ul { list-style: none; }
   display: flex; align-items: baseline; justify-content: space-between;
   margin-bottom: 20px;
   border-bottom: 3px solid var(--acc);
-  padding-bottom: 8px;
+  padding: 20px 0 8px;
 }
 .section-header h2 {
   font-family: var(--font-heading);
