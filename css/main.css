@@ -124,10 +124,10 @@ ul { list-style: none; }
   width: 0%; transition: width .3s linear; border-radius: 2px;
 }
 
-/* Right zone — volume popup + search — aligned to post card right edge */
+/* Right zone — volume + search aligned to post card right edge */
 #player-bar .player-right {
   display: flex; align-items: center; gap: 4px;
-  flex-shrink: 0; padding-right: 32px;
+  flex-shrink: 0; padding-right: var(--sidebar-w);
 }
 #player-bar .player-right .volume-btn,
 #player-bar .player-right .search-icon-btn {
@@ -630,16 +630,16 @@ ul { list-style: none; }
    POST DETAIL
    ============================================ */
 
-/* Grey page background on post pages — card flush to top nav */
+/* Grey page background on post pages — equal margins both sides */
 body[data-page="post"] #main {
   background: var(--bg-2);
-  padding: 0 0 60px;
+  padding: 0 var(--sidebar-w) 60px 0;
 }
 
-/* The post card — full width of content area, flush to top */
+/* The post card — fills content area, flush to top */
 #post-content {
   background: var(--bg);
-  box-shadow: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
   overflow: hidden;
   width: 100%;
 }
