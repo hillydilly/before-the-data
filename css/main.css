@@ -502,7 +502,6 @@ ul { list-style: none; }
   background: rgba(0,0,0,.3);
   opacity: 0; transition: opacity .2s;
 }
-.music-card .card-art .play-overlay { opacity: 1; }
 .music-card:hover .card-art .play-overlay { opacity: 1; }
 /* Keep overlay visible + show pause when this card is actively playing */
 .music-card .card-art.is-playing .play-overlay { opacity: 1; }
@@ -549,20 +548,33 @@ ul { list-style: none; }
   color: var(--acc);
   width: 32px; text-align: center; flex-shrink: 0;
 }
-.chart-play {
-  width: 32px; height: 32px;
-  background: var(--acc); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 14px; flex-shrink: 0;
-  transition: opacity .15s;
+/* Chart play button is now overlaid on art — hide standalone button */
+.chart-play { display: none; }
+.chart-art-wrap {
+  position: relative; flex-shrink: 0;
+  width: 96px; height: 96px;
+  border-radius: 4px; overflow: hidden;
+  background: var(--bg-2);
+  cursor: pointer;
 }
-.chart-play:hover { opacity: .8; }
-.chart-play.is-playing { font-size: 0; }
-.chart-play.is-playing::before { content: '⏸'; font-size: 14px; }
 .chart-art {
-  width: 48px; height: 48px;
+  width: 96px; height: 96px;
   border-radius: 4px; object-fit: cover;
-  background: var(--bg-2); flex-shrink: 0;
+  display: block;
+}
+.chart-art-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.3);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .2s;
+}
+.chart-row:hover .chart-art-overlay,
+.chart-art-wrap.is-playing .chart-art-overlay { opacity: 1; }
+.chart-art-overlay .chart-play-circle {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.9); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #000; padding-left: 2px;
 }
 .chart-info { flex: 1; min-width: 0; }
 .chart-info .chart-artist {

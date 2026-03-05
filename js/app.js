@@ -1,6 +1,15 @@
 /* ============================================
    Before The Data — App / Page Logic
    ============================================ */
+
+// EP/album/mixtape posts don't get quotes around the title; songs do
+function isEP(post) {
+  const t = (post.type || '').toLowerCase();
+  const title = (post.title || '').toLowerCase();
+  if (t === 'ep' || t === 'album' || t === 'mixtape' || t === 'compilation') return true;
+  if (title.endsWith(' ep') || title.includes(' ep)') || title.includes('mixtape') || title.includes(' lp')) return true;
+  return false;
+}
 // ── Genre normalization (canonical display names) ─────────────────────────────
 const GENRE_NORM = {
   'hip-hop': 'Hip-Hop', 'hip hop': 'Hip-Hop', 'hiphop': 'Hip-Hop',
@@ -113,7 +122,7 @@ function createMusicCard(post) {
       <img src="${post.artUrl}" alt="${post.title}" loading="lazy">
       <div class="play-overlay"><div class="play-circle">&#9654;</div></div>
     </div>
-    <div class="card-title" title="&quot;${post.title}&quot;">&ldquo;${truncateTitle(post.title)}&rdquo;</div>
+    <div class="card-title" title="${post.title}">${isEP(post) ? truncateTitle(post.title) : `&ldquo;${truncateTitle(post.title)}&rdquo;`}</div>
     <div class="card-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
 
   `;
@@ -144,15 +153,16 @@ function createChartRow(post, rank) {
   row.className = 'chart-row';
   row.innerHTML = `
     <div class="chart-rank">#${rank}</div>
-    <button class="chart-play" data-playing-id="${post.id}">&#9654;</button>
-    <img class="chart-art" src="${post.artUrl}" alt="${post.title}" loading="lazy">
+    <div class="chart-art-wrap" data-playing-id="${post.id}">
+      <img class="chart-art" src="${post.artUrl}" alt="${post.title}" loading="lazy">
+      <div class="chart-art-overlay"><div class="chart-play-circle">&#9654;</div></div>
+    </div>
     <div class="chart-info">
       <div class="chart-artist" title="${post.artist}">${truncateTitle(post.artist, 30)}</div>
       <div class="chart-title">&ldquo;${post.title}&rdquo;</div>
     </div>
-
   `;
-  row.querySelector('.chart-play').addEventListener('click', (e) => {
+  row.querySelector('.chart-art-wrap').addEventListener('click', (e) => {
     e.stopPropagation();
     Player.play({ id: post.id, title: post.title, artist: post.artist, artUrl: post.artUrl, previewUrl: post.previewUrl });
   });
