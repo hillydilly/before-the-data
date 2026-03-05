@@ -621,11 +621,19 @@
             <a class="archive-card-title" href="${postHref}" style="text-decoration:none;color:inherit;display:block">${displayTitle}</a>
             <div class="archive-card-artist">${post.artist || ''}</div>
           `;
-          // Play overlay → play
-          card.querySelector('.archive-card-play-overlay').addEventListener('click', (e) => {
+          // Play overlay → play (toggle if already current)
+          card.querySelector('.archive-card-play-overlay').addEventListener('click', async (e) => {
             e.preventDefault(); e.stopPropagation();
-            if (post.previewUrl) {
-              Player.play({ id: post.id || post.slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl });
+            const id = post.id || post.slug;
+            const current = Player.getCurrent();
+            if (current && current.id === id) { Player.togglePlay(); return; }
+            let previewUrl = post.previewUrl || '';
+            if (!previewUrl) {
+              const queued = (Player._queue || []).find(p => (p.slug || p.id) === id);
+              previewUrl = queued?.previewUrl || '';
+            }
+            if (previewUrl) {
+              Player.play({ id, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl });
             }
           });
           // Art img → navigate to post
@@ -702,16 +710,28 @@
       const postHref = '/' + slug;
       const artSrc = card.querySelector('img')?.src || '';
 
-      // Play overlay → find in allPosts (preloaded from posts.json)
+      // Play overlay → fetch posts.json for previewUrl then play
       const overlay = card.querySelector('.archive-card-play-overlay');
       if (overlay) {
-        overlay.addEventListener('click', (e) => {
+        overlay.addEventListener('click', async (e) => {
           e.preventDefault(); e.stopPropagation();
-          const posts = allPosts || [];
-          const post = posts.find(p => (p.slug || p.id) === slug);
-          if (post) {
-            Player.play({ id: post.id || slug, title: post.title, artist: post.artist, artUrl: artSrc, previewUrl: post.previewUrl || '', youtubeId: post.youtubeId || '' });
+          const current = Player.getCurrent();
+          if (current && current.id === slug) { Player.togglePlay(); return; }
+          // Try queue first, then fetch posts.json
+          let previewUrl = '';
+          let title = card.querySelector('.archive-card-title')?.textContent?.replace(/[""]/g,'').trim() || slug;
+          let artist = card.querySelector('.archive-card-artist')?.textContent?.trim() || '';
+          const queued = (Player._queue || []).find(p => (p.slug || p.id) === slug);
+          if (queued?.previewUrl) {
+            previewUrl = queued.previewUrl;
+          } else {
+            try {
+              const data = await fetch('/posts.json').then(r => r.json());
+              const post = (data.posts || data).find(p => (p.slug || p.id) === slug);
+              previewUrl = post?.previewUrl || '';
+            } catch(_) {}
           }
+          Player.play({ id: slug, title, artist, artUrl: artSrc, previewUrl });
         });
       }
 
