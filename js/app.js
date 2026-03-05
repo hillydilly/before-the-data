@@ -243,26 +243,29 @@ async function renderDiscover() {
     if (!slug) return;
     const postHref = `/${slug}`;
 
-    // Play overlay → play; read track data from DOM + queue
+    // Play overlay → play; read DOM for display, fetch posts.json for previewUrl
     const overlay = card.querySelector('.as-play-overlay');
     if (overlay) {
-      overlay.addEventListener('click', (e) => {
+      overlay.addEventListener('click', async (e) => {
         e.preventDefault(); e.stopPropagation();
-        // Read what we can from the DOM directly
         const artUrl = card.querySelector('.as-art img')?.src || '';
         const title = card.querySelector('.as-song')?.textContent?.replace(/[""]/g, '').trim() || '';
         const artist = card.querySelector('.as-artist')?.textContent?.trim() || '';
-        // Try queue for previewUrl
-        const queue = Player._queue || [];
-        const queued = queue.find(p => (p.slug || p.id) === slug);
-        const previewUrl = queued?.previewUrl || '';
-        const id = queued?.id || slug;
         const current = Player.getCurrent();
-        if (current && current.id === id) {
-          Player.togglePlay();
+        if (current && current.id === slug) { Player.togglePlay(); return; }
+        // Get previewUrl — try queue first, then fetch posts.json
+        let previewUrl = '';
+        const queued = (Player._queue || []).find(p => (p.slug || p.id) === slug);
+        if (queued?.previewUrl) {
+          previewUrl = queued.previewUrl;
         } else {
-          Player.play({ id, title, artist, artUrl, previewUrl });
+          try {
+            const data = await fetch('/posts.json').then(r => r.json());
+            const post = (data.posts || data).find(p => (p.slug || p.id) === slug);
+            previewUrl = post?.previewUrl || '';
+          } catch(_) {}
         }
+        Player.play({ id: slug, title, artist, artUrl, previewUrl });
       });
     }
 
