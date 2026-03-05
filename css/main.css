@@ -123,26 +123,34 @@ ul { list-style: none; }
   width: 0%; transition: width .3s linear; border-radius: 2px;
 }
 
-/* Right zone — shaded panel from post right edge to page edge, like HD */
+/* Right zone — icons sit LEFT of the divider, aligned to post card right edge */
 #player-bar .player-right {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 4px;
   flex-shrink: 0;
+  padding-right: 16px;
+}
+/* Shaded panel — sits after the icons, same width as sidebar */
+#player-bar .player-right-shade {
   width: var(--sidebar-w);
   height: 100%;
   background: var(--bg-2);
   border-left: 1px solid var(--bd);
-  padding: 0;
+  flex-shrink: 0;
 }
 #player-bar .player-right .volume-btn,
 #player-bar .player-right .search-icon-btn {
   color: var(--tx-3);
   display: flex; align-items: center; justify-content: center;
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 40px; height: 40px; border-radius: 50%;
   transition: background .15s, color .15s; flex-shrink: 0;
   position: relative;
 }
+#player-bar .player-right .volume-btn svg,
+#player-bar .player-right .search-icon-btn svg {
+  width: 24px; height: 24px;
+}
 #player-bar .player-right .volume-btn:hover,
-#player-bar .player-right .search-icon-btn:hover { background: var(--bd); color: var(--tx-2); }
+#player-bar .player-right .search-icon-btn:hover { background: var(--bg-2); color: var(--tx-2); }
 
 /* Volume popup — vertical slider above button */
 .volume-popup {
@@ -640,14 +648,14 @@ body[data-page="post"] {
 }
 body[data-page="post"] #main {
   background: var(--bg-2);
-  margin-top: 0 !important;
-  padding: 0 var(--sidebar-w) 60px 0 !important;
   position: fixed !important;
   top: var(--player-h) !important;
   left: var(--sidebar-w) !important;
-  right: 0 !important;
+  right: var(--sidebar-w) !important;
   bottom: 0 !important;
   overflow-y: auto !important;
+  margin: 0 !important;
+  padding: 0 0 60px !important;
   width: auto !important;
   min-height: unset !important;
 }
