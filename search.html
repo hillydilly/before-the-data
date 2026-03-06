@@ -588,7 +588,7 @@
       if (postsCache || postsLoading) return;
       postsLoading = true;
       try {
-        const res = await fetch('/posts.json?v=' + Math.floor(Date.now() / 600000));
+        const res = await fetch('/search-index.json?v=' + Math.floor(Date.now() / 600000));
         if (res.ok) {
           const data = await res.json();
           postsCache = (data.posts || []).filter(p => p.title && p.artist);
@@ -609,12 +609,12 @@
       let allPosts = postsCache;
       if (!allPosts) {
         try {
-          const res = await fetch('/posts.json?v=' + Math.floor(Date.now() / 600000));
+          const res = await fetch('/search-index.json?v=' + Math.floor(Date.now() / 600000));
           if (res.ok) {
             const data = await res.json();
             allPosts = postsCache = (data.posts || []).filter(p => p.title && p.artist);
           }
-        } catch(e) {}
+        } catch(e) { console.error('search-index fetch failed:', e); }
       }
       if (!allPosts) { metaEl.innerHTML = 'Could not load catalog — try again.'; return; }
 

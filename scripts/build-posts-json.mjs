@@ -107,6 +107,25 @@ async function main() {
   const liveOutPath = new URL('../posts-live.json', import.meta.url).pathname;
   writeFileSync(liveOutPath, JSON.stringify(liveOutput));
   console.log(`✅ posts-live.json written: ${livePosts.length} live posts (${Math.round(JSON.stringify(liveOutput).length / 1024)}KB)`);
+
+  // Also build search-index.json — slim version for browser search (no writeup, smaller)
+  const searchPosts = posts.map(p => {
+    const d = p.publishedAt?.seconds ? new Date(p.publishedAt.seconds * 1000).toISOString() : '';
+    return {
+      slug: p.slug, title: p.title, artist: p.artist,
+      artUrlSm: p.artUrlSm || p.artUrl,
+      previewUrl: p.previewUrl || '',
+      city: p.city || '', country: p.country || '',
+      genres: p.genres || [], tags: p.tags || [],
+      publishedAt: d,
+      isArchive: p.isArchive || false,
+      btdPostLive: p.btdPostLive || false,
+    };
+  });
+  const searchOutput = { generated: new Date().toISOString(), count: searchPosts.length, posts: searchPosts };
+  const searchOutPath = new URL('../search-index.json', import.meta.url).pathname;
+  writeFileSync(searchOutPath, JSON.stringify(searchOutput));
+  console.log(`✅ search-index.json written: ${searchPosts.length} posts (${Math.round(JSON.stringify(searchOutput).length / 1024)}KB)`);
 }
 
 main().catch(e => { console.error('Fatal:', e.message); process.exit(1); });
