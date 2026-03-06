@@ -221,11 +221,18 @@ async function renderDiscover() {
   chartList.innerHTML = Array(8).fill(0).map(skelRow).join('');
 
   // Fetch new music + charts in parallel
-  // Use liveOnly=true → hits posts-live.json (16KB) instead of full 22MB posts.json
-  const [latest, charts] = await Promise.all([
-    fetchPosts('publishedAt', 'desc', 10, { liveOnly: true }),
-    fetchCharts()
-  ]);
+  // Discover scroll uses posts-live.json directly (fast, 16KB) for the homepage strip
+  let latest = [];
+  try {
+    const liveRes = await fetch('/posts-live.json');
+    if (liveRes.ok) {
+      const d = await liveRes.json();
+      latest = (d.posts || []).filter(p => p.title && p.artist).slice(0, 10);
+    }
+  } catch(e) {}
+  if (!latest.length) latest = await fetchPosts('publishedAt', 'desc', 10);
+
+  const charts = await fetchCharts();
 
   // Render new music (max 10)
   scrollContainer.innerHTML = '';

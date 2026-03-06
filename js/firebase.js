@@ -358,7 +358,9 @@ async function fetchPostsFromFirebase(opts = {}) {
 
 // Fast fetch — only btdPostLive posts from slim JSON (12KB vs 7.8MB)
 async function fetchLivePosts() {
-  const CACHE_KEY = 'btd_live_posts_cache';
+  // New Music page: show all non-archive posts (not just btdPostLive flag)
+  // Uses full posts.json filtered to isArchive:false
+  const CACHE_KEY = 'btd_new_music_cache';
   const CACHE_TTL = 5 * 60 * 1000;
   try {
     const cached = sessionStorage.getItem(CACHE_KEY);
@@ -367,18 +369,10 @@ async function fetchLivePosts() {
       if (Date.now() - ts < CACHE_TTL && posts?.length > 0) return posts;
     }
   } catch(e) {}
-  try {
-    const res = await fetch('/posts-live.json');
-    if (res.ok) {
-      const data = await res.json();
-      const posts = (data.posts || data).filter(p => p.title && p.artist);
-      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
-      return posts;
-    }
-  } catch(e) {}
-  // Fallback to full posts.json filtered to live
   const all = await fetchPostsFromFirebase();
-  return (all || []).filter(p => p.btdPostLive);
+  const posts = (all || []).filter(p => p.title && p.artist && !p.isArchive);
+  try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
+  return posts;
 }
 
 async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limitCount = 25, opts = {}) {
