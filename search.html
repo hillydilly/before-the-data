@@ -643,7 +643,11 @@
 
     function getYear(p) {
       const d = p.publishedAt || p.addedAt || '';
-      return d ? parseInt(d.substring(0, 4)) : 0;
+      if (!d) return 0;
+      const s = String(d);
+      // Handle numeric timestamps (ms or s)
+      if (/^\d{10,}$/.test(s)) return new Date(s.length > 10 ? Number(s) : Number(s) * 1000).getFullYear();
+      return parseInt(s.substring(0, 4)) || 0;
     }
 
     function renderResults(posts, q) {

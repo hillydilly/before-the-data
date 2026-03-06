@@ -93,6 +93,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Mobile sticky search — filter new music list on index page
   const mobileSearchInput = document.getElementById('mobile-search-input');
   if (mobileSearchInput) {
+    // On Enter/Go — redirect to full search page
+    mobileSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const q = mobileSearchInput.value.trim();
+        if (q) window.location.href = '/search.html?q=' + encodeURIComponent(q);
+      }
+    });
+    // On input — filter visible cards on discover page
     mobileSearchInput.addEventListener('input', () => {
       const q = mobileSearchInput.value.toLowerCase().trim();
       document.querySelectorAll('#new-music-scroll .music-list-item, #music-grid .music-list-item, #music-grid .music-card').forEach(item => {
