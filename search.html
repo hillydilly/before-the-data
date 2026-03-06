@@ -205,55 +205,7 @@
       .search-result-art { width: 50px; height: 50px; }
     }
 
-    /* ── Mobile search bottom sheet ──────────────────────────── */
-    #mobile-search-sheet {
-      display: none;
-      position: fixed; left: 0; right: 0; bottom: 0; z-index: 8000;
-      background: var(--bg-0, #fff);
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
-      padding: 16px 20px 32px;
-      transform: translateY(100%);
-      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
-    }
-    #mobile-search-sheet.open {
-      transform: translateY(0);
-    }
-    #mobile-search-sheet-backdrop {
-      display: none;
-      position: fixed; inset: 0; z-index: 7999;
-      background: rgba(0,0,0,0.3);
-    }
-    .sheet-handle {
-      width: 36px; height: 4px; background: var(--border, #e0e0e0);
-      border-radius: 2px; margin: 0 auto 16px;
-    }
-    .sheet-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-      text-transform: uppercase; color: var(--tx-3); margin-bottom: 12px;
-    }
-    .sheet-city-btn {
-      display: flex; align-items: center; gap: 12px;
-      width: 100%; padding: 14px 16px; border-radius: 12px;
-      background: #000; border: none; cursor: pointer;
-      text-decoration: none; color: #fff;
-      transition: opacity 0.15s;
-    }
-    .sheet-city-btn:hover { opacity: 0.85; }
-    .sheet-city-btn .sheet-btn-icon {
-      font-size: 22px; line-height: 1;
-    }
-    .sheet-city-btn .sheet-btn-text { text-align: left; }
-    .sheet-city-btn .sheet-btn-title {
-      font-size: 15px; font-weight: 700; display: block; letter-spacing: -0.2px;
-    }
-    .sheet-city-btn .sheet-btn-sub {
-      font-size: 12px; color: rgba(255,255,255,0.6); display: block; margin-top: 2px;
-    }
-    @media (min-width: 601px) {
-      #mobile-search-sheet { display: none !important; }
-      #mobile-search-sheet-backdrop { display: none !important; }
-    }
+
   </style>
 
   <main id="main">
@@ -378,19 +330,7 @@
   </main>
 
   <!-- Mobile search bottom sheet (appears on input focus on mobile) -->
-  <div id="mobile-search-sheet-backdrop" onclick="closeMobileSheet()"></div>
-  <div id="mobile-search-sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-label">Quick access</div>
-    <a href="/search-by-city.html" class="sheet-city-btn">
-      <span class="sheet-btn-icon">📍</span>
-      <span class="sheet-btn-text">
-        <span class="sheet-btn-title">Search by City</span>
-        <span class="sheet-btn-sub">Nashville, London, Sydney, Berlin and more</span>
-      </span>
-    </a>
-    <button onclick="closeMobileSheet(); document.getElementById('search-input').focus();" style="margin-top:14px;width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;color:var(--tx-2,#666);cursor:pointer;letter-spacing:0.2px;">Search by artist or song instead</button>
-  </div>
+
 
   <!-- City Search Modal -->
   <!-- (modal HTML injected below via city-suggestions) -->
@@ -486,21 +426,7 @@
       input.focus();
     }
 
-    // Mobile: show bottom sheet on touchstart (fires before keyboard opens), dismiss when typing starts
-    input.addEventListener('touchstart', (e) => {
-      if (window.innerWidth > 600) return;
-      if (input.value.length > 0) return; // already typing, don't interrupt
-      e.preventDefault(); // prevent keyboard from opening immediately
-      input.blur();
-      if (typeof openMobileSheet === 'function') openMobileSheet();
-    }, { passive: false });
-    input.addEventListener('focus', () => {
-      // desktop fallback or if sheet already dismissed
-      if (window.innerWidth <= 600 && input.value.length === 0) {
-        if (typeof openMobileSheet === 'function') openMobileSheet();
-      }
-    });
-    input.addEventListener('input', () => { if (input.value.length > 0 && typeof closeMobileSheet === 'function') closeMobileSheet(); });
+    input.addEventListener('input', () => { /* sheet removed — city search button is always visible above */ });
 
     // City modal
     window.openCityModal = function() {
