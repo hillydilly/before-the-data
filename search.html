@@ -263,11 +263,13 @@
         <p>17,000+ posts across 19 years of music discovery</p>
       </div>
 
+      <form id="search-form" onsubmit="event.preventDefault(); if(window.triggerSearch) { window.triggerSearch(); document.getElementById('search-input').blur(); }" style="margin:0;display:contents;">
       <div class="search-input-wrap">
         <span class="search-icon">⌕</span>
-        <input type="text" id="search-input" placeholder="Artist, song, city, genre…" autocomplete="off" spellcheck="false">
-        <button class="search-clear" id="search-clear" title="Clear">✕</button>
+        <input type="search" id="search-input" placeholder="Artist, song, city, genre…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+        <button class="search-clear" id="search-clear" title="Clear" type="button">✕</button>
       </div>
+      </form>
 
       <div class="search-filters" id="search-filters">
         <div class="search-filter-group">
@@ -460,7 +462,16 @@
       clearBtn.classList.toggle('visible', input.value.length > 0);
       citySuggestions.style.display = input.value ? 'none' : 'flex';
       clearTimeout(debounce);
-      debounce = setTimeout(triggerSearch, 220);
+      debounce = setTimeout(triggerSearch, 300);
+    });
+
+    // Also trigger on Enter key (mobile keyboard "Go" / "Search" button)
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        clearTimeout(debounce);
+        triggerSearch();
+        input.blur(); // dismiss keyboard after search on mobile
+      }
     });
 
     // Auto-search if ?q= param present (e.g. arriving from search-by-city page)
@@ -586,7 +597,7 @@
     }
     preloadPosts();
 
-    async function triggerSearch() {
+    window.triggerSearch = async function triggerSearch() {
       const q = input.value.trim();
       if (!q) { resultsEl.innerHTML = ''; metaEl.innerHTML = ''; return; }
 
