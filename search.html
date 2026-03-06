@@ -509,8 +509,8 @@
         const remaining = Math.max(0, 5 - used);
         usageBar.style.display = 'block';
         usageBar.innerHTML = remaining > 0
-          ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month. <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`
-          : `You've used all 5 city searches this month. <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
+          ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month. <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`
+          : `You've used all 5 city searches this month. <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
 
         document.querySelectorAll('.city-modal-pill').forEach(pill => {
           pill.style.opacity = remaining > 0 ? '1' : '0.4';
@@ -661,6 +661,22 @@
         resultsEl.appendChild(el);
       });
     }
+
+    // Pro upgrade — calls Stripe checkout API directly (avoids heard-first loop)
+    window.upgradeToProCheckout = async function(e) {
+      if (e) e.preventDefault();
+      const link = e && e.target;
+      if (link) { link.textContent = 'Loading...'; link.style.pointerEvents = 'none'; }
+      try {
+        const res = await fetch('/api/create-checkout?plan=pro', { method: 'POST' });
+        const data = await res.json();
+        if (data.url) { window.location.href = data.url; }
+        else { alert('Something went wrong — please try again.'); }
+      } catch(err) {
+        if (link) { link.textContent = 'Upgrade to Pro for unlimited →'; link.style.pointerEvents = 'auto'; }
+        alert('Something went wrong — please try again.');
+      }
+    };
   });
   </script>
 
