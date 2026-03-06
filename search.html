@@ -386,6 +386,7 @@
         <span class="sheet-btn-sub">Nashville, London, Sydney, Berlin and more</span>
       </span>
     </a>
+    <button onclick="closeMobileSheet(); document.getElementById('search-input').focus();" style="margin-top:14px;width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;color:var(--tx-2,#666);cursor:pointer;letter-spacing:0.2px;">Search by artist or song instead</button>
   </div>
 
   <!-- City Search Modal -->
@@ -473,8 +474,20 @@
       input.focus();
     }
 
-    // Mobile: show bottom sheet on focus, dismiss when typing starts
-    input.addEventListener('focus', () => { if (typeof openMobileSheet === 'function') openMobileSheet(); });
+    // Mobile: show bottom sheet on touchstart (fires before keyboard opens), dismiss when typing starts
+    input.addEventListener('touchstart', (e) => {
+      if (window.innerWidth > 600) return;
+      if (input.value.length > 0) return; // already typing, don't interrupt
+      e.preventDefault(); // prevent keyboard from opening immediately
+      input.blur();
+      if (typeof openMobileSheet === 'function') openMobileSheet();
+    }, { passive: false });
+    input.addEventListener('focus', () => {
+      // desktop fallback or if sheet already dismissed
+      if (window.innerWidth <= 600 && input.value.length === 0) {
+        if (typeof openMobileSheet === 'function') openMobileSheet();
+      }
+    });
     input.addEventListener('input', () => { if (input.value.length > 0 && typeof closeMobileSheet === 'function') closeMobileSheet(); });
 
     // City modal
@@ -537,8 +550,11 @@
           input.value = city;
           clearBtn.classList.add('visible');
           citySuggestions.style.display = 'none';
-          triggerSearch();
-          input.focus();
+          // Small delay to let modal close animation complete before search fires
+          setTimeout(() => {
+            triggerSearch();
+            input.focus();
+          }, 50);
         };
       });
     };
