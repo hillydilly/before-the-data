@@ -72,87 +72,137 @@
   </aside>
 
   <style>
-    .search-container { max-width: 760px; padding-bottom: 60px; }
-    .search-page-header { margin-bottom: 20px; }
-    .search-page-header h1 { font-family: var(--font-heading); font-size: 32px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px; }
-    .search-page-header p { font-size: 13px; color: var(--tx-3); margin: 0; }
+    /* ── Page layout ─────────────────────────────────────────── */
+    .search-container { max-width: 720px; padding-bottom: 80px; }
 
-    /* Input */
-    .search-input-wrap { position: relative; margin-bottom: 16px; }
+    /* ── Header ──────────────────────────────────────────────── */
+    .search-page-header { margin-bottom: 28px; padding-top: 4px; }
+    .search-page-header h1 {
+      font-family: var(--font-heading);
+      font-size: 38px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; margin: 0 0 6px; line-height: 1;
+    }
+    .search-page-header p { font-size: 13px; color: var(--tx-3); margin: 0; letter-spacing: 0.2px; }
+
+    /* ── Search input ────────────────────────────────────────── */
+    .search-input-wrap { position: relative; margin-bottom: 18px; }
     .search-input-wrap input {
-      width: 100%; padding: 14px 16px 14px 44px; font-size: 16px;
-      border: 1.5px solid var(--border); border-radius: 10px;
-      background: var(--bg-1); color: var(--tx-1); outline: none;
-      box-sizing: border-box; transition: border-color 0.15s;
+      width: 100%; padding: 17px 48px 17px 52px;
+      font-size: 17px; font-family: inherit; letter-spacing: -0.1px;
+      border: 2px solid var(--border); border-radius: 14px;
+      background: var(--bg-0, #fff); color: var(--tx-1); outline: none;
+      box-sizing: border-box; transition: border-color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .search-input-wrap input:focus { border-color: var(--acc); }
-    .search-input-wrap .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--tx-3); pointer-events: none; }
+    .search-input-wrap input:focus {
+      border-color: #000;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .search-input-wrap input::placeholder { color: var(--tx-3); }
+    .search-input-wrap .search-icon {
+      position: absolute; left: 17px; top: 50%; transform: translateY(-50%);
+      font-size: 20px; color: var(--tx-3); pointer-events: none;
+    }
     .search-input-wrap .search-clear {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-      background: none; border: none; cursor: pointer; color: var(--tx-3);
-      font-size: 18px; padding: 4px; display: none; line-height: 1;
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: var(--bg-2); border: none; cursor: pointer; color: var(--tx-3);
+      font-size: 13px; padding: 4px 7px; border-radius: 50%; display: none; line-height: 1;
+      transition: background 0.15s, color 0.15s;
     }
+    .search-input-wrap .search-clear:hover { background: var(--border); color: var(--tx-1); }
     .search-input-wrap .search-clear.visible { display: block; }
 
-    /* Filter pills */
-    .search-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-    .search-filter-group { display: flex; gap: 6px; align-items: center; }
-    .search-filter-group label { font-size: 11px; color: var(--tx-3); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+    /* ── Filter pills ────────────────────────────────────────── */
+    .search-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+    .search-filter-group { display: flex; gap: 5px; align-items: center; }
+    .search-filter-group label {
+      font-size: 10px; color: var(--tx-3); text-transform: uppercase;
+      letter-spacing: 0.8px; white-space: nowrap; font-weight: 600; margin-right: 2px;
+    }
     .filter-pill {
-      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
-      border: 1.5px solid var(--border); background: var(--bg-1); color: var(--tx-2);
-      cursor: pointer; transition: all 0.15s; white-space: nowrap;
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      border: 1.5px solid var(--border); background: transparent; color: var(--tx-2);
+      cursor: pointer; transition: all 0.15s; white-space: nowrap; letter-spacing: 0.1px;
     }
-    .filter-pill:hover { border-color: var(--acc); color: var(--acc); }
-    .filter-pill.active { background: var(--acc); border-color: var(--acc); color: #fff; }
-    .filter-divider { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+    .filter-pill:hover { border-color: var(--tx-2); color: var(--tx-1); }
+    .filter-pill.active { background: #000; border-color: #000; color: #fff; }
+    .filter-divider { width: 1px; height: 22px; background: var(--border); margin: 0 6px; flex-shrink: 0; }
 
-    /* Results meta */
-    .search-meta { font-size: 12px; color: var(--tx-3); margin-bottom: 14px; min-height: 18px; }
-    .search-meta strong { color: var(--tx-1); }
+    /* ── Results count ───────────────────────────────────────── */
+    .search-meta {
+      font-size: 12px; color: var(--tx-3); margin-bottom: 12px;
+      min-height: 18px; letter-spacing: 0.2px;
+    }
+    .search-meta strong { color: var(--tx-1); font-weight: 700; }
 
-    /* Result cards */
-    .search-results { display: flex; flex-direction: column; gap: 2px; }
+    /* ── Result cards ────────────────────────────────────────── */
+    .search-results { display: flex; flex-direction: column; gap: 0; }
     .search-result {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 10px; border-radius: 8px; cursor: pointer;
-      transition: background 0.12s;
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 8px; border-radius: 10px; cursor: pointer;
+      transition: background 0.1s;
+      border-bottom: 1px solid transparent;
     }
-    .search-result:hover { background: var(--bg-2); }
+    .search-result:hover { background: var(--bg-2, #f7f7f7); }
+
+    /* Artwork */
     .search-result-art {
-      position: relative; width: 52px; height: 52px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: var(--bg-2);
+      position: relative; width: 58px; height: 58px; flex-shrink: 0;
+      border-radius: 8px; overflow: hidden; background: var(--bg-2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
     }
     .search-result-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .search-result-art .sr-play {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.45); opacity: 0; transition: opacity 0.15s; border-radius: 6px;
-      font-size: 16px; color: #fff;
+      background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.15s; border-radius: 8px;
+      font-size: 18px; color: #fff;
     }
     .search-result:hover .sr-play { opacity: 1; }
+
+    /* Text */
     .search-result-info { flex: 1; min-width: 0; }
-    .sr-title { font-size: 14px; font-weight: 600; color: var(--tx-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .sr-artist { font-size: 12px; color: var(--tx-2); margin-top: 2px; }
-    .sr-meta { font-size: 11px; color: var(--tx-3); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; }
-    .sr-meta span { display: flex; align-items: center; gap: 3px; }
-    .sr-year-badge { background: var(--bg-2); border-radius: 4px; padding: 1px 6px; font-size: 10px; color: var(--tx-3); font-weight: 500; flex-shrink: 0; align-self: center; }
-
-    /* Empty / loading */
-    .search-empty { padding: 40px 0; text-align: center; color: var(--tx-3); font-size: 14px; }
-    .search-empty strong { display: block; font-size: 16px; color: var(--tx-2); margin-bottom: 6px; }
-
-    /* City suggestions */
-    .city-suggestions { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
-    .city-pill {
-      padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500;
-      border: 1px solid var(--border); background: var(--bg-1); color: var(--tx-3);
-      cursor: pointer; transition: all 0.15s;
+    .sr-title {
+      font-size: 14px; font-weight: 600; color: var(--tx-1);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: -0.1px;
     }
-    .city-pill:hover { border-color: var(--acc); color: var(--acc); }
+    .sr-artist {
+      font-size: 13px; color: var(--tx-2); margin-top: 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sr-meta {
+      font-size: 11px; color: var(--tx-3); margin-top: 4px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    }
+
+    /* Year badge */
+    .sr-year-badge {
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 5px; padding: 2px 7px; font-size: 10px;
+      color: var(--tx-3); font-weight: 600; flex-shrink: 0; align-self: center;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Empty state ─────────────────────────────────────────── */
+    .search-empty { padding: 56px 0; text-align: center; color: var(--tx-3); font-size: 14px; }
+    .search-empty strong { display: block; font-size: 18px; color: var(--tx-2); margin-bottom: 8px; font-weight: 700; }
+
+    /* ── City search button ───────────────────────────────────── */
+    .city-suggestions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+    .city-suggestions span { font-size: 11px; color: var(--tx-3); letter-spacing: 0.3px; }
+    #city-search-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 22px; font-size: 13px; font-weight: 600;
+      border: 2px solid #000; background: #000; color: #fff;
+      cursor: pointer; transition: all 0.15s; letter-spacing: 0.1px;
+    }
+    #city-search-btn:hover { background: transparent; color: #000; }
 
     @media (max-width: 600px) {
-      .search-page-header h1 { font-size: 24px; }
-      .search-input-wrap input { font-size: 15px; }
+      .search-page-header h1 { font-size: 28px; }
+      .search-input-wrap input { font-size: 16px; padding: 15px 44px 15px 48px; }
       .search-filters { gap: 6px; }
+      .search-result-art { width: 50px; height: 50px; }
     }
   </style>
 
