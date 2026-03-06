@@ -3,10 +3,31 @@
     { "source": "/heard-first", "destination": "/heard-first.html" },
     { "source": "/archive", "destination": "/archive.html" },
     { "source": "/for-managers", "destination": "/for-managers.html" },
+    { "source": "/search-by-city", "destination": "/search-by-city.html" },
     { "source": "/artist/:slug", "destination": "/artist.html" },
-    { "source": "/:slug", "destination": "/post.html" }
+    { "source": "/:slug((?!posts\\.json|search-index\\.json|posts-live\\.json|assets|js|css|api|favicon|sitemap).*)", "destination": "/post.html" }
   ],
   "redirects": [
     { "source": "/pro", "destination": "/heard-first/pro", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/posts.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/search-index.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    },
+    {
+      "source": "/posts-live.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, s-maxage=300, stale-while-revalidate=600" }
+      ]
+    }
   ]
 }
