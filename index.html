@@ -221,76 +221,28 @@
 
   <!-- MAIN CONTENT -->
   <main id="main">
-    <!-- Mobile sticky search bar -->
+    <!-- Mobile sticky search bar — tapping navigates to full search page on mobile -->
     <div id="mobile-search-bar">
-      <input type="search" id="mobile-search-input" placeholder="Search artists, songs, cities…" autocomplete="off" enterkeyhint="search">
-    </div>
-
-    <!-- Mobile city bottom sheet (slides up when search bar tapped) -->
-    <div id="disc-sheet-backdrop" onclick="closeDiscSheet()" style="display:none;position:fixed;inset:0;z-index:9400;background:rgba(0,0,0,0.4);"></div>
-    <div id="disc-sheet" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9500;background:var(--bg-0,#fff);border-radius:18px 18px 0 0;padding:12px 20px 36px;box-shadow:0 -4px 30px rgba(0,0,0,0.15);transform:translateY(100%);transition:transform 0.28s cubic-bezier(.32,1,.23,1);">
-      <div style="width:36px;height:4px;background:rgba(0,0,0,0.15);border-radius:2px;margin:0 auto 16px;"></div>
-      <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--tx-3,#999);margin-bottom:14px;">Quick access</div>
-      <a href="/search-by-city.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-1,#f7f7f7);border-radius:12px;text-decoration:none;color:inherit;margin-bottom:10px;">
-        <span style="font-size:24px;">📍</span>
-        <span>
-          <div style="font-size:15px;font-weight:600;color:var(--tx-1,#000);">Search by City</div>
-          <div style="font-size:12px;color:var(--tx-3,#999);margin-top:2px;">Nashville, London, Sydney, Berlin and more</div>
-        </span>
-      </a>
-      <button onclick="dismissDiscSheetAndSearch();" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;color:var(--tx-2,#666);cursor:pointer;letter-spacing:0.2px;">Search by artist or song instead</button>
+      <input type="search" id="mobile-search-input" placeholder="Search artists, songs, cities…" autocomplete="off" enterkeyhint="search" readonly>
     </div>
     <script>
-      function openDiscSheet() {
-        if (window.innerWidth > 600) return;
-        document.getElementById('disc-sheet').style.display = 'block';
-        document.getElementById('disc-sheet-backdrop').style.display = 'block';
-        requestAnimationFrame(() => document.getElementById('disc-sheet').style.transform = 'translateY(0)');
-      }
-      function closeDiscSheet() {
-        const s = document.getElementById('disc-sheet');
-        s.style.transform = 'translateY(100%)';
-        setTimeout(() => {
-          s.style.display = 'none';
-          document.getElementById('disc-sheet-backdrop').style.display = 'none';
-        }, 280);
-      }
       document.addEventListener('DOMContentLoaded', () => {
         const inp = document.getElementById('mobile-search-input');
         if (!inp) return;
-        let sheetDismissed = false;
-
+        // On mobile: tap goes straight to search page
         inp.addEventListener('touchstart', (e) => {
           if (window.innerWidth > 600) return;
-          if (inp.value.length > 0) return;
-          if (sheetDismissed) return; // user chose to type instead — don't re-open
           e.preventDefault();
-          inp.blur();
-          openDiscSheet();
+          window.location.href = '/search';
         }, { passive: false });
-
+        // On desktop: filter visible cards (legacy behavior)
         inp.addEventListener('input', () => {
-          if (inp.value.length > 0) closeDiscSheet();
+          if (window.innerWidth <= 600) return;
+          const q = inp.value.toLowerCase().trim();
+          document.querySelectorAll('#new-music-scroll .music-list-item, #music-grid .music-list-item, #music-grid .music-card').forEach(item => {
+            item.style.display = (!q || item.textContent.toLowerCase().includes(q)) ? '' : 'none';
+          });
         });
-
-        // Enter/Go key — go to search results
-        inp.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            const q = inp.value.trim();
-            if (q) window.location.href = '/search.html?q=' + encodeURIComponent(q);
-          }
-        });
-
-        // Expose dismiss function so the "Search by artist" button can set the flag
-        window.dismissDiscSheetAndSearch = function() {
-          sheetDismissed = true;
-          closeDiscSheet();
-          setTimeout(() => {
-            inp.focus();
-            // Reset flag after a moment so tapping search bar fresh still works
-            setTimeout(() => { sheetDismissed = false; }, 5000);
-          }, 300);
-        };
       });
     </script>
 
