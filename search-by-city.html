@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Search by City — Before The Data</title>
+  <meta name="description" content="Find artists from your city. 19 years of music discovery, filtered by where artists are from.">
+  <link rel="canonical" href="https://beforethedata.com/search-by-city">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <style>
+    .city-search-container {
+      max-width: 640px;
+      padding-bottom: 80px;
+    }
+
+    /* Header */
+    .city-page-header { margin-bottom: 28px; padding-top: 4px; }
+    .city-page-header h1 {
+      font-family: var(--font-heading);
+      font-size: 34px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 1px; margin: 0 0 6px; line-height: 1;
+    }
+    .city-page-header p { font-size: 13px; color: var(--tx-3); margin: 0; }
+
+    /* Gate message */
+    #city-gate-block {
+      display: none;
+      padding: 28px 24px;
+      background: var(--bg-1);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    #city-gate-block h2 { font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+    #city-gate-block p { font-size: 14px; color: var(--tx-3); margin: 0 0 18px; }
+    .gate-cta {
+      display: inline-block; padding: 12px 24px;
+      background: #000; color: #fff; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.8px; text-transform: uppercase; border-radius: 8px;
+      text-decoration: none; transition: opacity 0.15s;
+    }
+    .gate-cta:hover { opacity: 0.8; }
+
+    /* Usage bar */
+    #city-usage-bar {
+      display: none;
+      padding: 12px 16px;
+      background: var(--bg-1);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--tx-2);
+      margin-bottom: 24px;
+    }
+
+    /* Region sections */
+    .city-region { margin-bottom: 28px; }
+    .city-region-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--tx-3);
+      margin: 0 0 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .city-region-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .city-tile {
+      padding: 14px 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-0);
+      font-size: 14px; font-weight: 600;
+      color: var(--tx-1);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .city-tile:hover {
+      background: #000; border-color: #000; color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .city-tile:active { transform: translateY(0); }
+
+    @media (max-width: 480px) {
+      .city-page-header h1 { font-size: 26px; }
+      .city-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 6px; }
+      .city-tile { padding: 12px 8px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body data-page="search-by-city">
+  <div id="player-bar">
+    <a class="player-brand" href="/"><img src="assets/brand/logo-black-mark.png" alt="Before The Data"></a>
+    <div class="player-controls">
+      <button class="prev-btn" title="Previous">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+      </button>
+      <button class="play-btn" title="Play">&#9654;</button>
+      <button class="next-btn" title="Next">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6h2v12h-2z"/></svg>
+      </button>
+    </div>
+    <div class="player-center">
+      <img class="player-art" src="" alt="" id="player-bar-art">
+      <div class="player-info">
+        <div class="player-title" id="player-title-text">Select a track</div>
+        <a class="player-source" id="player-apple-link" href="#" target="_blank">APPLE MUSIC</a>
+      </div>
+      <div class="player-progress-wrap">
+        <div class="player-progress"><div class="player-progress-fill"></div></div>
+      </div>
+    </div>
+    <div class="player-right">
+      <button class="volume-btn" title="Volume">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <div class="volume-popup" id="volume-popup">
+          <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.05" value="0.8" orient="vertical">
+        </div>
+      </button>
+    </div>
+    <div class="player-right-shade"></div>
+  </div>
+
+  <aside id="sidebar">
+    <a href="index.html" class="sidebar-brand"><span class="brand-name">Before The Data</span></a>
+    <nav>
+      <a href="/"><span class="nav-icon">◈</span> Discover</a>
+      <a href="/new-music.html"><span class="nav-icon">♪</span> New Music</a>
+      <a href="/popular.html"><span class="nav-icon">▲</span> Popular</a>
+      <a href="/search.html"><span class="nav-icon">⌕</span> Search</a>
+      <a href="/archive"><span class="nav-icon">◷</span> Archive</a>
+      <a href="/submit.html"><span class="nav-icon">📬</span> Submit Music</a>
+      <a href="/heard-first.html" class="nav-heard-first"><span class="nav-icon">★</span> Heard First</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/about.html">About</a>
+      <a href="/contact.html">Contact</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="city-search-container">
+
+      <div class="city-page-header">
+        <h1>📍 Search by City</h1>
+        <p>19 years of music discovery, filtered by where artists are from.</p>
+      </div>
+
+      <!-- Gate: non-members -->
+      <div id="city-gate-block">
+        <h2>Heard First members only</h2>
+        <p>Heard First members get 5 city searches per month.<br>Pro members get unlimited access.</p>
+        <a href="/heard-first.html" class="gate-cta">Join Heard First →</a>
+      </div>
+
+      <!-- Usage bar: HF tier -->
+      <div id="city-usage-bar"></div>
+
+      <!-- City grid -->
+      <div id="city-grid-body">
+        <div class="city-region">
+          <div class="city-region-label">🇺🇸 United States</div>
+          <div class="city-grid">
+            <a class="city-tile" data-city="Nashville">Nashville</a>
+            <a class="city-tile" data-city="New York">New York</a>
+            <a class="city-tile" data-city="Los Angeles">Los Angeles</a>
+            <a class="city-tile" data-city="Atlanta">Atlanta</a>
+            <a class="city-tile" data-city="Chicago">Chicago</a>
+            <a class="city-tile" data-city="Brooklyn">Brooklyn</a>
+            <a class="city-tile" data-city="Austin">Austin</a>
+            <a class="city-tile" data-city="Seattle">Seattle</a>
+            <a class="city-tile" data-city="Portland">Portland</a>
+            <a class="city-tile" data-city="Miami">Miami</a>
+            <a class="city-tile" data-city="Houston">Houston</a>
+            <a class="city-tile" data-city="Boston">Boston</a>
+            <a class="city-tile" data-city="Philadelphia">Philadelphia</a>
+            <a class="city-tile" data-city="Denver">Denver</a>
+          </div>
+        </div>
+
+        <div class="city-region">
+          <div class="city-region-label">🇨🇦 Canada</div>
+          <div class="city-grid">
+            <a class="city-tile" data-city="Toronto">Toronto</a>
+            <a class="city-tile" data-city="Vancouver">Vancouver</a>
+            <a class="city-tile" data-city="Montreal">Montreal</a>
+          </div>
+        </div>
+
+        <div class="city-region">
+          <div class="city-region-label">🇬🇧 UK &amp; Europe</div>
+          <div class="city-grid">
+            <a class="city-tile" data-city="London">London</a>
+            <a class="city-tile" data-city="Manchester">Manchester</a>
+            <a class="city-tile" data-city="Dublin">Dublin</a>
+            <a class="city-tile" data-city="Glasgow">Glasgow</a>
+            <a class="city-tile" data-city="Berlin">Berlin</a>
+            <a class="city-tile" data-city="Amsterdam">Amsterdam</a>
+            <a class="city-tile" data-city="Paris">Paris</a>
+            <a class="city-tile" data-city="Stockholm">Stockholm</a>
+          </div>
+        </div>
+
+        <div class="city-region">
+          <div class="city-region-label">🌏 Australia &amp; NZ</div>
+          <div class="city-grid">
+            <a class="city-tile" data-city="Melbourne">Melbourne</a>
+            <a class="city-tile" data-city="Sydney">Sydney</a>
+            <a class="city-tile" data-city="Auckland">Auckland</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase.js?v=202603060001"></script>
+  <script src="js/gate.js"></script>
+  <script src="js/player.js?v=202603060001"></script>
+  <script>window.__btd_skip_initSearch = true;</script>
+  <script src="js/app.js?v=202603060001"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tier = localStorage.getItem('btd_tier') || 'free';
+    const isPro = tier === 'pro';
+    const isHF = tier === 'heard-first';
+    const isPaid = isPro || isHF;
+    const gateBlock = document.getElementById('city-gate-block');
+    const usageBar = document.getElementById('city-usage-bar');
+    const gridBody = document.getElementById('city-grid-body');
+
+    if (!isPaid) {
+      gateBlock.style.display = 'block';
+      gridBody.style.opacity = '0.35';
+      gridBody.style.pointerEvents = 'none';
+    } else if (isHF) {
+      const USAGE_KEY = 'btd_city_search_usage';
+      const monthKey = new Date().toISOString().substring(0, 7);
+      let usage = {};
+      try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
+      const used = usage[monthKey] || 0;
+      const remaining = Math.max(0, 5 - used);
+      usageBar.style.display = 'block';
+      usageBar.innerHTML = remaining > 0
+        ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month &nbsp;·&nbsp; <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`
+        : `You've used all 5 city searches this month. <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
+      if (remaining === 0) {
+        gridBody.style.opacity = '0.35';
+        gridBody.style.pointerEvents = 'none';
+      }
+    }
+
+    // City tile clicks
+    document.querySelectorAll('.city-tile').forEach(tile => {
+      tile.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!isPaid) { window.location.href = '/heard-first.html'; return; }
+
+        // Deduct usage for HF
+        if (isHF) {
+          const USAGE_KEY = 'btd_city_search_usage';
+          const monthKey = new Date().toISOString().substring(0, 7);
+          let usage = {};
+          try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
+          usage[monthKey] = (usage[monthKey] || 0) + 1;
+          try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(e) {}
+        }
+
+        const city = tile.dataset.city;
+        window.location.href = '/search.html?q=' + encodeURIComponent(city);
+      });
+    });
+  });
+  </script>
+
+</body>
+</html>

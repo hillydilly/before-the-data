@@ -204,6 +204,56 @@
       .search-filters { gap: 6px; }
       .search-result-art { width: 50px; height: 50px; }
     }
+
+    /* ── Mobile search bottom sheet ──────────────────────────── */
+    #mobile-search-sheet {
+      display: none;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 8000;
+      background: var(--bg-0, #fff);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+      padding: 16px 20px 32px;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    }
+    #mobile-search-sheet.open {
+      transform: translateY(0);
+    }
+    #mobile-search-sheet-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 7999;
+      background: rgba(0,0,0,0.3);
+    }
+    .sheet-handle {
+      width: 36px; height: 4px; background: var(--border, #e0e0e0);
+      border-radius: 2px; margin: 0 auto 16px;
+    }
+    .sheet-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--tx-3); margin-bottom: 12px;
+    }
+    .sheet-city-btn {
+      display: flex; align-items: center; gap: 12px;
+      width: 100%; padding: 14px 16px; border-radius: 12px;
+      background: #000; border: none; cursor: pointer;
+      text-decoration: none; color: #fff;
+      transition: opacity 0.15s;
+    }
+    .sheet-city-btn:hover { opacity: 0.85; }
+    .sheet-city-btn .sheet-btn-icon {
+      font-size: 22px; line-height: 1;
+    }
+    .sheet-city-btn .sheet-btn-text { text-align: left; }
+    .sheet-city-btn .sheet-btn-title {
+      font-size: 15px; font-weight: 700; display: block; letter-spacing: -0.2px;
+    }
+    .sheet-city-btn .sheet-btn-sub {
+      font-size: 12px; color: rgba(255,255,255,0.6); display: block; margin-top: 2px;
+    }
+    @media (min-width: 601px) {
+      #mobile-search-sheet { display: none !important; }
+      #mobile-search-sheet-backdrop { display: none !important; }
+    }
   </style>
 
   <main id="main">
@@ -324,6 +374,43 @@
     </div>
   </main>
 
+  <!-- Mobile search bottom sheet (appears on input focus on mobile) -->
+  <div id="mobile-search-sheet-backdrop" onclick="closeMobileSheet()"></div>
+  <div id="mobile-search-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-label">Quick access</div>
+    <a href="/search-by-city.html" class="sheet-city-btn">
+      <span class="sheet-btn-icon">📍</span>
+      <span class="sheet-btn-text">
+        <span class="sheet-btn-title">Search by City</span>
+        <span class="sheet-btn-sub">Nashville, London, Sydney, Berlin and more</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- City Search Modal -->
+  <!-- (modal HTML injected below via city-suggestions) -->
+
+  <script>
+  // Mobile sheet logic
+  function openMobileSheet() {
+    if (window.innerWidth > 600) return;
+    document.getElementById('mobile-search-sheet').style.display = 'block';
+    document.getElementById('mobile-search-sheet-backdrop').style.display = 'block';
+    requestAnimationFrame(() => {
+      document.getElementById('mobile-search-sheet').classList.add('open');
+    });
+  }
+  function closeMobileSheet() {
+    const sheet = document.getElementById('mobile-search-sheet');
+    sheet.classList.remove('open');
+    setTimeout(() => {
+      sheet.style.display = 'none';
+      document.getElementById('mobile-search-sheet-backdrop').style.display = 'none';
+    }, 280);
+  }
+  </script>
+
   <script>
   // Inline search logic — runs after app.js loads
   document.addEventListener('DOMContentLoaded', () => {
@@ -375,7 +462,20 @@
       debounce = setTimeout(triggerSearch, 220);
     });
 
-    input.focus();
+    // Auto-search if ?q= param present (e.g. arriving from search-by-city page)
+    const urlParams = new URLSearchParams(window.location.search);
+    const qParam = urlParams.get('q');
+    if (qParam) {
+      input.value = qParam;
+      clearBtn.classList.add('visible');
+      triggerSearch();
+    } else {
+      input.focus();
+    }
+
+    // Mobile: show bottom sheet on focus, dismiss when typing starts
+    input.addEventListener('focus', () => { if (typeof openMobileSheet === 'function') openMobileSheet(); });
+    input.addEventListener('input', () => { if (input.value.length > 0 && typeof closeMobileSheet === 'function') closeMobileSheet(); });
 
     // City modal
     window.openCityModal = function() {
