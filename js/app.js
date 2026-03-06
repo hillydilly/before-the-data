@@ -227,7 +227,7 @@ async function renderDiscover() {
     const liveRes = await fetch('/posts-live.json');
     if (liveRes.ok) {
       const d = await liveRes.json();
-      latest = (d.posts || []).filter(p => p.title && p.artist).slice(0, 10);
+      latest = (d.posts || []).filter(p => p.title && p.artist && !p.isArchive).slice(0, 10);
     }
   } catch(e) {}
   if (!latest.length) latest = await fetchPosts('publishedAt', 'desc', 10);
