@@ -438,12 +438,18 @@ async function fetchPostBySlug(slug) {
 async function searchPosts(query) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
-  const all = await fetchPosts('publishedAt', 'desc', 100);
+  // Use full posts.json (all 17k posts) not paginated Firestore
+  const all = await fetchPostsFromFirebase();
+  if (!all) return [];
   return all.filter(p =>
-    p.artist.toLowerCase().includes(q) ||
-    p.title.toLowerCase().includes(q) ||
-    (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
-  );
+    (p.artist || '').toLowerCase().includes(q) ||
+    (p.title || '').toLowerCase().includes(q) ||
+    (p.tags && p.tags.some(t => t.toLowerCase().includes(q))) ||
+    (p.genres && p.genres.some(g => g.toLowerCase().includes(q))) ||
+    (p.city || '').toLowerCase().includes(q) ||
+    (p.location || '').toLowerCase().includes(q) ||
+    (p.writeup || '').toLowerCase().includes(q)
+  ).slice(0, 50);
 }
 
 async function incrementViews(postId) {
