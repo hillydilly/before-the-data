@@ -222,15 +222,15 @@ async function renderDiscover() {
 
   // Fetch new music + charts in parallel
   // Discover scroll uses posts-live.json directly (fast, 16KB) for the homepage strip
-  let latest = [];
-  try {
-    const liveRes = await fetch('/posts-live.json');
-    if (liveRes.ok) {
-      const d = await liveRes.json();
-      latest = (d.posts || []).filter(p => p.title && p.artist && !p.isArchive).slice(0, 10);
-    }
-  } catch(e) {}
-  if (!latest.length) latest = await fetchPosts('publishedAt', 'desc', 10);
+  // Use fetchLivePosts() — same source as New Music page, same order
+  const livePostsAll = await fetchLivePosts();
+  const latest = (livePostsAll || [])
+    .sort((a, b) => {
+      const aS = typeof a.publishedAt === 'object' ? a.publishedAt.seconds : Math.floor(new Date(a.publishedAt).getTime()/1000);
+      const bS = typeof b.publishedAt === 'object' ? b.publishedAt.seconds : Math.floor(new Date(b.publishedAt).getTime()/1000);
+      return bS - aS;
+    })
+    .slice(0, 10);
 
   const charts = await fetchCharts();
 
