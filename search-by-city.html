@@ -157,11 +157,21 @@
         <p>19 years of music discovery, filtered by where artists are from.</p>
       </div>
 
-      <!-- Gate: non-members -->
+      <!-- Email gate (no email yet) -->
+      <div id="email-gate-block" style="display:none;background:var(--bg-1,#f7f7f7);border-radius:12px;padding:24px;margin-bottom:24px;text-align:center;">
+        <div style="font-size:22px;margin-bottom:10px;">📍</div>
+        <h2 style="font-size:18px;font-weight:700;margin:0 0 8px;">City Search</h2>
+        <p style="font-size:14px;color:var(--tx-3,#999);margin:0 0 16px;">Enter your email to explore the archive by city.<br>Heard First members get 5 searches/month. Pro is unlimited.</p>
+        <form id="email-gate-form" style="display:flex;gap:8px;max-width:340px;margin:0 auto 12px;">
+          <input type="email" id="email-gate-input" placeholder="your@email.com" required style="flex:1;padding:10px 14px;border:1px solid rgba(0,0,0,0.15);border-radius:8px;font-size:14px;background:var(--bg-0,#fff);color:var(--tx-1,#000);">
+          <button type="submit" style="padding:10px 18px;background:#000;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Continue</button>
+        </form>
+      </div>
+      <!-- Tier gate (has email, not a paid member) -->
       <div id="city-gate-block">
         <h2>Heard First members only</h2>
         <p>Heard First members get 5 city searches per month.<br>Pro members get unlimited access.</p>
-        <a href="/heard-first.html" class="gate-cta">Join Heard First →</a>
+        <a href="/heard-first.html" class="gate-cta">Join Heard First — $9/mo →</a>
       </div>
 
       <!-- Usage bar: HF tier -->
@@ -235,49 +245,94 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const email = localStorage.getItem('btd_email') || '';
     const tier = localStorage.getItem('btd_tier') || 'free';
     const isPro = tier === 'pro';
     const isHF = tier === 'heard-first';
     const isPaid = isPro || isHF;
-    const gateBlock = document.getElementById('city-gate-block');
+    const emailGate = document.getElementById('email-gate-block');
+    const tierGate = document.getElementById('city-gate-block');
     const usageBar = document.getElementById('city-usage-bar');
     const gridBody = document.getElementById('city-grid-body');
+    const USAGE_KEY = 'btd_city_search_usage';
 
-    if (!isPaid) {
-      gateBlock.style.display = 'block';
-      gridBody.style.opacity = '0.35';
-      gridBody.style.pointerEvents = 'none';
-    } else if (isHF) {
-      const USAGE_KEY = 'btd_city_search_usage';
-      const monthKey = new Date().toISOString().substring(0, 7);
-      let usage = {};
-      try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
-      const used = usage[monthKey] || 0;
-      const remaining = Math.max(0, 5 - used);
-      usageBar.style.display = 'block';
-      usageBar.innerHTML = remaining > 0
-        ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month &nbsp;·&nbsp; <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`
-        : `You've used all 5 city searches this month. <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
-      if (remaining === 0) {
+    function getMonthKey() { return new Date().toISOString().substring(0, 7); }
+    function getUsage() { try { return JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) { return {}; } }
+
+    function initGate() {
+      // Step 1: no email at all
+      if (!email) {
+        emailGate.style.display = 'block';
+        tierGate.style.display = 'none';
+        gridBody.style.opacity = '0.25';
+        gridBody.style.pointerEvents = 'none';
+        return;
+      }
+      // Step 2: has email, not paid
+      if (!isPaid) {
+        emailGate.style.display = 'none';
+        tierGate.style.display = 'block';
         gridBody.style.opacity = '0.35';
         gridBody.style.pointerEvents = 'none';
+        return;
       }
+      // Step 3: paid
+      emailGate.style.display = 'none';
+      tierGate.style.display = 'none';
+      if (isHF) {
+        const usage = getUsage();
+        const used = usage[getMonthKey()] || 0;
+        const remaining = Math.max(0, 5 - used);
+        usageBar.style.display = 'block';
+        usageBar.innerHTML = remaining > 0
+          ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month &nbsp;·&nbsp; <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited</a>`
+          : `You've used all 5 city searches this month. <a href="#" onclick="upgradeToProCheckout(event)" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
+        if (remaining === 0) {
+          gridBody.style.opacity = '0.35';
+          gridBody.style.pointerEvents = 'none';
+        }
+      }
+    }
+
+    initGate();
+
+    // Email gate form submit
+    const emailForm = document.getElementById('email-gate-form');
+    if (emailForm) {
+      emailForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const val = document.getElementById('email-gate-input').value.trim();
+        if (!val) return;
+        localStorage.setItem('btd_email', val);
+        // Subscribe to BTD list via API
+        try { await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: val, source: 'city-search-gate' }) }); } catch(err) {}
+        emailGate.style.display = 'none';
+        gridBody.style.opacity = '';
+        gridBody.style.pointerEvents = '';
+        // Re-run gate with email now set
+        location.reload();
+      });
     }
 
     // City tile clicks
     document.querySelectorAll('.city-tile').forEach(tile => {
       tile.addEventListener('click', (e) => {
         e.preventDefault();
-        if (!isPaid) { window.location.href = '/heard-first.html'; return; }
+        const currentEmail = localStorage.getItem('btd_email') || '';
+        const currentTier = localStorage.getItem('btd_tier') || 'free';
+        const currentPaid = currentTier === 'pro' || currentTier === 'heard-first';
+
+        if (!currentEmail) { emailGate.style.display = 'block'; emailGate.scrollIntoView({ behavior: 'smooth' }); return; }
+        if (!currentPaid) { window.location.href = '/heard-first.html'; return; }
 
         // Deduct usage for HF
-        if (isHF) {
-          const USAGE_KEY = 'btd_city_search_usage';
-          const monthKey = new Date().toISOString().substring(0, 7);
-          let usage = {};
-          try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
-          usage[monthKey] = (usage[monthKey] || 0) + 1;
-          try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(e) {}
+        if (currentTier === 'heard-first') {
+          const usage = getUsage();
+          const mk = getMonthKey();
+          const used = usage[mk] || 0;
+          if (used >= 5) { return; } // blocked by UI already
+          usage[mk] = used + 1;
+          try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(err) {}
         }
 
         const city = tile.dataset.city;
@@ -285,7 +340,7 @@
       });
     });
 
-    // Pro upgrade — calls Stripe checkout API directly
+    // Pro upgrade
     window.upgradeToProCheckout = async function(e) {
       if (e) e.preventDefault();
       const link = e && e.target;
@@ -300,7 +355,6 @@
         alert('Something went wrong — please try again.');
       }
     };
-
   });
   </script>
 
