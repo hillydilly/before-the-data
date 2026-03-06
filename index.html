@@ -238,7 +238,7 @@
           <div style="font-size:12px;color:var(--tx-3,#999);margin-top:2px;">Nashville, London, Sydney, Berlin and more</div>
         </span>
       </a>
-      <button onclick="closeDiscSheet(); document.getElementById('mobile-search-input').focus();" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;color:var(--tx-2,#666);cursor:pointer;letter-spacing:0.2px;">Search by artist or song instead</button>
+      <button onclick="dismissDiscSheetAndSearch();" style="width:100%;padding:12px;background:transparent;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:14px;color:var(--tx-2,#666);cursor:pointer;letter-spacing:0.2px;">Search by artist or song instead</button>
     </div>
     <script>
       function openDiscSheet() {
@@ -258,14 +258,39 @@
       document.addEventListener('DOMContentLoaded', () => {
         const inp = document.getElementById('mobile-search-input');
         if (!inp) return;
+        let sheetDismissed = false;
+
         inp.addEventListener('touchstart', (e) => {
           if (window.innerWidth > 600) return;
           if (inp.value.length > 0) return;
+          if (sheetDismissed) return; // user chose to type instead — don't re-open
           e.preventDefault();
           inp.blur();
           openDiscSheet();
         }, { passive: false });
-        inp.addEventListener('input', () => { if (inp.value.length > 0) closeDiscSheet(); });
+
+        inp.addEventListener('input', () => {
+          if (inp.value.length > 0) closeDiscSheet();
+        });
+
+        // Enter/Go key — go to search results
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const q = inp.value.trim();
+            if (q) window.location.href = '/search.html?q=' + encodeURIComponent(q);
+          }
+        });
+
+        // Expose dismiss function so the "Search by artist" button can set the flag
+        window.dismissDiscSheetAndSearch = function() {
+          sheetDismissed = true;
+          closeDiscSheet();
+          setTimeout(() => {
+            inp.focus();
+            // Reset flag after a moment so tapping search bar fresh still works
+            setTimeout(() => { sheetDismissed = false; }, 5000);
+          }, 300);
+        };
       });
     </script>
 
