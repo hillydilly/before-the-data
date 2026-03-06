@@ -453,12 +453,53 @@
       if (e.target === document.getElementById('city-modal')) closeCityModal();
     });
 
+    // Preload posts.json on page load so first search is instant
+    let postsCache = null;
+    let postsLoading = false;
+    async function preloadPosts() {
+      if (postsCache || postsLoading) return;
+      postsLoading = true;
+      try {
+        const res = await fetch('/posts.json?v=' + Math.floor(Date.now() / 600000));
+        if (res.ok) {
+          const data = await res.json();
+          postsCache = (data.posts || []).filter(p => p.title && p.artist);
+        }
+      } catch(e) {}
+      postsLoading = false;
+    }
+    preloadPosts();
+
     async function triggerSearch() {
       const q = input.value.trim();
       if (!q) { resultsEl.innerHTML = ''; metaEl.innerHTML = ''; return; }
 
-      metaEl.innerHTML = 'Searching…';
-      let posts = await searchPosts(q);
+      metaEl.innerHTML = '<span style="opacity:0.5">Searching…</span>';
+      resultsEl.innerHTML = '';
+
+      // Use preloaded cache or fetch fresh
+      let allPosts = postsCache;
+      if (!allPosts) {
+        try {
+          const res = await fetch('/posts.json?v=' + Math.floor(Date.now() / 600000));
+          if (res.ok) {
+            const data = await res.json();
+            allPosts = postsCache = (data.posts || []).filter(p => p.title && p.artist);
+          }
+        } catch(e) {}
+      }
+      if (!allPosts) { metaEl.innerHTML = 'Could not load catalog — try again.'; return; }
+
+      const lq = q.toLowerCase();
+      let posts = allPosts.filter(p =>
+        (p.artist || '').toLowerCase().includes(lq) ||
+        (p.title || '').toLowerCase().includes(lq) ||
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(lq))) ||
+        (p.genres && p.genres.some(g => g.toLowerCase().includes(lq))) ||
+        (p.city || '').toLowerCase().includes(lq) ||
+        (p.location || '').toLowerCase().includes(lq) ||
+        (p.writeup || '').toLowerCase().includes(lq)
+      );
 
       // Apply filters
       if (activeFilters.type === 'archive') posts = posts.filter(p => p.isArchive);
