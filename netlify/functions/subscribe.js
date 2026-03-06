@@ -18,7 +18,8 @@ export default async (req) => {
   }
 
   try {
-    const { email } = await req.json();
+    const body = await req.json();
+    const { email, source: bodySource } = body;
     if (!email || !email.includes('@')) {
       return new Response(JSON.stringify({ error: 'Invalid email' }), {
         status: 400,
@@ -179,6 +180,24 @@ export default async (req) => {
         headers: { 'Content-Type': 'application/json' }
       });
     }
+
+    // Save subscriber to Firebase for visibility
+    try {
+      const FIREBASE_KEY = 'AIzaSyAI2Nrt4PsnOB0DyLa4yrWYyY39Oblzcec';
+      const FIREBASE_BASE = 'https://firestore.googleapis.com/v1/projects/ar-scouting-dashboard/databases/(default)/documents';
+      const docId = 'sub_' + email.toLowerCase().replace(/[^a-z0-9]/g, '_');
+      const source = bodySource || 'unknown';
+      await fetch(`${FIREBASE_BASE}/btd_subscribers/${docId}?key=${FIREBASE_KEY}&updateMask.fieldPaths=email&updateMask.fieldPaths=source&updateMask.fieldPaths=tier&updateMask.fieldPaths=createdAt`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fields: {
+          email: { stringValue: email.toLowerCase() },
+          source: { stringValue: source },
+          tier: { stringValue: 'free' },
+          createdAt: { stringValue: new Date().toISOString() }
+        }})
+      });
+    } catch(e) { /* non-fatal — email already sent */ }
 
     return new Response(JSON.stringify({ ok: true }), {
       status: 200,
