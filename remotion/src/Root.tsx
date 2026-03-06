@@ -13,6 +13,9 @@ import {BTDReelAllWeHold} from './BTDReelAllWeHold';
 import {BTDReelSungHolly} from './BTDReelSungHolly';
 import {WaveformTest} from './WaveformTest';
 import {BTDArchiveAd} from './BTDArchiveAd';
+import {BTDArchiveIpod} from './BTDArchiveIpod';
+import {BTDArchiveIpod3D} from './BTDArchiveIpod3D';
+import {BTDArchiveCoverFlow} from './BTDArchiveCoverFlow';
 
 const defaultProps: BTDReelProps = {
   artistName: 'SLOE JACK',
@@ -150,6 +153,33 @@ export const RemotionRoot: React.FC = () => {
         id="WaveformTest"
         component={WaveformTest}
         durationInFrames={90}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{}}
+      />
+      <Composition
+        id="BTDArchiveIpod"
+        component={BTDArchiveIpod}
+        durationInFrames={960}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{}}
+      />
+      <Composition
+        id="BTDArchiveIpod3D"
+        component={BTDArchiveIpod3D}
+        durationInFrames={960}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{}}
+      />
+      <Composition
+        id="BTDArchiveCoverFlow"
+        component={BTDArchiveCoverFlow}
+        durationInFrames={1530}
         fps={30}
         width={1080}
         height={1920}

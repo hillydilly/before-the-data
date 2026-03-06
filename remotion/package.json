@@ -8,8 +8,8 @@
     "render": "node scripts/render-reel.mjs"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/drei": "^9.88.0",
+    "@react-three/fiber": "^8.16.8",
     "@remotion/cli": "4.0.257",
     "@remotion/three": "^4.0.257",
     "@svg-maps/australia": "^2.0.0",

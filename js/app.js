@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     case 'discover': await renderDiscover(); break;
     case 'new-music': await renderNewMusic(); break;
     case 'popular': await renderPopular(); break;
-    case 'search': initSearch(); break;
+    case 'search': if (!window.__btd_skip_initSearch) initSearch(); break;
     case 'post': await renderPost(); break;
     case 'artist': await renderArtist(); break;
   }

@@ -29,7 +29,9 @@ const CLOUDINARY_SECRET = 'seOMwI2Hd2x_5fhbnn11c2o7SNU';
 
 const POSTS_CSV  = '/Users/clawdbot/Downloads/api_wp_wp_posts_20200416_1355PDT.csv';
 const TRACKS_CSV = '/Users/clawdbot/Downloads/api_tracks_tracks_proper_20200416_1354PDT.csv';
-const PROGRESS_FILE = '/tmp/hillydilly-import-progress.json';
+const PROGRESS_FILE = process.argv.includes('--progress-file')
+  ? process.argv[process.argv.indexOf('--progress-file') + 1]
+  : '/tmp/hillydilly-import-progress.json';
 
 // ── Author map ────────────────────────────────────────────────────────────────
 const AUTHOR_MAP = {
