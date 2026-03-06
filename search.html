@@ -618,7 +618,9 @@
       }
       if (!allPosts) { metaEl.innerHTML = 'Could not load catalog — try again.'; return; }
 
-      const lq = q.toLowerCase();
+      // Normalize accents for search (montreal matches montréal, etc.)
+      const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const lq = normalize(q);
 
       // City alias expansion — so "New York" matches Brooklyn, Manhattan etc.
       const CITY_ALIASES = {
@@ -640,15 +642,15 @@
       const cityTerms = CITY_ALIASES[lq] || [lq];
 
       let posts = allPosts.filter(p => {
-        const city = (p.city || '').toLowerCase();
-        const loc = (p.location || '').toLowerCase();
+        const city = normalize(p.city || '');
+        const loc = normalize(p.location || '');
         return (
-          (p.artist || '').toLowerCase().includes(lq) ||
-          (p.title || '').toLowerCase().includes(lq) ||
-          (p.tags && p.tags.some(t => t.toLowerCase().includes(lq))) ||
-          (p.genres && p.genres.some(g => g.toLowerCase().includes(lq))) ||
-          cityTerms.some(t => city.includes(t) || loc.includes(t)) ||
-          (p.writeup || '').toLowerCase().includes(lq)
+          normalize(p.artist || '').includes(lq) ||
+          normalize(p.title || '').includes(lq) ||
+          (p.tags && p.tags.some(t => normalize(t).includes(lq))) ||
+          (p.genres && p.genres.some(g => normalize(g).includes(lq))) ||
+          cityTerms.some(t => city.includes(normalize(t)) || loc.includes(normalize(t))) ||
+          normalize(p.writeup || '').includes(lq)
         );
       });
 
