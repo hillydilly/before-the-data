@@ -618,15 +618,38 @@
       if (!allPosts) { metaEl.innerHTML = 'Could not load catalog — try again.'; return; }
 
       const lq = q.toLowerCase();
-      let posts = allPosts.filter(p =>
-        (p.artist || '').toLowerCase().includes(lq) ||
-        (p.title || '').toLowerCase().includes(lq) ||
-        (p.tags && p.tags.some(t => t.toLowerCase().includes(lq))) ||
-        (p.genres && p.genres.some(g => g.toLowerCase().includes(lq))) ||
-        (p.city || '').toLowerCase().includes(lq) ||
-        (p.location || '').toLowerCase().includes(lq) ||
-        (p.writeup || '').toLowerCase().includes(lq)
-      );
+
+      // City alias expansion — so "New York" matches Brooklyn, Manhattan etc.
+      const CITY_ALIASES = {
+        'new york': ['new york', 'brooklyn', 'manhattan', 'queens', 'bronx', 'new york city', 'nyc', 'staten island', 'long island city'],
+        'los angeles': ['los angeles', 'la', 'west hollywood', 'compton', 'inglewood', 'east los angeles', 'culver city', 'east la', 'watts', 'carson', 'gardena'],
+        'london': ['london', 'south london', 'north london', 'east london', 'west london', 'hackney', 'brixton', 'croydon', 'camden', 'peckham'],
+        'toronto': ['toronto', 'scarborough', 'north york', 'etobicoke', 'brampton', 'mississauga'],
+        'chicago': ['chicago', 'chi', 'south side', 'north side', 'oak park'],
+        'atlanta': ['atlanta', 'atl', 'decatur', 'stone mountain', 'college park', 'east atlanta'],
+        'houston': ['houston', 'h-town', 'fifth ward', 'third ward'],
+        'miami': ['miami', 'miami beach', 'hialeah', 'homestead', 'north miami'],
+        'san francisco': ['san francisco', 'sf', 'bay area', 'oakland', 'berkeley'],
+        'seattle': ['seattle', 'bellevue', 'tacoma'],
+        'melbourne': ['melbourne', 'fitzroy', 'st kilda', 'brunswick'],
+        'sydney': ['sydney', 'parramatta', 'newtown'],
+        'paris': ['paris', 'ile-de-france', 'seine-saint-denis'],
+        'berlin': ['berlin', 'kreuzberg', 'neukölln', 'mitte'],
+      };
+      const cityTerms = CITY_ALIASES[lq] || [lq];
+
+      let posts = allPosts.filter(p => {
+        const city = (p.city || '').toLowerCase();
+        const loc = (p.location || '').toLowerCase();
+        return (
+          (p.artist || '').toLowerCase().includes(lq) ||
+          (p.title || '').toLowerCase().includes(lq) ||
+          (p.tags && p.tags.some(t => t.toLowerCase().includes(lq))) ||
+          (p.genres && p.genres.some(g => g.toLowerCase().includes(lq))) ||
+          cityTerms.some(t => city.includes(t) || loc.includes(t)) ||
+          (p.writeup || '').toLowerCase().includes(lq)
+        );
+      });
 
       // Apply filters
       if (activeFilters.type === 'archive') posts = posts.filter(p => p.isArchive);

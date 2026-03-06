@@ -46,6 +46,8 @@ function parseDoc(doc) {
     trackId: strVal(f.trackId) || strVal(f.spotifyId),
     youtubeId: strVal(f.youtubeId) || strVal(f.ytId),
     country: strVal(f.country),
+    city: strVal(f.city),
+    location: strVal(f.location),
     publishedAt: { seconds: publishedSec },
     tags: arrVal(f.tags),
     genres: arrVal(f.genres) || (strVal(f.genre) ? [strVal(f.genre)] : []),
