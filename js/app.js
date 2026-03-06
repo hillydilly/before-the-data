@@ -842,7 +842,7 @@ async function renderPost() {
         trackRow.classList.remove('pip-playing');
       }
     };
-    trackRow.querySelector('.pip-art-wrap').addEventListener('click', (e) => {
+    const handlePipClick = (e) => {
       e.stopPropagation();
       const cur = Player.getCurrent();
       if (cur && cur.id === post.id) {
@@ -852,7 +852,9 @@ async function renderPost() {
         playPost();
         setTimeout(syncPip, 200);
       }
-    });
+    };
+    trackRow.querySelector('.pip-art-wrap').addEventListener('click', handlePipClick);
+    trackRow.querySelector('.pip-info').addEventListener('click', handlePipClick);
     document.addEventListener('btd:playerStateChange', syncPip);
   }
 

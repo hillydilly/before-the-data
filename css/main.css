@@ -795,7 +795,10 @@ body[data-page="post"] #main {
   background: var(--bg-2);
   border-radius: 8px;
   border: 1px solid var(--bd);
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.post-inline-player:hover { background: var(--bg-3, #efefef); }
 .pip-art-wrap {
   position: relative; flex-shrink: 0;
   width: 72px; height: 72px;
@@ -808,13 +811,11 @@ body[data-page="post"] #main {
 .pip-art-wrap:hover .pip-art { transform: scale(1.05); }
 .pip-play-overlay {
   position: absolute; inset: 0;
-  background: rgba(0,0,0,.4);
+  background: rgba(0,0,0,.35);
   display: flex; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity .15s;
+  opacity: 1; transition: opacity .15s;
   border-radius: 6px;
 }
-.pip-art-wrap:hover .pip-play-overlay,
-.post-inline-player.pip-playing .pip-play-overlay { opacity: 1; }
 .pip-play-btn {
   width: 36px; height: 36px;
   background: #fff; border-radius: 50%;
