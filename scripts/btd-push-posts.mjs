@@ -156,12 +156,23 @@ async function main() {
 
   // Rebuild static posts.json after every import so the site loads fast
   if (ok > 0) {
-    console.log('\nRebuilding posts.json...');
+    console.log('\nRebuilding posts.json + search-index.json...');
     const { execSync } = await import('child_process');
+    const repoDir = new URL('..', import.meta.url).pathname;
     try {
       execSync(`node ${new URL('./build-posts-json.mjs', import.meta.url).pathname}`, { stdio: 'inherit' });
     } catch (e) {
       console.error('⚠️  posts.json rebuild failed:', e.message);
+    }
+    // Auto-push updated JSON files to GitHub so Netlify deploys and search stays current
+    try {
+      execSync(
+        `cd ${repoDir} && git add posts.json posts-live.json search-index.json && git diff --cached --quiet || git commit -m "Auto-rebuild: search index after BTD import (${ok} post${ok !== 1 ? 's' : ''})" --author="CLAWD <clawd@dreamsneverdie.xyz>" && git push origin main`,
+        { stdio: 'inherit', timeout: 60000 }
+      );
+      console.log('✅ search-index.json pushed to GitHub — Netlify deploying');
+    } catch (e) {
+      console.error('⚠️  git push failed:', e.message);
     }
   }
 }
