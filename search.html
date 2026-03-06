@@ -189,17 +189,85 @@
 
       <div class="city-suggestions" id="city-suggestions">
         <span style="font-size:11px;color:var(--tx-3);align-self:center;">Browse by city:</span>
-        <button class="city-pill" data-city="Nashville">Nashville</button>
-        <button class="city-pill" data-city="New York">New York</button>
-        <button class="city-pill" data-city="Los Angeles">Los Angeles</button>
-        <button class="city-pill" data-city="London">London</button>
-        <button class="city-pill" data-city="Toronto">Toronto</button>
-        <button class="city-pill" data-city="Atlanta">Atlanta</button>
-        <button class="city-pill" data-city="Chicago">Chicago</button>
-        <button class="city-pill" data-city="Brooklyn">Brooklyn</button>
-        <button class="city-pill" data-city="Auckland">Auckland</button>
-        <button class="city-pill" data-city="Melbourne">Melbourne</button>
+        <button class="city-pill" id="city-search-btn" onclick="openCityModal()">📍 Search by City</button>
       </div>
+
+      <!-- City Search Modal -->
+      <div id="city-modal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;">
+        <div id="city-modal-inner" style="background:var(--bg-0,#fff);color:var(--tx-1,#000);border-radius:14px;padding:32px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.25);">
+          <button onclick="closeCityModal()" style="position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--tx-3,#999);line-height:1;">✕</button>
+          <h2 style="font-family:var(--font-heading,'Arial Black',sans-serif);font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 6px;">Search by City</h2>
+          <p style="font-size:13px;color:var(--tx-3,#999);margin:0 0 24px;">19 years of music discovery, filtered by where artists are from.</p>
+          <div id="city-gate-msg" style="display:none;padding:16px;background:#f7f7f7;border-radius:8px;margin-bottom:20px;text-align:center;">
+            <p style="margin:0 0 10px;font-size:14px;font-weight:600;">Heard First members only</p>
+            <p style="margin:0 0 14px;font-size:13px;color:#666;">Heard First members get 5 city searches/month. Pro members get unlimited.</p>
+            <a href="/heard-first.html" style="display:inline-block;padding:10px 20px;background:#000;color:#fff;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:6px;text-decoration:none;">Join Heard First →</a>
+          </div>
+          <div id="city-search-body">
+            <div id="city-usage-bar" style="display:none;margin-bottom:16px;padding:10px 14px;background:#f7f7f7;border-radius:8px;font-size:12px;color:#666;"></div>
+            <div style="display:flex;flex-direction:column;gap:20px;">
+              <div>
+                <p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx-3,#999);margin:0 0 10px;">🇺🇸 United States</p>
+                <div class="city-modal-grid">
+                  <button class="city-modal-pill" data-city="Nashville">Nashville</button>
+                  <button class="city-modal-pill" data-city="New York">New York</button>
+                  <button class="city-modal-pill" data-city="Los Angeles">Los Angeles</button>
+                  <button class="city-modal-pill" data-city="Atlanta">Atlanta</button>
+                  <button class="city-modal-pill" data-city="Chicago">Chicago</button>
+                  <button class="city-modal-pill" data-city="Brooklyn">Brooklyn</button>
+                  <button class="city-modal-pill" data-city="Austin">Austin</button>
+                  <button class="city-modal-pill" data-city="Seattle">Seattle</button>
+                  <button class="city-modal-pill" data-city="Portland">Portland</button>
+                  <button class="city-modal-pill" data-city="Miami">Miami</button>
+                  <button class="city-modal-pill" data-city="Houston">Houston</button>
+                  <button class="city-modal-pill" data-city="Boston">Boston</button>
+                  <button class="city-modal-pill" data-city="Philadelphia">Philadelphia</button>
+                  <button class="city-modal-pill" data-city="Denver">Denver</button>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx-3,#999);margin:0 0 10px;">🇨🇦 Canada</p>
+                <div class="city-modal-grid">
+                  <button class="city-modal-pill" data-city="Toronto">Toronto</button>
+                  <button class="city-modal-pill" data-city="Vancouver">Vancouver</button>
+                  <button class="city-modal-pill" data-city="Montreal">Montreal</button>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx-3,#999);margin:0 0 10px;">🇬🇧 UK &amp; Europe</p>
+                <div class="city-modal-grid">
+                  <button class="city-modal-pill" data-city="London">London</button>
+                  <button class="city-modal-pill" data-city="Manchester">Manchester</button>
+                  <button class="city-modal-pill" data-city="Dublin">Dublin</button>
+                  <button class="city-modal-pill" data-city="Glasgow">Glasgow</button>
+                  <button class="city-modal-pill" data-city="Berlin">Berlin</button>
+                  <button class="city-modal-pill" data-city="Amsterdam">Amsterdam</button>
+                  <button class="city-modal-pill" data-city="Paris">Paris</button>
+                  <button class="city-modal-pill" data-city="Stockholm">Stockholm</button>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx-3,#999);margin:0 0 10px;">🌏 Australia &amp; NZ</p>
+                <div class="city-modal-grid">
+                  <button class="city-modal-pill" data-city="Melbourne">Melbourne</button>
+                  <button class="city-modal-pill" data-city="Sydney">Sydney</button>
+                  <button class="city-modal-pill" data-city="Auckland">Auckland</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .city-modal-grid { display:flex;flex-wrap:wrap;gap:8px; }
+        .city-modal-pill {
+          padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;
+          border:1.5px solid var(--border,#e5e5e5);background:var(--bg-1,#f9f9f9);
+          color:var(--tx-2,#444);cursor:pointer;transition:all 0.15s;
+        }
+        .city-modal-pill:hover { background:#000;border-color:#000;color:#fff; }
+      </style>
 
       <div class="search-meta" id="search-meta"></div>
       <div id="search-results" class="search-results"></div>
@@ -258,6 +326,82 @@
     });
 
     input.focus();
+
+    // City modal
+    window.openCityModal = function() {
+      const modal = document.getElementById('city-modal');
+      const gateMsg = document.getElementById('city-gate-msg');
+      const body = document.getElementById('city-search-body');
+      const usageBar = document.getElementById('city-usage-bar');
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      const tier = (typeof BTDGate !== 'undefined') ? (localStorage.getItem('btd_tier') || 'free') : 'free';
+      const isPro = tier === 'pro';
+      const isHF = tier === 'heard-first';
+      const isPaid = isPro || isHF;
+
+      if (!isPaid) {
+        gateMsg.style.display = 'block';
+        body.style.display = 'none';
+        return;
+      }
+      gateMsg.style.display = 'none';
+      body.style.display = 'block';
+
+      // Usage tracking for HF (5/month)
+      if (isHF) {
+        const USAGE_KEY = 'btd_city_search_usage';
+        const monthKey = new Date().toISOString().substring(0, 7);
+        let usage = {};
+        try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
+        const used = usage[monthKey] || 0;
+        const remaining = Math.max(0, 5 - used);
+        usageBar.style.display = 'block';
+        usageBar.innerHTML = remaining > 0
+          ? `📍 <strong>${remaining} city search${remaining !== 1 ? 'es' : ''}</strong> remaining this month. <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`
+          : `You've used all 5 city searches this month. <a href="/heard-first.html" style="color:#000;font-weight:600;">Upgrade to Pro for unlimited →</a>`;
+
+        document.querySelectorAll('.city-modal-pill').forEach(pill => {
+          pill.style.opacity = remaining > 0 ? '1' : '0.4';
+          pill.style.pointerEvents = remaining > 0 ? 'auto' : 'none';
+        });
+      } else {
+        usageBar.style.display = 'none';
+      }
+
+      // City pill clicks
+      document.querySelectorAll('.city-modal-pill').forEach(pill => {
+        pill.onclick = () => {
+          const city = pill.dataset.city;
+          // Deduct usage for HF
+          if (isHF) {
+            const USAGE_KEY = 'btd_city_search_usage';
+            const monthKey = new Date().toISOString().substring(0, 7);
+            let usage = {};
+            try { usage = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}'); } catch(e) {}
+            usage[monthKey] = (usage[monthKey] || 0) + 1;
+            try { localStorage.setItem(USAGE_KEY, JSON.stringify(usage)); } catch(e) {}
+          }
+          closeCityModal();
+          input.value = city;
+          clearBtn.classList.add('visible');
+          citySuggestions.style.display = 'none';
+          triggerSearch();
+          input.focus();
+        };
+      });
+    };
+
+    window.closeCityModal = function() {
+      document.getElementById('city-modal').style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    // Close on backdrop click
+    document.getElementById('city-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('city-modal')) closeCityModal();
+    });
 
     async function triggerSearch() {
       const q = input.value.trim();
