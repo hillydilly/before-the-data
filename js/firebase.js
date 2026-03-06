@@ -275,29 +275,46 @@ function parsePostDoc(doc) {
 }
 
 /* Fetch all posts — paginates, caches in sessionStorage for 10min to avoid quota burns */
-async function fetchPostsFromFirebase() {
+async function fetchPostsFromFirebase(opts = {}) {
   const CACHE_KEY = 'btd_posts_cache';
+  const LIVE_CACHE_KEY = 'btd_live_cache';
   const CACHE_TTL = 5 * 60 * 1000; // 5 min TTL
+  const liveOnly = opts.liveOnly || false;
 
   // --- FAST PATH: serve from sessionStorage cache if fresh ---
+  const cacheKey = liveOnly ? LIVE_CACHE_KEY : CACHE_KEY;
   try {
-    const cached = sessionStorage.getItem(CACHE_KEY);
+    const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
-      const { ts, posts, src } = JSON.parse(cached);
-      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) {
-        // In background, check if a new import happened since we cached
-        // Don't block — refresh on next load if stale
-        return posts;
-      }
+      const { ts, posts } = JSON.parse(cached);
+      if (Date.now() - ts < CACHE_TTL && posts?.length > 0) return posts;
     }
   } catch(e) {}
 
-  // --- PRIMARY: static posts.json served from Netlify CDN ---
-  // One HTTP request, served from edge, ~10x faster than Firestore pagination
+  // --- LIVE-ONLY FAST PATH: posts-live.json is ~16KB, loads instantly ---
+  if (liveOnly) {
+    try {
+      const res = await Promise.race([
+        fetch('/posts-live.json'),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000))
+      ]);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.posts?.length > 0) {
+          const posts = data.posts.filter(p => p.title && p.artist);
+          try { sessionStorage.setItem(LIVE_CACHE_KEY, JSON.stringify({ ts: Date.now(), posts })); } catch(e) {}
+          return posts;
+        }
+      }
+    } catch(e) {}
+    // Fall through to full posts.json if live fails
+  }
+
+  // --- PRIMARY: static posts.json served from CDN ---
   try {
     const res = await Promise.race([
       fetch('/posts.json'),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000))
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000))
     ]);
     if (res.ok) {
       const data = await res.json();
@@ -364,8 +381,8 @@ async function fetchLivePosts() {
   return (all || []).filter(p => p.btdPostLive);
 }
 
-async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limitCount = 25) {
-  const livePosts = await fetchPostsFromFirebase();
+async function fetchPosts(orderByField = 'publishedAt', direction = 'desc', limitCount = 25, opts = {}) {
+  const livePosts = await fetchPostsFromFirebase(opts);
   const posts = livePosts || [...DEMO_POSTS];
 
   if (orderByField === 'views') {

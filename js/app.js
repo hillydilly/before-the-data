@@ -221,8 +221,9 @@ async function renderDiscover() {
   chartList.innerHTML = Array(8).fill(0).map(skelRow).join('');
 
   // Fetch new music + charts in parallel
+  // Use liveOnly=true → hits posts-live.json (16KB) instead of full 22MB posts.json
   const [latest, charts] = await Promise.all([
-    fetchPosts('publishedAt', 'desc', 10),
+    fetchPosts('publishedAt', 'desc', 10, { liveOnly: true }),
     fetchCharts()
   ]);
 
