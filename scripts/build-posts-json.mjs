@@ -113,7 +113,7 @@ async function main() {
     const d = p.publishedAt?.seconds ? new Date(p.publishedAt.seconds * 1000).toISOString() : '';
     return {
       slug: p.slug, title: p.title, artist: p.artist,
-      artUrlSm: p.artUrlSm || p.artUrl,
+      artUrlSm: (() => { const sm = p.artUrlSm || p.artUrl || ''; return sm.includes('scdn.co') ? (p.artUrl && !p.artUrl.includes('scdn.co') ? p.artUrl : '') : sm; })(),
       previewUrl: p.previewUrl || '',
       city: p.city || '', country: p.country || '',
       genres: p.genres || [], tags: p.tags || [],

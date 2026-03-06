@@ -686,7 +686,10 @@
         const year = getYear(p);
         const el = document.createElement('div');
         el.className = 'search-result';
-        const art = p.artUrl || 'assets/brand/logo-black-mark.png';
+        const rawArt = p.artUrlSm || p.artUrl || '';
+        // Skip Spotify CDN (blocks hotlinking) and use placeholder instead
+        const art = (rawArt && !rawArt.includes('i.scdn.co') && !rawArt.includes('scdn.co'))
+          ? rawArt : 'assets/brand/logo-black-mark.png';
         const genres = (p.genres || (p.genre ? [p.genre] : [])).slice(0, 2).join(' · ');
         const loc = p.city || p.location || '';
         el.innerHTML = `
