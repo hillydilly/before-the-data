@@ -228,10 +228,8 @@ async function renderDiscover() {
   scrollContainer.innerHTML = Array(6).fill(0).map(skelCard).join('');
   chartList.innerHTML = Array(8).fill(0).map(skelRow).join('');
 
-  // Fetch new music + charts in parallel
-  // Discover scroll uses posts-live.json directly (fast, 16KB) for the homepage strip
-  // Use fetchLivePosts() — same source as New Music page, same order
-  const livePostsAll = await fetchLivePosts();
+  // Fetch new music + charts in parallel — both start immediately
+  const [livePostsAll, charts] = await Promise.all([fetchLivePosts(), fetchCharts()]);
   const latest = (livePostsAll || [])
     .sort((a, b) => {
       const aS = typeof a.publishedAt === 'object' ? a.publishedAt.seconds : Math.floor(new Date(a.publishedAt).getTime()/1000);
@@ -239,8 +237,6 @@ async function renderDiscover() {
       return bS - aS;
     })
     .slice(0, 10);
-
-  const charts = await fetchCharts();
 
   // Render new music (max 10)
   scrollContainer.innerHTML = '';
