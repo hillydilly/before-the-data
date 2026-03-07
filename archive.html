@@ -589,8 +589,21 @@
       let allPosts = null;
       let loading = false;
 
-      // Preload posts.json immediately so play overlays work without waiting for year click
-      fetchPostsFromFirebase().then(posts => { allPosts = posts || []; }).catch(() => { allPosts = []; });
+      // Preload archive-index.json (lean 4MB vs 25MB posts.json) for fast year grid rendering
+      let archiveIndexPromise = fetch('/archive-index.json?v=' + Math.floor(Date.now() / 3600000))
+        .then(r => r.json())
+        .then(d => {
+          // Expand short field names to full names for compatibility
+          allPosts = (d.posts || []).map(p => ({
+            slug: p.s, id: p.s, title: p.t, artist: p.a,
+            publishedAt: p.d ? { seconds: Math.floor(new Date(p.d).getTime() / 1000) } : null,
+            artUrl: p.i || '', artUrlSm: p.i || '',
+            previewUrl: p.p ? '__has_preview__' : '',  // boolean flag; real URL fetched on play
+            type: p.y || '',
+            _hasRealArt: p.r === 1,
+          }));
+        })
+        .catch(() => { allPosts = []; });
 
       function getPostYear(post) {
         if (!post.publishedAt) return null;
@@ -630,17 +643,11 @@
         grid.innerHTML = '';
         empty.style.display = 'none';
 
-        const SILHOUETTE = 'artist-default.svg';
         const yearPosts = posts
           .filter(p => getPostYear(p) === parseInt(year))
           .sort((a, b) => {
-            const aRealArt = !!(a.artUrl || a.artUrlSm) && !(a.artUrl || '').includes(SILHOUETTE) && !(a.artUrlSm || '').includes(SILHOUETTE);
-            const bRealArt = !!(b.artUrl || b.artUrlSm) && !(b.artUrl || '').includes(SILHOUETTE) && !(b.artUrlSm || '').includes(SILHOUETTE);
-            const aHasPreview = !!a.previewUrl;
-            const bHasPreview = !!b.previewUrl;
-            // Tier 1: real art + preview | Tier 2: real art only | Tier 3: silhouette + preview | Tier 4: silhouette, no preview
-            const aScore = (aRealArt ? 2 : 0) + (aHasPreview ? 1 : 0);
-            const bScore = (bRealArt ? 2 : 0) + (bHasPreview ? 1 : 0);
+            const aScore = ((a._hasRealArt || (a.artUrl && !a.artUrl.includes('artist-default'))) ? 2 : 0) + (a.previewUrl ? 1 : 0);
+            const bScore = ((b._hasRealArt || (b.artUrl && !b.artUrl.includes('artist-default'))) ? 2 : 0) + (b.previewUrl ? 1 : 0);
             return bScore - aScore;
           });
         const postWord = yearPosts.length === 1 ? 'post' : 'posts';
@@ -676,6 +683,16 @@
             const current = Player.getCurrent();
             if (current && current.id === id) { Player.togglePlay(); return; }
             let previewUrl = post.previewUrl || '';
+            // If flag only (from archive-index), fetch real URL from posts.json on demand
+            if (previewUrl === '__has_preview__') {
+              previewUrl = '';
+              try {
+                const data = await fetch('/posts.json').then(r => r.json());
+                const full = (data.posts || []).find(p => p.slug === id || p.id === id);
+                previewUrl = full?.previewUrl || '';
+                if (previewUrl) post.previewUrl = previewUrl; // cache for next tap
+              } catch(e) {}
+            }
             if (!previewUrl) {
               const queued = (Player._queue || []).find(p => (p.slug || p.id) === id);
               previewUrl = queued?.previewUrl || '';
@@ -711,12 +728,12 @@
         grid.innerHTML = '<div class="archive-loading">Loading...</div>';
         empty.style.display = 'none';
 
-        if (!allPosts) {
+        if (!allPosts || allPosts.length === 0) {
           if (loading) return;
           loading = true;
           try {
-            allPosts = await fetchPostsFromFirebase();
-            if (!allPosts) allPosts = [];
+            await archiveIndexPromise;
+            if (!allPosts || allPosts.length === 0) allPosts = [];
           } catch (e) {
             allPosts = [];
           }

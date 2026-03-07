@@ -126,6 +126,27 @@ async function main() {
   const searchOutPath = new URL('../search-index.json', import.meta.url).pathname;
   writeFileSync(searchOutPath, JSON.stringify(searchOutput));
   console.log(`✅ search-index.json written: ${searchPosts.length} posts (${Math.round(JSON.stringify(searchOutput).length / 1024)}KB)`);
+
+  // Build archive-index.json — ultra-lean for archive year grid (no writeup, no preview URL, just boolean)
+  const SILHOUETTE = 'artist-default.svg';
+  const archivePosts = posts.map(p => {
+    const artUrl = p.artUrlSm || p.artUrl || '';
+    const d = p.publishedAt?.seconds ? new Date(p.publishedAt.seconds * 1000).toISOString() : '';
+    return {
+      s: p.slug,                          // slug
+      t: p.title,                         // title
+      a: p.artist,                        // artist
+      d: d.slice(0, 10),                  // date YYYY-MM-DD
+      i: artUrl.includes('scdn.co') ? '' : artUrl,  // artUrl (scrubbed)
+      p: !!p.previewUrl,                  // hasPreview (boolean only)
+      y: p.type || '',                    // type (ep/lp/etc)
+      r: artUrl && !artUrl.includes(SILHOUETTE) ? 1 : 0,  // hasRealArt
+    };
+  }).filter(p => p.t && p.a);
+  const archiveOutput = { generated: new Date().toISOString(), count: archivePosts.length, posts: archivePosts };
+  const archiveOutPath = new URL('../archive-index.json', import.meta.url).pathname;
+  writeFileSync(archiveOutPath, JSON.stringify(archiveOutput));
+  console.log(`✅ archive-index.json written: ${archivePosts.length} posts (${Math.round(JSON.stringify(archiveOutput).length / 1024)}KB)`);
 }
 
 main().catch(e => { console.error('Fatal:', e.message); process.exit(1); });
