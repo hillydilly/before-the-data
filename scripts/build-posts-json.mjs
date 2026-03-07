@@ -101,8 +101,14 @@ async function main() {
   writeFileSync(OUT_PATH, JSON.stringify(output));
   console.log(`✅ posts.json written: ${posts.length} posts (${Math.round(JSON.stringify(output).length / 1024)}KB)`);
 
-  // Also build slim posts-live.json (btdPostLive only, for fast new-music page load)
-  const livePosts = posts.filter(p => p.btdPostLive === true);
+  // Also build slim posts-live.json — all non-archive posts for fast discover/new-music page load
+  // Include btdPostLive:true posts always, plus recent non-archive posts (last 500)
+  const btdLive = posts.filter(p => p.btdPostLive === true);
+  const recentNonArchive = posts
+    .filter(p => !p.isArchive && p.btdPostLive !== true)
+    .slice(0, 500); // already sorted newest-first
+  const livePosts = [...btdLive, ...recentNonArchive]
+    .sort((a,b) => (b.publishedAt?.seconds||0) - (a.publishedAt?.seconds||0));
   const liveOutput = { generated: new Date().toISOString(), count: livePosts.length, posts: livePosts };
   const liveOutPath = new URL('../posts-live.json', import.meta.url).pathname;
   writeFileSync(liveOutPath, JSON.stringify(liveOutput));
