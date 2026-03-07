@@ -634,10 +634,14 @@
         const yearPosts = posts
           .filter(p => getPostYear(p) === parseInt(year))
           .sort((a, b) => {
-            const aReal = !!(a.artUrl || a.artUrlSm) && !(a.artUrl || '').includes(SILHOUETTE) && !(a.artUrlSm || '').includes(SILHOUETTE);
-            const bReal = !!(b.artUrl || b.artUrlSm) && !(b.artUrl || '').includes(SILHOUETTE) && !(b.artUrlSm || '').includes(SILHOUETTE);
-            if (aReal === bReal) return 0;
-            return aReal ? -1 : 1;
+            const aRealArt = !!(a.artUrl || a.artUrlSm) && !(a.artUrl || '').includes(SILHOUETTE) && !(a.artUrlSm || '').includes(SILHOUETTE);
+            const bRealArt = !!(b.artUrl || b.artUrlSm) && !(b.artUrl || '').includes(SILHOUETTE) && !(b.artUrlSm || '').includes(SILHOUETTE);
+            const aHasPreview = !!a.previewUrl;
+            const bHasPreview = !!b.previewUrl;
+            // Tier 1: real art + preview | Tier 2: real art only | Tier 3: silhouette + preview | Tier 4: silhouette, no preview
+            const aScore = (aRealArt ? 2 : 0) + (aHasPreview ? 1 : 0);
+            const bScore = (bRealArt ? 2 : 0) + (bHasPreview ? 1 : 0);
+            return bScore - aScore;
           });
         const postWord = yearPosts.length === 1 ? 'post' : 'posts';
         heading.innerHTML = `${year} <span class="archive-year-count">${yearPosts.length.toLocaleString()} ${postWord}</span>`;
@@ -655,19 +659,18 @@
           const artSrc = post.artUrl || post.artUrlSm || 'https://res.cloudinary.com/dd9nbystx/image/upload/w_400,h_400,c_fill/ar-scouting-dashboard/placeholder.jpg';
           const isEPPost = (post.type && /ep|lp|mixtape/i.test(post.type)) || /\b(ep|mixtape|lp)\b/i.test(post.title || '');
           const displayTitle = isEPPost ? (post.title || '') : `"${post.title || ''}"`;
+          const hasPreview = !!post.previewUrl;
           card.innerHTML = `
             <div class="archive-card-art">
               <img src="${artSrc}" alt="${post.artist || ''}" loading="lazy" style="cursor:pointer">
-              <div class="archive-card-play-overlay">
-                <div class="archive-card-play-circle">&#9654;</div>
-              </div>
+              ${hasPreview ? `<div class="archive-card-play-overlay"><div class="archive-card-play-circle">&#9654;</div></div>` : ''}
               <span class="archive-card-year-badge">${year}</span>
             </div>
             <a class="archive-card-title" href="${postHref}" style="text-decoration:none;color:inherit;display:block">${displayTitle}</a>
             <a class="archive-card-artist" href="/artist/${(post.artist||'').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')}">${post.artist || ''}</a>
           `;
           // Play overlay → play (toggle if already current)
-          card.querySelector('.archive-card-play-overlay').addEventListener('click', async (e) => {
+          card.querySelector('.archive-card-play-overlay')?.addEventListener('click', async (e) => {
             e.preventDefault(); e.stopPropagation();
             const id = post.id || post.slug;
             const current = Player.getCurrent();
