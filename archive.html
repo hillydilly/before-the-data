@@ -630,7 +630,15 @@
         grid.innerHTML = '';
         empty.style.display = 'none';
 
-        const yearPosts = posts.filter(p => getPostYear(p) === parseInt(year));
+        const SILHOUETTE = 'artist-default.svg';
+        const yearPosts = posts
+          .filter(p => getPostYear(p) === parseInt(year))
+          .sort((a, b) => {
+            const aReal = !!(a.artUrl || a.artUrlSm) && !(a.artUrl || '').includes(SILHOUETTE) && !(a.artUrlSm || '').includes(SILHOUETTE);
+            const bReal = !!(b.artUrl || b.artUrlSm) && !(b.artUrl || '').includes(SILHOUETTE) && !(b.artUrlSm || '').includes(SILHOUETTE);
+            if (aReal === bReal) return 0;
+            return aReal ? -1 : 1;
+          });
         const postWord = yearPosts.length === 1 ? 'post' : 'posts';
         heading.innerHTML = `${year} <span class="archive-year-count">${yearPosts.length.toLocaleString()} ${postWord}</span>`;
 
