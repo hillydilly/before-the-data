@@ -186,9 +186,21 @@ const Player = (() => {
     audio.play().then(() => {
       isPlaying = true;
       updatePlayButton();
-    }).catch(() => {
+    }).catch(async () => {
+      // URL failed (expired Deezer token, network error, etc.) — try Apple Music live
       isPlaying = false;
       updatePlayButton();
+      updateUI({ ...track, title: 'Loading...' });
+      const freshUrl = await _fetchAppleMusicPreview(track.artist, track.title);
+      if (freshUrl) {
+        track.previewUrl = freshUrl;
+        audio.src = freshUrl;
+        audio.play().then(() => { isPlaying = true; updatePlayButton(); updateUI(track); }).catch(() => {
+          updateUI({ ...track, title: `${track.title} — No preview available` });
+        });
+      } else {
+        updateUI({ ...track, title: `${track.title} — No preview available` });
+      }
     });
     updateUI(track);
     saveState();
